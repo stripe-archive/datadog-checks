@@ -1,6 +1,10 @@
 # Stripe Datadog checks
 
-This is a collection of Datadog plugins — checks in Datadog parlance — that Stripe has found useful with Datadog.
+This is a collection of plugins — [checks](http://docs.datadoghq.com/guides/agent_checks/) in Datadog parlance — for the [Datadog agent](https://github.com/datadog/dd-agent) that Stripe has found useful with Datadog.
+
+# Motivation
+
+We've sent a lot of patches to [Datadog](https://www.datadoghq.com/) and we regularly work closely with them on our ideas. But sometimes we want something that isn't a fit for the mainline Datadog agent. To that end we've created this repository to hold work that is either in flight or was decided to not be a fit for inclusion in the core agent set. We hope you find it useful!
 
 # Checks
 

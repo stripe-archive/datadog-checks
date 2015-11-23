@@ -1,0 +1,13 @@
+# init_config:
+# # Not required for this check
+#
+# instances:
+#     - name: "some.check.name1"
+#       command: "/path/to/command with args"
+#     - name: "some.check.name2"
+#       command: "/path/to/command with args2"
+
+init_config:
+  # Not required for this check
+
+instances:

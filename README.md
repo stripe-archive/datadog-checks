@@ -6,7 +6,15 @@ This is a collection of plugins — [checks](http://docs.datadoghq.com/guides/ag
 
 We've sent a lot of patches to [Datadog](https://www.datadoghq.com/) and we regularly work closely with them on our ideas. But sometimes we want something that isn't a fit for the mainline Datadog agent. To that end we've created this repository to hold work that is either in flight or was decided to not be a fit for inclusion in the core agent set. We hope you find it useful!
 
+# Using The Checks
+
+Place the `.py` file you want to use in to the checks directory — `/etc/dd-agent/checks.d` by default — and the YAML config file in the config directory — `/etc/dd-agent/conf.d` by default — and you should be ready to do! Restart the agent and run `/etc/init.d/datadog-agent info` to verify that the plugin is working.
+
+Each plugin here is provided with a sample config file containing some documentation.
+
 # Checks
+
+Here's our list of checks!
 
 ## Nagios Runner
 

@@ -28,7 +28,7 @@ class MoreUnixCheck(AgentCheck):
                     if match is not None:
                         meminfo[match.group(1)] = match.group(2)
                 except Exception:
-                    self.logger.exception("Cannot parse /proc/meminfo")
+                    self.logger.exception("Parsing error on /proc/meminfo line: %s" % line)
 
             try:
                 self.gauge('linux.memory.slab', int(meminfo.get('Slab', 0)) / 1024, tags)

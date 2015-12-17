@@ -6,7 +6,10 @@ import utils.subprocess_output
 import re
 import subprocess
 
-class MoreUnixCheck(AgentCheck):
+STATS_ABOUT_WHICH_WE_CARE = ('Slab', 'PageTables', 'SwapCached')
+
+class MoreLinuxMemCheck(AgentCheck):
+
     def check(self, instance):
         if Platform.is_linux():
             tags = instance.get('tags', [])
@@ -28,14 +31,13 @@ class MoreUnixCheck(AgentCheck):
                     if match is not None:
                         meminfo[match.group(1)] = match.group(2)
                 except Exception:
-                    self.logger.exception("Parsing error on /proc/meminfo line: %s" % line)
+                    self.log.exception("Parsing error on /proc/meminfo line: %s" % line)
 
-            try:
-                self.gauge('linux.memory.slab', int(meminfo.get('Slab', 0)) / 1024, tags)
-                self.gauge('linux.memory.pagetables', int(meminfo.get('PageTables', 0)) / 1024, tags)
-                self.gauge('linux.memory.swapcached',int(meminfo.get('SwapCached', 0)) / 1024, tags)
-            except Exception:
-                self.logger.exception('Cannot compute stats from /proc/meminfo')
+            for sawwc in STATS_ABOUT_WHICH_WE_CARE:
+                try:
+                  self.gauge('linux.memory.%s' % sawwc.lower(), int(meminfo.get(sawwc, 0)) / 1024, tags)
+                except Exception:
+                  self.log.exception("Cannot compute stat `linux.memory.%s' from value `%i'" % (sawwc.lower(), int(meminfo.get(sawwc, 0))))
 
         else:
             return False

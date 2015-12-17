@@ -20,7 +20,7 @@ PROCESS_PRIOS = {
     'L': 'locked'
 }
 
-class MoreUnixCheck(AgentCheck):
+class MoreLinuxProcCheck(AgentCheck):
     def check(self, instance):
         if Platform.is_linux():
             tags = instance.get('tags', [])

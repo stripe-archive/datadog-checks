@@ -16,6 +16,15 @@ Each plugin here is provided with a sample config file containing some documenta
 
 Here's our list of checks!
 
+## Linux Mem Extras
+
+There are some additional Linux memory metrics we like to watch that aren't included in the cure Datadog agent.
+This check adds the following metrics from linux `/proc/meminfo`:
+
+* `linux.memory.slab` from `/proc/meminfo`'s `Slab`
+* `linux.memory.pagetables` from `/proc/meminfo`'s `PageTables`
+* `linux.memory.swapcached` from `/proc/meminfo`'s `SwapCached`
+
 ## Linux Proc Extras
 
 There are some additional Linux metrics we like to watch that aren't included in the core Datadog agent.

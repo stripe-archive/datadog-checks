@@ -19,7 +19,7 @@ class MoreLinuxMemCheck(AgentCheck):
                     lines = mem_info.readlines()
 
             except Exception:
-                self.logger.exception('Cannot get memory metrics from /proc/meminfo')
+                self.log.exception('Cannot get memory metrics from /proc/meminfo')
                 return False
 
             regexp = re.compile(r'^(\w+):\s+([0-9]+)')  # We run this several times so one-time compile now

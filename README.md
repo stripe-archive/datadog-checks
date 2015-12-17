@@ -16,6 +16,37 @@ Each plugin here is provided with a sample config file containing some documenta
 
 Here's our list of checks!
 
+## Linux Proc Extras
+
+There are some additional Linux metrics we like to watch that aren't included in the core Datadog agent.
+This check adds the following metrics from Linux's `/proc` filesystem:
+
+* inode information
+  * `system.inodes.total`
+  * `system.inodes.used`
+* entropy available
+  * `system.entropy.available`
+* context switch count (for rates!)
+  * `linux.context_switches`
+* processes created count (for rates!)
+  * `linux.processes_created`
+* interrupts
+  * `linux.interrupts`
+* counts of processes by state, with tags
+  * `system.processes.states`
+    * `state:uninterruptible`
+    * `state:runnable`
+    * `state:sleeping`
+    * `state:stopped`
+    * `state:paging`
+    * `state:dead`
+    * `state:zombie`
+* counts of processes by priority, with tags
+  * `system.processes.priorities`
+    * `priority:low`
+    * `priority:high`
+    * `priority:locked`
+
 ## Nagios Runner
 
 The Nagios Runner check takes a list of check "instances". The instances are each executed and, [according to the Nagios Plugin API](https://assets.nagios.com/downloads/nagioscore/docs/nagioscore/3/en/pluginapi.html) the return value is inspected and a [service check](http://docs.datadoghq.com/api/#service_checks) is submitted using the provided name.

@@ -1,8 +1,7 @@
 # Fetch metrics from Phabricator, using our MetricsExtension (not yet available)
 
 # stdlib
-from collections import defaultdict, namedtuple
-import time
+from collections import namedtuple
 import urlparse
 
 # 3p
@@ -10,7 +9,6 @@ import requests
 
 # project
 from checks import AgentCheck
-from config import _is_affirmative
 from util import headers
 
 PhabricatorInstanceConfig = namedtuple(
@@ -58,7 +56,7 @@ class PhabCheck(AgentCheck):
         tags = ['url:%s' % url]
         tags.extend(custom_tags)
 
-        timeout = instance.get('timeout') or self.DEFAULT_TIMEOUT
+        timeout = instance.get('timeout', self.DEFAULT_TIMEOUT)
 
         config = PhabricatorInstanceConfig(
             service_check_tags=service_check_tags,

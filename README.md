@@ -8,7 +8,10 @@ We've sent a lot of patches to [Datadog](https://www.datadoghq.com/) and we regu
 
 # Using The Checks
 
-Place the `.py` file you want to use in to the checks directory — `/etc/dd-agent/checks.d` by default — and the YAML config file in the config directory — `/etc/dd-agent/conf.d` by default — and you should be ready to do! Restart the agent and run `/etc/init.d/datadog-agent info` to verify that the plugin is working.
+If you use `librarian-puppet`, feel free to reference this in your `Puppetfile`! Otherwise, move the
+`.py` file you want from the `files/` directory into your checks directory —
+`/etc/dd-agent/checks.d` by default — and the YAML config file from the `templates/` directory into
+your config directory — `/etc/dd-agent/conf.d` by default — and you should be ready to go!  Restart the agent and run `/etc/init.d/datadog-agent info` to verify that the plugin is working.
 
 Each plugin here is provided with a sample config file containing some documentation.
 

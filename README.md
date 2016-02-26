@@ -16,6 +16,36 @@ Each plugin here is provided with a sample config file containing some documenta
 
 Here's our list of checks!
 
+## NSQ
+
+Fetches the following metrics by polling NSQ's `/stats` endpoint:
+
+* `nsq.topic_count`
+* `nsq.topic.channel_count`
+* `nsq.topic` (all tagged with `topic_name`):
+  * `depth`
+  * `backend_depth`
+  * `message_count` (count, not gauge)
+* `nsq.topic.channel` (all tagged with `topic_name` and `channel_name`):
+  * `depth`
+  * `backend_depth`
+  * `in_flight_count`
+  * `deferred_count`
+  * `message_count` (count, not gauge)
+  * `requeue_count`
+  * `timeout_count`
+  * `e2e_processing_latency.p50` (nanoseconds)
+  * `e2e_processing_latency.p95` (nanoseconds)
+  * `e2e_processing_latency.p99` (nanoseconds)
+  * `e2e_processing_latency.p999` (nanoseconds)
+  * `e2e_processing_latency.p9999` (nanoseconds)
+* `nsq.topic.channel.client` (all tagged with `topic_name`, `channel_name` and `client_id`, `client_version`, `tls`, `user_agent`, `deflate` and `snappy`):
+  * `ready_count`
+  * `in_flight_count`
+  * `message_count` (count, not gauge)
+  * `finish_count`
+  * `requeue_count`
+
 ## Linux Mem Extras
 
 There are some additional Linux memory metrics we like to watch that aren't included in the cure Datadog agent.

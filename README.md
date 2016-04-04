@@ -16,6 +16,18 @@ Each plugin here is provided with a sample config file containing some documenta
 
 Here's our list of checks!
 
+## Linux VM Extras
+
+Fetches the following metrics by polling Linux' '/proc/vmstat':
+
+* `system.linux.vm`
+  * `pgpgin` as `pages.in`,
+  * `pgpgout` as `pages.out`,
+  * `pswpin` as `pages.swapped_in`,
+  * `pswpout` as `pages.swapped_out`,
+  * `pgfault` as `pages.faults`,
+  * `pgmajfault` as `pages.major_faults`
+
 ## NSQ
 
 Fetches the following metrics by polling NSQ's `/stats` endpoint:

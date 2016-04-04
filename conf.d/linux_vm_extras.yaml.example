@@ -1,0 +1,4 @@
+init_config:
+ 2
+ 3 instances:
+ 4   - tags: []

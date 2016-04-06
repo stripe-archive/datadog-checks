@@ -69,7 +69,7 @@ class FileCheck(AgentCheck):
             title = 'File %s is now %s' % (path, status)
             self.event({
                 'timestamp': timestamp,
-                'event_type': 'File',
+                'event_type': 'file.presence_change',
                 'msg_title': title,
                 'alert_type': alert_type,
                 'tags': tags,

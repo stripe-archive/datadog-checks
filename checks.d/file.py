@@ -34,6 +34,8 @@ class FileCheck(AgentCheck):
         """
         if 'path' not in instance:
             raise Exception("Missing 'path' in file check config")
+        if 'expect' not in instance:
+            raise Exception("Missing 'expect' in file check config")
 
         path = instance['path']
         expect = instance['expect']

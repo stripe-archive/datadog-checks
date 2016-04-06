@@ -42,18 +42,19 @@ class FileCheck(AgentCheck):
 
         status, statinfo = self.stat_file(path)
 
-        # Emit a service check:
-        msg = "File %s is %s" % (path, expect)
-        check_status = AgentCheck.OK
-        service_tags = [
+        tags = [
             'expected_status:' + expect,
             'path:' + path,
             'actual_status:' + status,
         ]
+
+        # Emit a service check:
+        msg = "File %s is %s" % (path, expect)
+        check_status = AgentCheck.OK
         if status != expect:
             check_status = AgentCheck.CRITICAL
             msg = "File %s that was expected to be %s is %s instead" % (path, expect, status)
-        self.service_check('file.existence', check_status, message=msg, tags=service_tags)
+        self.service_check('file.existence', check_status, message=msg, tags=tags)
 
         # Emit an event if the previous state is known & it's different:
         if self.has_different_status(path, status):
@@ -71,17 +72,12 @@ class FileCheck(AgentCheck):
                 'event_type': 'File',
                 'msg_title': title,
                 'alert_type': alert_type,
-                'tags': service_tags,
+                'tags': tags,
                 'aggregation_key': path,
             })
 
         # Emit age metrics (of dubious utility):
-        age_tags = [
-            'path:' + path,
-            'expected_status:' + expect,
-            'actual_status:' + status,
-        ]
         file_age = -1
         if status == self.STATUS_PRESENT:
             file_age = time.time() - statinfo.st_ctime
-        self.gauge('file.age_seconds', file_age, tags=age_tags)
+        self.gauge('file.age_seconds', file_age, tags=tags)

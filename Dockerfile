@@ -6,6 +6,4 @@ RUN DD_API_KEY='foo' DD_INSTALL_ONLY=true bash -c "$(curl -L https://raw.githubu
 
 ADD . /src
 RUN make -C /src test
-RUN make -C /src install
-
-CMD true
+CMD make -C /src install

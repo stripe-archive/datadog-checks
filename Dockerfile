@@ -5,5 +5,4 @@ RUN apt-get update && apt-get install -y build-essential python-dev python-pip p
 RUN DD_API_KEY='foo' DD_INSTALL_ONLY=true bash -c "$(curl -L https://raw.githubusercontent.com/DataDog/dd-agent/master/packaging/datadog-agent/source/install_agent.sh)"
 
 ADD . /src
-RUN make -C /src test
-CMD make -C /src install
+CMD make -C /src test install

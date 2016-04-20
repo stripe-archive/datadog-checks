@@ -79,7 +79,7 @@ class NSQ(AgentCheck):
                 for attr in self.TOPIC_GAUGES:
                     self.gauge('nsq.topic.' + attr, topic[attr], tags=topic_tags)
                 for attr in self.TOPIC_COUNTS:
-                    self.count('nsq.topic.' + attr, topic[attr], tags=topic_tags)
+                    self.monotonic_count('nsq.topic.' + attr, topic[attr], tags=topic_tags)
 
 
                 # Descend in to channels
@@ -89,7 +89,7 @@ class NSQ(AgentCheck):
                     for attr in self.CHANNEL_GAUGES:
                         self.gauge('nsq.topic.channel.' + attr, channel[attr], tags=channel_tags)
                     for attr in self.CHANNEL_COUNTS:
-                        self.count('nsq.topic.channel.' + attr, channel[attr], tags=channel_tags)
+                        self.monotonic_count('nsq.topic.channel.' + attr, channel[attr], tags=channel_tags)
 
                     # Descend in to clients
                     self.gauge('nsq.topic.channel.client_count', len(channel['clients']), tags=channel_tags)
@@ -105,7 +105,7 @@ class NSQ(AgentCheck):
                         for attr in self.CLIENT_GAUGES:
                             self.gauge('nsq.topic.channel.client.' + attr, client[attr], tags=client_tags)
                         for attr in self.CLIENT_COUNTS:
-                            self.count('nsq.topic.channel.client.' + attr, client[attr], tags=client_tags)
+                            self.monotonic_count('nsq.topic.channel.client.' + attr, client[attr], tags=client_tags)
 
                     for latency in channel['e2e_processing_latency']['percentiles']:
                         # NSQ does not zero pad the quantile's numberic representation,

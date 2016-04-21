@@ -105,12 +105,13 @@ class PhabCheck(AgentCheck):
         return resp.json()
 
     def _process_queue_data(self, data, config):
-        metric = 'phabricator.queued.count'
-
-        tags = list(config.tags)
-
-        for task in data.get('queued', []):
-          for worker_class, count in task.iteritems():
+        for worker_class, count in data.get('queued', {}).iteritems():
+            tags = list(config.tags)
             tags.append("worker:%s" % worker_class)
-            self.gauge(metric, count, tags=tags)
+            self.gauge('phabricator.queued.count', count, tags=tags)
 
+        for worker_class, metrics in data.get('completed', {}).iteritems():
+            tags = list(config.tags)
+            tags.append("worker:%s" % worker_class)
+            self.gauge('phabricator.worker.last_15.tasks_processed', metrics.get('n', 0), tags=tags)
+            self.gauge('phabricator.worker.last_15.average_duration_mus', metrics.get('duration', 0), tags=tags)

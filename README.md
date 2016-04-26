@@ -16,6 +16,10 @@ Each plugin here is provided with a sample config file containing some documenta
 
 Here's our list of checks!
 
+## Jenkins Metrics
+
+Fetches metrics from Jenkin's [Metrics Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Metrics+Plugin) (which you must install separately). It fetches all the metrics under `vm.*` and emits them as gauges except the `vm.gc.*.count` and `vm.gc.*.time` which are emitted as `monotonic_count`.
+
 ## Linux VM Extras
 
 Fetches the following metrics by polling Linux' '/proc/vmstat':

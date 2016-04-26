@@ -13,36 +13,6 @@ class JenkinsMetrics(AgentCheck):
     DEFAULT_TIMEOUT = 5
     CONNECT_CHECK_NAME = 'jenkins.can_connect'
 
-    TOPIC_GAUGES = [
-        'depth',
-        'backend_depth' # Depth on disk as opposed to in memory
-    ]
-    TOPIC_COUNTS = [
-        'message_count'
-    ]
-
-    CHANNEL_GAUGES = [
-        'depth',
-        'backend_depth',
-        'in_flight_count',
-        'deferred_count',
-    ]
-    CHANNEL_COUNTS = [
-        'message_count',
-        'requeue_count',
-        'timeout_count'
-    ]
-
-    CLIENT_GAUGES = [
-        'ready_count',
-        'in_flight_count',
-        'finish_count'
-    ]
-    CLIENT_COUNTS = [
-        'message_count',
-        'requeue_count'
-    ]
-
     def check(self, instance):
         if 'url' not in instance:
             raise Exception('Jenkins instance missing "url" value.')

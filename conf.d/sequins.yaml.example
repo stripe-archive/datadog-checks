@@ -1,0 +1,11 @@
+# This check takes no init_config
+init_config:
+
+# The sequins to connect to. You should connect to just one sequins instance per
+# cluster, since all instances report information for all peers.
+instances:
+  - url: http://localhost:9599
+    tags: []
+    # The maximum number of unique dbs to be reported. The check will error
+    # if there are more than this.
+    max_dbs: 100

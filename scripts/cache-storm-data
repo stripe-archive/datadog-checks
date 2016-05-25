@@ -1,0 +1,145 @@
+#!/usr/bin/env python
+
+# This script uses the storm_rest_api config, queries each configured
+# storm instance, and writes the responses to a one json file per
+# instance.
+
+# Add lib/ to the import path:
+import sys
+import os
+agent_lib_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../lib')
+sys.path.insert(1, agent_lib_dir)
+
+from collections import namedtuple
+import urlparse
+import json
+import re
+import tempfile
+import os
+import sys
+import time
+
+import requests
+import yaml
+
+import storm_utils
+
+StormConfig = namedtuple(
+    'StormConfig',
+    [
+        'url',
+        'timeout',
+        'topology_timeout',
+        'topologies',
+        'executor_details_whitelist',
+        'cache_file',
+    ]
+)
+
+class StormCache:
+    class ConnectionFailure(StandardError):
+        def __init__(self, url, timeout):
+            self.url = url
+            self.timeout = timeout
+
+    TIMESPEC_RE = re.compile('^(\d+)([a-z])$')
+
+    def __init__(self, conf_file):
+        with open(conf_file, 'r') as conf:
+            self.instances = yaml.load(conf).get('instances', [])
+
+    def instance_config(self, instance):
+        timeout = instance.get('timeout', 5)
+        raw_whitelist = instance.get('executor_details_whitelist', [])
+        executor_details_whitelist = [re.compile(regex) for regex in raw_whitelist]
+        topologies_re = re.compile(instance.get('topologies', '(.*)'))
+        return StormConfig(
+            url=instance['url'],
+            timeout=timeout,
+            topology_timeout=instance.get('topology_timeout', timeout),
+            cache_file=instance.get('cache_file'),
+            executor_details_whitelist=executor_details_whitelist,
+            topologies=topologies_re,
+        )
+
+    def _get_json_from_url(self, config, base_url, timeout=None):
+        if timeout is None:
+            timeout = config.timeout
+        url = urlparse.urljoin(config.url, base_url)
+        try:
+            resp = requests.get(url, timeout=timeout)
+            resp.raise_for_status()
+            return resp.json()
+        except:
+            raise self.ConnectionFailure(url, timeout)
+
+    def is_detail_task_id(self, config, task_id):
+        for regex in config.executor_details_whitelist:
+            if regex.match(task_id):
+                return True
+        return False
+
+    def collect_detail_components(self, config, details):
+        detail_ids=[]
+        for spout in details.get('spouts'):
+            if self.is_detail_task_id(config, spout['spoutId']):
+                detail_ids.append(spout['encodedSpoutId'])
+        for bolt in details.get('bolts'):
+            name = bolt['boltId']
+            if self.is_detail_task_id(config, bolt['boltId']):
+                detail_ids.append(bolt['encodedBoltId'])
+        return detail_ids
+
+
+    def cache_one(self, config):
+        try:
+            cluster = self._get_json_from_url(config, '/api/v1/cluster/summary')
+            supervisors = self._get_json_from_url(config, '/api/v1/supervisor/summary')
+            all_topologies = self._get_json_from_url(config, '/api/v1/topology/summary')
+            topologies = storm_utils.collect_topologies(config.topologies, all_topologies.get('topologies'))
+            topology_url = urlparse.urljoin(config.url, '/api/v1/topology/')
+            topology_details = []
+            for name, topology in topologies.iteritems():
+                this_topology_url = urlparse.urljoin(topology_url, topology['id'])
+                details = self._get_json_from_url(config, this_topology_url, timeout=config.topology_timeout)
+                executor_components = self.collect_detail_components(config, details)
+                executor_details = []
+                for component in executor_components:
+                    detail_url = urlparse.urljoin(urlparse.urljoin(this_topology_url + '/', 'component/'), component)
+                    executor_details.append(self._get_json_from_url(config, detail_url, timeout=config.timeout))
+                topology_details.append({
+                    'name': name,
+                    'topology': details,
+                    'component_details': executor_details,
+                })
+
+            return {
+                'status': 'success',
+                'updated': time.time(),
+                'data': {
+                    'cluster': cluster,
+                    'supervisors': supervisors,
+                    'topologies': topologies,
+                    'topology_details': topology_details,
+                },
+            }
+        except self.ConnectionFailure as failure:
+            return {
+                'status': 'error',
+                'error_url': failure.url,
+                'error_timeout': failure.timeout,
+                'updated': time.time(),
+            }
+
+    def run(self):
+        for instance in self.instances:
+            config = self.instance_config(instance)
+            if config.cache_file is None:
+                continue
+            cached = self.cache_one(config)
+            with tempfile.NamedTemporaryFile(prefix=config.cache_file, delete=False) as tmp:
+                json.dump(cached, tmp)
+                os.rename(tmp.name, config.cache_file)
+
+if __name__ == '__main__':
+    StormCache(sys.argv[1]).run()

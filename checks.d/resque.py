@@ -32,3 +32,5 @@ class ResqueVMCheck(AgentCheck):
         for key, name in self.CARD_KEYS.iteritems():
             value = conn.scard(key)
             self.gauge(name, value)
+
+        del conn

@@ -16,6 +16,10 @@ Each plugin here is provided with a sample config file containing some documenta
 
 Here's our list of checks!
 
+## Resque
+
+Fetches metrics about processed jobs from Resque. It's pretty minimal, but we only needed it for a small thing.
+
 ## Jenkins Metrics
 
 Fetches metrics from Jenkin's [Metrics Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Metrics+Plugin) (which you must install separately). It fetches all the metrics under `vm.*` and emits them as gauges except the `vm.gc.*.count` and `vm.gc.*.time` which are emitted as `monotonic_count`.

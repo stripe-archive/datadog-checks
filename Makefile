@@ -14,4 +14,7 @@ test: test-requirements
 	ln -sf /src/checks.d/* /opt/datadog-agent/agent/checks.d/
 	sh -c '. /src/venv/bin/activate ; env PYTHONPATH=$(echo $PYTHONPATH):/opt/datadog-agent/agent nosetests tests/checks/integration/test_*.py'
 
-.PHONY: test-requirements test install
+dockertest:
+	docker build -t localbuild . && docker run --rm -ti localbuild:latest make -C /src test
+
+.PHONY: dockertest test-requirements test install

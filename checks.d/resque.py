@@ -26,11 +26,11 @@ class ResqueVMCheck(AgentCheck):
         # Get scalars
         for key, name in self.SCALAR_KEYS.iteritems():
             value = conn.get(key)
-            self.monotonic_count(name, value)
+            self.monotonic_count(name, int(value))
 
         # Get set cardinality
         for key, name in self.CARD_KEYS.iteritems():
             value = conn.scard(key)
-            self.gauge(name, value)
+            self.gauge(name, int(value))
 
         del conn

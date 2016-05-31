@@ -6,8 +6,8 @@ import redis
 class ResqueVMCheck(AgentCheck):
 
     SCALAR_KEYS = {
-        'resque:stat:failed': 'resque.jobs_failed',
-        'resque:stat:processed': 'resque.jobs_processed',
+        'resque:stat:failed': 'resque.jobs.failed_total',
+        'resque:stat:processed': 'resque.jobs.processed_total',
     }
 
     CARD_KEYS = {
@@ -26,7 +26,7 @@ class ResqueVMCheck(AgentCheck):
         # Get scalars
         for key, name in self.SCALAR_KEYS.iteritems():
             value = conn.get(key)
-            self.gauge(name, value)
+            self.monotonic_count(name, value)
 
         # Get set cardinality
         for key, name in self.CARD_KEYS.iteritems():

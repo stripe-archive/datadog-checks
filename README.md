@@ -82,3 +82,37 @@ instances:
   - name: "stripe.check.falafel_length"
     command: "/usr/lib/nagios/plugins/check_falafel -l 1234"
 ```
+
+## Resque
+
+Inspects the Redis storage for a Resque instance and ouputs some metrics:
+
+* `resque.jobs.failed_total` - number of jobs failed (monotonic_count)
+* `resque.jobs.processed_total` - number of jobs processed (monotonic_count)
+* `resque.queues_count` - number of queues (gauge)
+* `resque.worker_count` - number of workers (gauge)
+
+## SubDir Sizes
+
+The SubDir Sizes is a sister to Datadog's `directory` integeration. Our needs required enough differences that making a new integration
+seemed the easier path and made for a less complex configuration.  It takes a `directory` and emits a total size (in bytes) and a
+count of files therein for each subdirectory it finds. It also can use a regular expression to dynamically create tags for each subdirectory.
+This integation is useful for getting tag-friendly metrics for backup directories and things like Kafka that store in subdirectories.
+
+Here's the config we use for Kafka:
+```yaml
+nit_config:
+
+instances:
+  - directory: "/pay/kafka/data"
+    dirtagname: "name"
+    subdirtagname: "topic"
+    subdirtagname_regex: "(?P<topic>.*)-(?P<partition>\\d+)"
+```
+
+**Note**: The regular expression provided to `subdirtagname_regex` should use [named groups](https://docs.python.org/2/howto/regex.html#non-capturing-and-named-groups)
+such that calling `groupdict()` on the resulting match provides name-value pairs for use as tags!
+
+And here are the metrics, each of which will be tagged with `$dirtagname:$DIRECTORY` and `$subdirtagname:basename(subdir)` and whatever tags come from `subdirtagname_regex`:
+  * `system.sub_dir.bytes`
+  * `system.sub_dir.files`

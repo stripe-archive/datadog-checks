@@ -83,6 +83,15 @@ instances:
     command: "/usr/lib/nagios/plugins/check_falafel -l 1234"
 ```
 
+## Resque
+
+Inspects the Redis storage for a Resque instance and ouputs some metrics:
+
+* `resque.jobs.failed_total` - number of jobs failed (monotonic_count)
+* `resque.jobs.processed_total` - number of jobs processed (monotonic_count)
+* `resque.queues_count` - number of queues (gauge)
+* `resque.worker_count` - number of workers (gauge)
+
 ## SubDir Sizes
 
 The SubDir Sizes is a sister to Datadog's `directory` integeration. Our needs required enough differences that making a new integration
@@ -105,5 +114,5 @@ instances:
 such that calling `groupdict()` on the resulting match provides name-value pairs for use as tags!
 
 And here are the metrics, each of which will be tagged with `$dirtagname:$DIRECTORY` and `$subdirtagname:basename(subdir)` and whatever tags come from `subdirtagname_regex`:
-  * system.sub_dir.bytes
-  * system.sub_dir.files
+  * `system.sub_dir.bytes`
+  * `system.sub_dir.files`

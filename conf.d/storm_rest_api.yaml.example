@@ -1,0 +1,31 @@
+---
+# init_config:
+# # None needed for this check
+#
+# instances:
+#  - topologies: "(.*)"             # regex applied to instance IDs to extract the name
+#    url: "http://127.0.0.1:8080"   # (required) The storm REST API endpoint
+#    cache_file: "/tmp/foo.json"    # (required) A JSON file prepopulated by scripts/cache-storm-data.
+#                                   # Each cache file must be unique to each instance.
+#    cache_staleness: 240           # Age in seconds that the cache file contents are allowed to
+#                                   # be out of date.
+#    timeout: 5                     # seconds; defaults to 5
+#    topology_timeout: 5            # seconds; this can take a long time; defaults to "timeout"
+#    tags:                          # additional tags applied to metrics
+#      - "storm_topology_purpose:frob"
+#    metric_prefix: null            # If non-null, this prefix will be prepended to all metric
+#                                   # and service check names
+#    task_tags:
+#      spout: {}                    # A dictionary of storm task ID -> list of tags to add to
+#                                   # metrics reported about that task
+#      bolt: {}                     # ditto
+#    task_tags_file: null           # If non-nil, a JSON file of the same format as task_tags
+#                                   # that additional tags will be read from every time the
+#                                   # check runs.
+#    executor_details_whitelist: [] # Regexes for task IDs for which we request executor details
+#                                   # from storm. Each of these can take a long time to retrieve,
+#                                   # so use sparingly.
+
+init_config: {}
+
+instances: []

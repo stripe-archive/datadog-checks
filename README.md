@@ -82,7 +82,6 @@ instances:
   - name: "stripe.check.falafel_length"
     command: "/usr/lib/nagios/plugins/check_falafel -l 1234"
 ```
-
 ## Resque
 
 Inspects the Redis storage for a Resque instance and ouputs some metrics:
@@ -91,6 +90,32 @@ Inspects the Redis storage for a Resque instance and ouputs some metrics:
 * `resque.jobs.processed_total` - number of jobs processed (monotonic_count)
 * `resque.queues_count` - number of queues (gauge)
 * `resque.worker_count` - number of workers (gauge)
+
+
+## Storm REST API
+
+This check comes in two parts: One is a cronjob-able script in
+`scripts/cache-storm-data` (intended to run every minute, or whichever
+interval doesn't overload your nimbus), and the other is a check that
+reads the generated JSON file and emits metrics.
+
+For the check, we recommend running it at an interval 2x faster than
+the cache-storm-data cron job runs (using the
+`min_collection_interval: <Nsec>` config parameter in `init_config`).
+
+You can configure the topologies considered for emission using the
+`topologies` regex, and the check will group all the matched metrics
+(picking the youngest `ACTIVE` metric for each that have name
+collisions).
+
+The caching process can be very time-consuming since storm's executor
+and per-topology stats take a really long time to generate. It's best
+to run the cache script a few times across the lifetime of your storm
+topologies to get a feel for how long it takes and how
+resource-intensive the metrics-gathering can be.
+
+The [`storm_rest_api.yaml`](conf.d/storm_rest_api.yaml.example) config file is used by both the
+cache strip and the check.
 
 ## SubDir Sizes
 
@@ -101,7 +126,7 @@ This integation is useful for getting tag-friendly metrics for backup directorie
 
 Here's the config we use for Kafka:
 ```yaml
-nit_config:
+init_config:
 
 instances:
   - directory: "/pay/kafka/data"

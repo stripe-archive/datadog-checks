@@ -16,9 +16,15 @@ Each plugin here is provided with a sample config file containing some documenta
 
 Here's our list of checks!
 
-## Resque
+## Hadoop Resource Manager
 
-Fetches metrics about processed jobs from Resque. It's pretty minimal, but we only needed it for a small thing.
+Leverages Stripe's Hadoop Job Tracker [Timberlake](https://github.com/stripe/timberlake) in conjunction with Hadoop's
+own metrics to generate mapreduce metrics:
+
+* `data.mapreduce.jobs.pending` tagged with `reduce` or `map`
+* `data.mapreduce.jobs.running` tagged with `reduce` or `map`
+* `data.mapreduce.vcores`
+* `data.mapreduce.nodes` tagged with `active` or `lost`
 
 ## Jenkins Metrics
 

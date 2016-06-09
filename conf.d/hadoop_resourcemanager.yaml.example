@@ -1,0 +1,8 @@
+# This check takes no init_config
+init_config:
+
+# The job tracker to connect to.
+instances:
+  - url: http://localhost:5656
+    resourcemanager_url: http://localhost:8088
+    tags: []

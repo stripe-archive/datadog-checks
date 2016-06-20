@@ -159,8 +159,8 @@ class TestFileUnit(AgentCheckTest):
         print spout_workers_metric[3]
         self.assert_tags(['storm_topology:sometopo', 'storm_task_id:somespout', 'is_a_great_spout:true'], spout_workers_metric[3]['tags'])
 
-        complete_latency_metric = self.find_metric(metrics, 'storm.rest.spout.complete_latency_ms', ['storm_task_id:somespout'])
-        self.assertEqual(2030, round(complete_latency_metric[2]))
+        complete_latency_metric = self.find_metric(metrics, 'storm.rest.spout.complete_latency_us', ['storm_task_id:somespout'])
+        self.assertEqual(2.030, complete_latency_metric[2])
 
         bolt_workers_metric = self.find_metric(metrics, 'storm.rest.bolt.executors_total', ['storm_task_id:somebolt'])
         self.assertEqual(3, bolt_workers_metric[2])

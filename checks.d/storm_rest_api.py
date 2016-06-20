@@ -115,7 +115,7 @@ class StormRESTCheck(AgentCheck):
         else:
             check_status = AgentCheck.CRITICAL
             if details['status'] != 'success':
-                check_msg = "Could not connect to URL %s with timeout %d" % (failure.url, failure.timeout)
+                check_msg = "Could not connect to URL %s with timeout %d" % (details['error_url'], details['error_timeout'])
             else:
                 check_msg = "Cache is too stale: %d vs. expected minimum %d" % (details['updated'], oldest_acceptable_cache_time)
 

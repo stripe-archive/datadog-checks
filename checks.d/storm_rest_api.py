@@ -221,8 +221,8 @@ class StormRESTCheck(AgentCheck):
                 'storm_task_id:' + name,
             ]
             report_task('spout', name, spout, task_tags)
-            self.gauge(self.metric(config, 'spout.complete_latency_ms'),
-                       float(spout['completeLatency']) * 1000, task_tags)
+            self.gauge(self.metric(config, 'spout.complete_latency_us'),
+                       float(spout['completeLatency']), task_tags)
 
         for bolt in details.get('bolts'):
             name = bolt['boltId']
@@ -237,10 +237,10 @@ class StormRESTCheck(AgentCheck):
                 executed_count = 0
             self.gauge(self.metric(config, 'bolt.executed_total'),
                        executed_count, task_tags)
-            self.gauge(self.metric(config, 'bolt.execute_latency_ms'),
-                       float(bolt['executeLatency']) * 1000, task_tags)
-            self.gauge(self.metric(config, 'bolt.process_latency_ms'),
-                       float(bolt['processLatency']) * 1000, task_tags)
+            self.gauge(self.metric(config, 'bolt.execute_latency_us'),
+                       float(bolt['executeLatency']), task_tags)
+            self.gauge(self.metric(config, 'bolt.process_latency_us'),
+                       float(bolt['processLatency']), task_tags)
             self.gauge(self.metric(config, 'bolt.capacity_percent'),
                        float(bolt['capacity']) * 100, task_tags)
 
@@ -282,10 +282,10 @@ class StormRESTCheck(AgentCheck):
                        executor.get('executed', 0), tags=executor_tags)
             self.gauge(self.metric(config, 'executor.failed_total'),
                        executor.get('failed', 0), tags=executor_tags)
-            self.gauge(self.metric(config, 'executor.execute_latency_ms'),
-                       float(executor.get('executeLatency', 0)) * 1000, tags=executor_tags)
-            self.gauge(self.metric(config, 'executor.process_latency_ms'),
-                       float(executor.get('processLatency', 0)) * 1000, tags=executor_tags)
+            self.gauge(self.metric(config, 'executor.execute_latency_us'),
+                       float(executor.get('executeLatency', 0)), tags=executor_tags)
+            self.gauge(self.metric(config, 'executor.process_latency_us'),
+                       float(executor.get('processLatency', 0)), tags=executor_tags)
 
             self.gauge(self.metric(config, 'executor.capacity_percent'),
                        float(executor.get('capacity', 0)) * 100, tags=executor_tags)

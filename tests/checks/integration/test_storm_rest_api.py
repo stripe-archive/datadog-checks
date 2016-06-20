@@ -152,6 +152,7 @@ class TestFileUnit(AgentCheckTest):
         self.check = load_check('storm_rest_api', conf, {})
 
         self.check.report_topology(self.check.instance_config(instance), name, topology_details)
+        self.check.report_topology(self.check.instance_config(instance), name, topology_details)
 
         metrics = self.check.get_metrics()
         spout_workers_metric = self.find_metric(metrics, 'storm.rest.spout.executors_total', ['storm_task_id:somespout'])
@@ -167,7 +168,7 @@ class TestFileUnit(AgentCheckTest):
         self.assert_tags(['storm_topology:sometopo', 'storm_task_id:somebolt', 'is_a_great_bolt:true'], bolt_workers_metric[3]['tags'])
 
         bolt_executed_metric = self.find_metric(metrics, 'storm.rest.bolt.executed_total', ['storm_task_id:somebolt'])
-        self.assertEqual(12, bolt_executed_metric[2])
+        self.assertEqual(0, bolt_executed_metric[2])
         self.assert_tags(['storm_topology:sometopo', 'storm_task_id:somebolt', 'is_a_great_bolt:true'], bolt_workers_metric[3]['tags'])
 
     def test_executor_metrics_for_bolt(self):
@@ -253,8 +254,8 @@ class TestFileUnit(AgentCheckTest):
 
         executed_counts_1 = self.find_metric(metrics, 'storm.rest.executor.executed_total', ['storm_host:10.100.29.85'])
         executed_counts_2 = self.find_metric(metrics, 'storm.rest.executor.executed_total', ['storm_host:10.100.14.0'])
-        self.assertEqual(4, executed_counts_1[2])
-        self.assertEqual(15, executed_counts_2[2])
+        self.assertEqual(0, executed_counts_1[2])
+        self.assertEqual(0, executed_counts_2[2])
         self.assert_tags(['storm_task_id:detail::bolt', 'storm_component_type:bolt', 'storm_topology:a_topology', 'is_a_great_bolt:true'], executed_counts_2[3]['tags'])
         uptime_1 = self.find_metric(metrics, 'storm.rest.executor.uptime_seconds', ['storm_host:10.100.29.85'])
         uptime_2 = self.find_metric(metrics, 'storm.rest.executor.uptime_seconds', ['storm_host:10.100.14.0'])
@@ -345,8 +346,8 @@ class TestFileUnit(AgentCheckTest):
 
         executed_counts_1 = self.find_metric(metrics, 'storm.rest.executor.executed_total', ['storm_host:10.100.29.85'])
         executed_counts_2 = self.find_metric(metrics, 'storm.rest.executor.executed_total', ['storm_host:10.100.14.0'])
-        self.assertEqual(4, executed_counts_1[2])
-        self.assertEqual(15, executed_counts_2[2])
+        self.assertEqual(0, executed_counts_1[2])
+        self.assertEqual(0, executed_counts_2[2])
         self.assert_tags(['storm_task_id:detail::spout', 'storm_component_type:spout', 'storm_topology:a_topology', 'is_a_great_spout:true'], executed_counts_1[3]['tags'])
 
         uptime_1 = self.find_metric(metrics, 'storm.rest.executor.uptime_seconds', ['storm_host:10.100.29.85'])

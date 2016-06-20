@@ -204,13 +204,13 @@ class StormRESTCheck(AgentCheck):
             self.gauge(self.metric(config, ('%s.tasks_total' % component_type)),
                        task['tasks'], task_tags)
 
-            self.gauge(self.metric(config, ('%s.emitted_total' % component_type)),
+            self.monotonic_count(self.metric(config, ('%s.emitted_total' % component_type)),
                        task['emitted'], task_tags)
-            self.gauge(self.metric(config, ('%s.transferred_total' % component_type)),
+            self.monotonic_count(self.metric(config, ('%s.transferred_total' % component_type)),
                        task['transferred'], task_tags)
-            self.gauge(self.metric(config, ('%s.acked_total' % component_type)),
+            self.monotonic_count(self.metric(config, ('%s.acked_total' % component_type)),
                        task['acked'], task_tags)
-            self.gauge(self.metric(config, ('%s.failed_total' % component_type)),
+            self.monotonic_count(self.metric(config, ('%s.failed_total' % component_type)),
                        task['failed'], task_tags)
 
         ## Report spouts
@@ -235,7 +235,7 @@ class StormRESTCheck(AgentCheck):
                 executed_count = bolt['executed']
             else:
                 executed_count = 0
-            self.gauge(self.metric(config, 'bolt.executed_total'),
+            self.monotonic_count(self.metric(config, 'bolt.executed_total'),
                        executed_count, task_tags)
             self.gauge(self.metric(config, 'bolt.execute_latency_us'),
                        float(bolt['executeLatency']), task_tags)
@@ -272,16 +272,17 @@ class StormRESTCheck(AgentCheck):
                 'storm_host:' + executor['host'],
                 'storm_port:' + str(executor['port']),
             ]
-            self.gauge(self.metric(config, 'executor.emitted_total'),
+            self.monotonic_count(self.metric(config, 'executor.emitted_total'),
                        executor.get('emitted', 0), tags=executor_tags)
-            self.gauge(self.metric(config, 'executor.transferred_total'),
+            self.monotonic_count(self.metric(config, 'executor.transferred_total'),
                        executor.get('transferred', 0), tags=executor_tags)
-            self.gauge(self.metric(config, 'executor.acked_total'),
+            self.monotonic_count(self.metric(config, 'executor.acked_total'),
                        executor.get('acked', 0), tags=executor_tags)
-            self.gauge(self.metric(config, 'executor.executed_total'),
+            self.monotonic_count(self.metric(config, 'executor.executed_total'),
                        executor.get('executed', 0), tags=executor_tags)
-            self.gauge(self.metric(config, 'executor.failed_total'),
+            self.monotonic_count(self.metric(config, 'executor.failed_total'),
                        executor.get('failed', 0), tags=executor_tags)
+
             self.gauge(self.metric(config, 'executor.execute_latency_us'),
                        float(executor.get('executeLatency', 0)), tags=executor_tags)
             self.gauge(self.metric(config, 'executor.process_latency_us'),

@@ -1,3 +1,5 @@
+from tempfile import mkstemp, gettempdir
+
 # project
 from checks import AgentCheck
 from tests.checks.common import AgentCheckTest, load_check
@@ -29,10 +31,14 @@ class TestFileUnit(AgentCheckTest):
         self.assert_tags(['expected_status:present', 'actual_status:present'], service_checks[0]['tags'])
 
     def test_glob_present_success(self):
+        # Make some temporary files, just in case
+        mkstemp()
+        mkstemp()
+
         conf = {
             'init_config': {},
             'instances': [
-                {'path': '/tmp/*', 'expect': 'present'}
+                {'path': gettempdir() + "/*", 'expect': 'present'}
             ]
         }
         self.check = load_check('file', conf, {})

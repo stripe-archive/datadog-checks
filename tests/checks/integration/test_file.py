@@ -28,6 +28,38 @@ class TestFileUnit(AgentCheckTest):
         self.assertTrue(service_checks[0]['status'] == AgentCheck.OK)
         self.assert_tags(['expected_status:present', 'actual_status:present'], service_checks[0]['tags'])
 
+    def test_glob_present_success(self):
+        conf = {
+            'init_config': {},
+            'instances': [
+                {'path': '/tmp/*', 'expect': 'present'}
+            ]
+        }
+        self.check = load_check('file', conf, {})
+        self.check.check(conf['instances'][0])
+        metrics = self.check.get_metrics()
+        self.assertTrue(len(metrics) == 1)
+        metric = metrics[0]
+        self.assertTrue(metric[2] > 0)
+        self.assert_tags(['expected_status:present', 'actual_status:present'], metric[3]['tags'])
+
+        service_checks = self.check.get_service_checks()
+        self.assertTrue(service_checks[0]['status'] == AgentCheck.OK)
+        self.assert_tags(['expected_status:present', 'actual_status:present'], service_checks[0]['tags'])
+
+    def test_glob_present_failure(self):
+        conf = {
+            'init_config': {},
+            'instances': [
+                {'path': '/doesntexist/*', 'expect': 'present'}
+            ]
+        }
+        self.check = load_check('file', conf, {})
+        self.check.check(conf['instances'][0])
+
+        service_checks = self.check.get_service_checks()
+        self.assertTrue(service_checks[0]['status'] == AgentCheck.CRITICAL)
+        self.assert_tags(['expected_status:present', 'actual_status:absent'], service_checks[0]['tags'])
 
     def test_absent_failure(self):
         conf = {

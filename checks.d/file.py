@@ -1,4 +1,5 @@
 import errno
+import glob
 import os
 import time
 
@@ -20,8 +21,14 @@ class FileCheck(AgentCheck):
 
     def stat_file(self, path):
         try:
-            statinfo = os.stat(path)
-            return self.STATUS_PRESENT, statinfo
+            files = glob.glob(path)
+            if len(files) > 0:
+                # We're only going to do something with the first file we find,
+                # I'm not sure how we'd stat multiple files and return them.
+                statinfo = os.stat(path[0])
+                return self.STATUS_PRESENT, statinfo
+            else:
+                return self.STATUS_ABSENT, []
         except OSError, e:
             if e.errno == errno.ENOENT:
                 return self.STATUS_ABSENT, []

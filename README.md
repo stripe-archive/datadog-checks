@@ -22,7 +22,7 @@ Uses Python's `glob.glob` to look look for at least one file matching the provid
 
 The service check and any emitted metrics are tagged with the `path`, `expected_status` and `actual_status`. It's check message will be `File %s that was expected to be %s is %s instead" % (path, expect, status)`.
 
-If this check *does* find a path that matches it will also emit a gauge `file.age_seconds` containing the age of the file in seconds, natch.
+If this check *does* find a path that matches it will also emit a gauge `file.age_seconds` containing the age of the *oldest* file in seconds that matches the path.
 
 ```
 ---

@@ -16,6 +16,28 @@ Each plugin here is provided with a sample config file containing some documenta
 
 Here's our list of checks!
 
+## File
+
+Uses Python's `glob.glob` to look look for at least one file matching the provided `path`. You can control the success or failure of this check via `expect` using one of `present` or `absent`. For example if you use `expect: present` and the file does not exist, this check will fail. If you use `expect: absent` and the file is absent, it will emit ok!
+
+The service check and any emitted metrics are tagged with the `path`, `expected_status` and `actual_status`. It's check message will be `File %s that was expected to be %s is %s instead" % (path, expect, status)`.
+
+If this check *does* find a path that matches it will also emit a gauge `file.age_seconds` containing the age of the *oldest* file in seconds that matches the path.
+
+```
+---
+init_config:
+
+instances:
+  # Puppet locks (these might turn stale):
+  - path: '/etc/stripe/facts/puppet_locked.txt'
+    expect: absent
+
+  # Package upgrades requiring reboots
+  - path: '/var/run/stripe/restart-required/*'
+    expect: absent
+```
+
 ## Resque
 
 Fetches metrics about processed jobs from Resque. It's pretty minimal, but we only needed it for a small thing.

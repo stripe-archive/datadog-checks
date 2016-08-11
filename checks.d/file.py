@@ -1,4 +1,5 @@
 import errno
+import glob
 import os
 import time
 
@@ -6,6 +7,7 @@ from checks import AgentCheck
 
 class FileCheck(AgentCheck):
 
+    MAX_FILES_TO_STAT = 1024
     STATUS_ABSENT = 'absent'
     STATUS_PRESENT = 'present'
 
@@ -20,8 +22,16 @@ class FileCheck(AgentCheck):
 
     def stat_file(self, path):
         try:
-            statinfo = os.stat(path)
-            return self.STATUS_PRESENT, statinfo
+            files = glob.glob(path)
+            if len(files) > 0:
+                if len(files) > self.MAX_FILES_TO_STAT:
+                    raise Exception("File check sanity check prevents more than %d files" % (self.MAX_FILES_TO_STAT))
+                # Stat each file and return the oldest file, as it's ctime will be the first in our ascending list.
+                sorted_files = sorted(files, cmp=lambda x, y: cmp(os.stat(x).st_ctime, os.stat(y).st_ctime))
+                statinfo = os.stat(sorted_files[0])
+                return self.STATUS_PRESENT, statinfo
+            else:
+                return self.STATUS_ABSENT, []
         except OSError, e:
             if e.errno == errno.ENOENT:
                 return self.STATUS_ABSENT, []

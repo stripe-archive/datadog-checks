@@ -54,8 +54,7 @@ class FileCheck(AgentCheck):
 
         tags = [
             'expected_status:' + expect,
-            'path:' + path,
-            'actual_status:' + status,
+            'path:' + path
         ]
 
         # Emit a service check:

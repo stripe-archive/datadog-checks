@@ -104,6 +104,30 @@ instances:
   - name: "stripe.check.falafel_length"
     command: "/usr/lib/nagios/plugins/check_falafel -l 1234"
 ```
+
+## Outdated Packages
+
+This check verifies that the given packages are not outdated (currently, only
+on Ubuntu).  You can specify a set of package names and versions (split out by
+release), and this check will report critical if the current version of that
+package is older than the specified version.  For example:
+
+```yaml
+init_config:
+  # Not needed
+
+instances:
+  - package: bash
+    version:
+      precise: "4.2-2ubuntu2.6"
+      trusty: "4.3-7ubuntu1.5"
+
+  - package: openssl
+    version:
+      precise: "1.0.1-4ubuntu5.31"
+      trusty: "1.0.1f-1ubuntu2.15"
+```
+
 ## Resque
 
 Inspects the Redis storage for a Resque instance and ouputs some metrics:

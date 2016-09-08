@@ -15,7 +15,7 @@ SUPPORTED_RELEASES = frozenset([
 ])
 
 
-class VulnerablePackagesCheck(AgentCheck):
+class OutdatedPackagesCheck(AgentCheck):
 
     def __init__(self, name, init_config, agentConfig, instances=None):
         AgentCheck.__init__(self, name, init_config, agentConfig, instances)
@@ -53,13 +53,13 @@ class VulnerablePackagesCheck(AgentCheck):
 
     def check(self, instance):
         """
-        Checks for a vulnerable package and emits a service_check based on
+        Checks for an outdated package and emits a service_check based on
         whether it's up-to-date.
         """
         if 'package' not in instance:
-            raise Exception("Missing 'package' in vulnerable package check config")
+            raise Exception("Missing 'package' in outdated package check config")
         if 'version' not in instance:
-            raise Exception("Missing 'version' in vulnerable package check config")
+            raise Exception("Missing 'version' in outdated package check config")
 
         if not Platform.is_linux():
             return

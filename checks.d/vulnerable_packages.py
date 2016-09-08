@@ -68,28 +68,36 @@ class VulnerablePackagesCheck(AgentCheck):
         if codename not in SUPPORTED_RELEASES:
             raise Exception("Release not supported: {0}".format(codename))
 
+        # Inputs
         package = instance["package"]
-        expected_version = instance["version"]
+        expected_versions = instance["version"]
 
-        tags = [
-            'package:' + package,
-            'expected_version:' + expected_version,
-        ]
-
-        curr_version = self.get_package_version(package)
-        up_to_date = self.version_compare(curr_version, 'ge', expected_version)
-
-        msg = "Package {0} is up-to-date (newer than {1})".format(package, expected_version)
+        # Default (successful) outputs
+        tags = ['package:' + package]
+        msg = "Package {0} is up-to-date".format(package)
         status = 'current'
         check_status = AgentCheck.OK
-        if not up_to_date:
-            status = 'outdated'
-            check_status = AgentCheck.CRITICAL
-            msg = "Package '{0}' is outdated: current version {1} is older than expected version {2}".format(
-                package,
-                curr_version,
-                expected_version,
-            )
+
+        # Handle unknown releases
+        expected_version = expected_versions.get(codename)
+        if expected_version is not None:
+            tags.append('expected_version:' + expected_version)
+
+            curr_version = self.get_package_version(package)
+            up_to_date = self.version_compare(curr_version, 'ge', expected_version)
+
+            if not up_to_date:
+                status = 'outdated'
+                check_status = AgentCheck.CRITICAL
+                msg = "Package '{0}' is outdated: current version {1} is older than expected version {2}".format(
+                    package,
+                    curr_version,
+                    expected_version,
+                )
+        else:
+            status = 'unknown'
+            check_status = AgentCheck.UNKNOWN
+            msg = "Package '{0}' does not specify version for release: {1}".format(package, codename)
 
         self.service_check('package.up_to_date', check_status, message=msg, tags=tags)
 
@@ -100,7 +108,7 @@ class VulnerablePackagesCheck(AgentCheck):
             if check_status != AgentCheck.OK:
                 alert_type = 'error'
 
-            title = 'Package {0} is now {1}'.format(
+            title = "Package '{0}' is now: {1}".format(
                 package,
                 status
             )

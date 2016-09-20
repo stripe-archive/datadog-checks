@@ -100,6 +100,9 @@ class OutdatedPackagesCheck(AgentCheck):
             msg = "Package '{0}' does not specify version for release: {1}".format(package, codename)
 
         self.service_check('package.up_to_date', check_status, message=msg, tags=tags)
+        # We must emit a metric with the `package` tag if we want to use that tag in any
+        # dashboards because check tags are not included in template variables.
+        self.count('sys._outdated_packages.checked', 1, tags=tags)
 
         # Emit an event if the previous state is known & it's different:
         if self.has_different_status(package, status):

@@ -1,0 +1,8 @@
+---
+init_config:
+  default_timeout: 30
+
+instances:
+  - url: https://localhost:8089
+    username: obsrobot
+    password: foobar

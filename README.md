@@ -163,6 +163,46 @@ resource-intensive the metrics-gathering can be.
 The [`storm_rest_api.yaml`](conf.d/storm_rest_api.yaml.example) config file is used by both the
 cache strip and the check.
 
+## Splunk
+
+Collects metrics from a Splunk master about the status of a Splunk cluster.
+
+It emits these service checks:
+  * `splunk.can_connect` when things break during fetching status
+  * `splunk.index.is_healthy` for "unhealthy" indices, tagged by `index_name`. See the message for more details.
+  * `splunk.peer.is_healthy` for "unhealthy" nodes, tagged by `peer_name`. See the message for more details.
+
+It emits these metrics:
+* `splunk.indexes` tagged by `index_name` and `searchable`
+  * `replication` tagged by `copy_index`, for each "copy"
+    * `actual_copies` - Number of copies that actually exist.
+    * `expected_copies` - Number of copies that *should* exist.
+  * `size_bytes` - The total size in bytes.
+  * `total_excess_bucket_copies` - The total number of excess copies for all buckets.
+  * `total_excess_searchable_copies` - The total number of excess searchable copies for all buckets.
+* `splunk.peers` tagged by `peer_name`, and `site`
+  * `bucket_count` - The number of buckets on this peer tagged additionally by `index`.
+  * `bucket_status` - The number of buckets in a given status on this peer, tagged additionally by `bucket_status`.
+  * `delayed_buckets_to_discard` - The number of buckets waiting to be discarded on this peer.
+  * `fixup_set` - The number of buckets that need repair once you take the peer offline.
+  * `pending_job_count` - The number of jobs requested by the master to this peer.
+  * `peers_present` - The number of peers available (as a counter) tagged additionally by `searchable` and `status`.
+  * `primary_count` - The number of buckets for which the peer is primary in its local site, or the number of buckets that return search results from same site as the peer.
+  * `primary_count_remote`  - The number of buckets for which the peer is primary that are not in its local site.
+  * `replication_count` - The number of replications this peer is part of, as either source or target.
+
+You can configure it thusly:
+```yaml
+---
+init_config:
+  default_timeout: 30
+
+instances:
+  - url: https://localhost:8089
+    username: obsrobot
+    password: foobar
+```
+
 ## SubDir Sizes
 
 The SubDir Sizes is a sister to Datadog's `directory` integeration. Our needs required enough differences that making a new integration

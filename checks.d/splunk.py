@@ -37,7 +37,7 @@ class Splunk(AgentCheck):
         for peer in response['entry']:
             host = peer['content']['label']
             site = peer['content']['site']
-            searchable = 'true' if peer['content']['is_searchable'] == '1' else 'false'
+            searchable = peer['content']['is_searchable']
 
             if searchable == 'false':
                 status = 'Host %s is not searchable.' % (host)

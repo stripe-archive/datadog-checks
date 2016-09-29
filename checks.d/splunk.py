@@ -25,8 +25,8 @@ class Splunk(AgentCheck):
         url = instance['url']
         instance_tags = instance.get('tags', [])
         default_timeout = self.init_config.get('default_timeout', self.DEFAULT_TIMEOUT)
-        username = self.init_config.get('username')
-        password = self.init_config.get('password')
+        username = instance.get('username')
+        password = instance.get('password')
         timeout = float(instance.get('timeout', default_timeout))
 
         self.do_index_metrics(url, username, password, timeout)

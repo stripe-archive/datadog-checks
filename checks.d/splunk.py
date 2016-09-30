@@ -44,7 +44,6 @@ class Splunk(AgentCheck):
                 'site:{0}'.format(site),
             ]
 
-            # Make the var a string cuz that's how
             searchable = peer['content']['is_searchable']
             if not searchable:
                 self.service_check(self.PEER_HEALTH_CHECK_NAME, AgentCheck.CRITICAL,

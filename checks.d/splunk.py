@@ -16,6 +16,7 @@ class Splunk(AgentCheck):
     CONNECT_CHECK_NAME = 'splunk.can_connect'
     INDEX_HEALTH_CHECK_NAME = 'splunk.index.is_healthy'
     INDEX_REPL_HEALTH_CHECK_NAME = 'splunk.index_copy.is_replicated'
+    INDEX_SEARCH_HEALTH_CHECK_NAME = 'splunk.index_copy.is_searchable'
     PEER_HEALTH_CHECK_NAME = 'splunk.peer.is_healthy'
 
     def check(self, instance):
@@ -64,8 +65,6 @@ class Splunk(AgentCheck):
             ])
 
             self.gauge('splunk.peers.delayed_buckets_to_discard', peer['content']['delayed_buckets_to_discard'], tags=tags)
-            self.gauge('splunk.peers.fixup_count', len(peer['content']['fixup_set']), tags=tags)
-            self.gauge('splunk.peers.pending_job_count', peer['content']['pending_job_count'], tags=tags)
             self.gauge('splunk.peers.primary_count', peer['content']['primary_count'], tags=tags)
             self.gauge('splunk.peers.primary_count_remote', peer['content']['primary_count_remote'], tags=tags)
             self.gauge('splunk.peers.replication_count', peer['content']['replication_count'], tags=tags)
@@ -102,7 +101,7 @@ class Splunk(AgentCheck):
             self.gauge('splunk.indexes.total_excess_searchable_copies', index['content']['total_excess_searchable_copies'], tags=tags)
 
             for index_index, index_copy in index['content']['replicated_copies_tracker'].items():
-                index_tags = tags + [ 'copy_index:{0}'.format(index_index) ]
+                index_tags = tags + [ 'index_copy:{0}'.format(index_index) ]
                 actual_copies = int(index_copy['actual_copies_per_slot'])
                 expected_copies = int(index_copy['expected_total_per_slot'])
                 self.gauge('splunk.indexes.replication.actual_copies', actual_copies, tags=index_tags)
@@ -117,6 +116,27 @@ class Splunk(AgentCheck):
                         ])
                 else:
                     self.service_check(self.INDEX_REPL_HEALTH_CHECK_NAME, AgentCheck.OK,
+                        tags = [
+                            'index_name:{0}'.format(name),
+                            'index_copy:{0}'.format(index_index)
+                        ])
+
+            for index_index, index_copy in index['content']['searchable_copies_tracker'].items():
+                index_tags = tags + [ 'copy_index:{0}'.format(index_index) ]
+                actual_copies = int(index_copy['actual_copies_per_slot'])
+                expected_copies = int(index_copy['expected_total_per_slot'])
+                self.gauge('splunk.indexes.search.actual_copies', actual_copies, tags=index_tags)
+                self.gauge('splunk.indexes.search.expected_copies', expected_copies, tags=index_tags)
+
+                if actual_copies != expected_copies:
+                    self.service_check(self.INDEX_SEARCH_HEALTH_CHECK_NAME, AgentCheck.CRITICAL,
+                        message='Index {0} copy {1} is not fully serachable.'.format(name, index_copy),
+                        tags = [
+                            'index_name:{0}'.format(name),
+                            'index_copy:{0}'.format(index_index)
+                        ])
+                else:
+                    self.service_check(self.INDEX_SEARCH_HEALTH_CHECK_NAME, AgentCheck.OK,
                         tags = [
                             'index_name:{0}'.format(name),
                             'index_copy:{0}'.format(index_index)

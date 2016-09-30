@@ -64,7 +64,7 @@ class Splunk(AgentCheck):
             ])
 
             self.gauge('splunk.peers.delayed_buckets_to_discard', peer['content']['delayed_buckets_to_discard'], tags=tags)
-            self.gauge('splunk.peers.fixup_set', len(peer['content']['fixup_set']), tags=tags)
+            self.gauge('splunk.peers.fixup_count', len(peer['content']['fixup_set']), tags=tags)
             self.gauge('splunk.peers.pending_job_count', peer['content']['pending_job_count'], tags=tags)
             self.gauge('splunk.peers.primary_count', peer['content']['primary_count'], tags=tags)
             self.gauge('splunk.peers.primary_count_remote', peer['content']['primary_count_remote'], tags=tags)

@@ -53,8 +53,6 @@ class Splunk(AgentCheck):
                     'fixup_level:{0}'.format(level)
                 ])
 
-
-
     def do_peer_metrics(self, instance_tags, url, username, password, timeout):
         response = self.get_json(url, '/services/cluster/master/peers', instance_tags, username, password, timeout)
         peer_statuses = defaultdict(lambda x: 0)

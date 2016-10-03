@@ -1,6 +1,6 @@
 # stdlib
 import time
-from collections import Counter
+from collections import defaultdict
 from urlparse import urljoin
 
 # 3rd party
@@ -16,7 +16,10 @@ class Splunk(AgentCheck):
     CONNECT_CHECK_NAME = 'splunk.can_connect'
     INDEX_HEALTH_CHECK_NAME = 'splunk.index.is_healthy'
     INDEX_REPL_HEALTH_CHECK_NAME = 'splunk.index_copy.is_replicated'
+    INDEX_SEARCH_HEALTH_CHECK_NAME = 'splunk.index_copy.is_searchable'
     PEER_HEALTH_CHECK_NAME = 'splunk.peer.is_healthy'
+
+    FIXUP_LEVELS = ['streaming', 'data_safety', 'generation', 'replication_factor', 'search_factor', 'checksum_sync']
 
     def check(self, instance):
         # if 'url' not in instance:
@@ -32,9 +35,27 @@ class Splunk(AgentCheck):
 
         self.do_index_metrics(instance_tags, url, username, password, timeout)
         self.do_peer_metrics(instance_tags, url, username, password, timeout)
+        self.do_fixup_metrics(instance_tags, url, username, password, timeout)
+
+    def do_fixup_metrics(self, instance_tags, url, username, password, timeout):
+        for level in self.FIXUP_LEVELS:
+            response = self.get_json(url, '/services/cluster/master/fixup', instance_tags, username, password, timeout, params={'level': level})
+
+            # Accumulate a count by index so we can emit a gauge.
+            index_tasks = defaultdict(lambda x: 0)
+            for entry in response['entry']:
+                index = entry['content']['index']
+                index_tasks[index] += 1
+
+            for index, count in index_tasks.items():
+                self.gauge('splunk.fixups.jobs_present', count, tags=instance_tags + [
+                    'index_name:{0}'.format(index),
+                    'fixup_level:{0}'.format(level)
+                ])
 
     def do_peer_metrics(self, instance_tags, url, username, password, timeout):
         response = self.get_json(url, '/services/cluster/master/peers', instance_tags, username, password, timeout)
+        peer_statuses = defaultdict(lambda x: 0)
         for peer in response['entry']:
             host = peer['content']['label']
             site = peer['content']['site']
@@ -53,30 +74,26 @@ class Splunk(AgentCheck):
                 self.service_check(self.PEER_HEALTH_CHECK_NAME, AgentCheck.OK,
                     tags = tags)
 
-
-            # This is a synthetic metric to make it easier to count the number of peers
-            # in twhatever status. It's a counter so that you can view it `as count`
-            # in a chart or monitor and get a reasonable visualization. The rate
-            # is obviously useless.
-            self.increment('splunk.peers.peers_present', 1, tags=tags + [
-                'searchable:{0}'.format(str(searchable)),
-                'status:{0}'.format(peer['content']['status'])
-            ])
-
             self.gauge('splunk.peers.delayed_buckets_to_discard', peer['content']['delayed_buckets_to_discard'], tags=tags)
-            self.gauge('splunk.peers.fixup_count', len(peer['content']['fixup_set']), tags=tags)
-            self.gauge('splunk.peers.pending_job_count', peer['content']['pending_job_count'], tags=tags)
             self.gauge('splunk.peers.primary_count', peer['content']['primary_count'], tags=tags)
             self.gauge('splunk.peers.primary_count_remote', peer['content']['primary_count_remote'], tags=tags)
             self.gauge('splunk.peers.replication_count', peer['content']['replication_count'], tags=tags)
 
             if peer['content']['bucket_count_by_index'] is not None:
                 for bucket, count in peer['content']['bucket_count_by_index'].items():
-                    self.gauge('splunk.peers.bucket_count', count, tags=tags + ['index:{0}'.format(bucket)])
+                    self.gauge('splunk.peers.bucket_count', count, tags=tags + ['index_name:{0}'.format(bucket)])
 
             if peer['content']['status_counter'] is not None:
                 for status, count in peer['content']['status_counter'].items():
                     self.gauge('splunk.peers.bucket_status', count, tags=tags + ['bucket_status:{0}'.format(status)])
+
+        # This is a synthetic metric to make it easier to count the number of peers
+        # in whatever status.
+        for status, count in peer_statuses.items():
+            self.gauge('splunk.peers.peers_present', count, tags=tags + [
+                'status:{0}'.format(status)
+            ])
+
 
     def do_index_metrics(self, instance_tags, url, username, password, timeout):
         response = self.get_json(url, '/services/cluster/master/indexes', instance_tags, username, password, timeout)
@@ -102,7 +119,7 @@ class Splunk(AgentCheck):
             self.gauge('splunk.indexes.total_excess_searchable_copies', index['content']['total_excess_searchable_copies'], tags=tags)
 
             for index_index, index_copy in index['content']['replicated_copies_tracker'].items():
-                index_tags = tags + [ 'copy_index:{0}'.format(index_index) ]
+                index_tags = tags + [ 'index_copy:{0}'.format(index_index) ]
                 actual_copies = int(index_copy['actual_copies_per_slot'])
                 expected_copies = int(index_copy['expected_total_per_slot'])
                 self.gauge('splunk.indexes.replication.actual_copies', actual_copies, tags=index_tags)
@@ -122,17 +139,41 @@ class Splunk(AgentCheck):
                             'index_copy:{0}'.format(index_index)
                         ])
 
-    def get_json(self, url, path, instance_tags, username, password, timeout):
+            for index_index, index_copy in index['content']['searchable_copies_tracker'].items():
+                index_tags = tags + [ 'index_copy:{0}'.format(index_index) ]
+                actual_copies = int(index_copy['actual_copies_per_slot'])
+                expected_copies = int(index_copy['expected_total_per_slot'])
+                self.gauge('splunk.indexes.search.actual_copies', actual_copies, tags=index_tags)
+                self.gauge('splunk.indexes.search.expected_copies', expected_copies, tags=index_tags)
+
+                if actual_copies != expected_copies:
+                    self.service_check(self.INDEX_SEARCH_HEALTH_CHECK_NAME, AgentCheck.CRITICAL,
+                        message='Index {0} copy {1} is not fully serachable.'.format(name, index_copy),
+                        tags = [
+                            'index_name:{0}'.format(name),
+                            'index_copy:{0}'.format(index_index)
+                        ])
+                else:
+                    self.service_check(self.INDEX_SEARCH_HEALTH_CHECK_NAME, AgentCheck.OK,
+                        tags = [
+                            'index_name:{0}'.format(name),
+                            'index_copy:{0}'.format(index_index)
+                        ])
+
+    def get_json(self, url, path, instance_tags, username, password, timeout, params={}):
         # For future reference
         # 'search': 'search earliest=-10@s | eval size=len(_raw) | stats sum(size) by host, source',
         # params
         #     'adhoc_search_level': 'fast',
         #     'exec_mode': 'oneshot'
+        request_params = {
+            'output_mode': 'json'
+        }
+        request_params.update(params)
+
         try:
             start_time = time.time()
-            r = requests.get(urljoin(url, path), verify=False, timeout=timeout, auth=HTTPBasicAuth(username, password), data={
-                'output_mode': 'json',
-            })
+            r = requests.get(urljoin(url, path), verify=False, timeout=timeout, auth=HTTPBasicAuth(username, password), data=request_params)
             r.raise_for_status()
             elapsed_time = time.time() - start_time
             self.histogram('splunk.stats_fetch_duration_seconds', int(elapsed_time), tags = [ 'path:{0}'.format(path) ])

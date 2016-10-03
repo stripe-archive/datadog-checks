@@ -173,8 +173,13 @@ It emits these service checks:
   * `splunk.peer.is_healthy` for "unhealthy" nodes, tagged by `peer_name`. See the message for more details.
 
 It emits these metrics:
+* `splunk.fixups`
+  * `jobs_present` tagged by `index_name` and `fixup_level`
 * `splunk.indexes` tagged by `index_name`
-  * `replication` tagged by `copy_index`, for each "copy"
+  * `replication` tagged by `index_copy`, for each "copy"
+    * `actual_copies` - Number of copies that actually exist.
+    * `expected_copies` - Number of copies that *should* exist.
+  * `search` tagged by `index_copy`, for each "copy"
     * `actual_copies` - Number of copies that actually exist.
     * `expected_copies` - Number of copies that *should* exist.
   * `size_bytes` - The total size in bytes.
@@ -184,9 +189,7 @@ It emits these metrics:
   * `bucket_count` - The number of buckets on this peer tagged additionally by `index`.
   * `bucket_status` - The number of buckets in a given status on this peer, tagged additionally by `bucket_status`.
   * `delayed_buckets_to_discard` - The number of buckets waiting to be discarded on this peer.
-  * `fixup_count` - The number of buckets that need repair once you take the peer offline.
-  * `pending_job_count` - The number of jobs requested by the master to this peer.
-  * `peers_present` - The number of peers available (as a counter) tagged additionally by `searchable` and `status`.
+  * `peers_present` - The number of peers available (as a gauge) tagged additionally by `status`.
   * `primary_count` - The number of buckets for which the peer is primary in its local site, or the number of buckets that return search results from same site as the peer.
   * `primary_count_remote`  - The number of buckets for which the peer is primary that are not in its local site.
   * `replication_count` - The number of replications this peer is part of, as either source or target.

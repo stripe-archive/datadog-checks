@@ -2,6 +2,7 @@
 import time
 from collections import defaultdict
 from urlparse import urljoin
+from xml.dom import minidom
 
 # 3rd party
 import requests
@@ -22,8 +23,8 @@ class Splunk(AgentCheck):
     FIXUP_LEVELS = ['streaming', 'data_safety', 'generation', 'replication_factor', 'search_factor', 'checksum_sync']
 
     def check(self, instance):
-        # if 'url' not in instance:
-        #     raise Exception('Splunk instance missing "url" value.')
+        if 'url' not in instance:
+            raise Exception('Splunk instance missing "url" value.')
 
         # Load values from the instance config
         url = instance['url']
@@ -33,13 +34,17 @@ class Splunk(AgentCheck):
         password = instance.get('password')
         timeout = float(instance.get('timeout', default_timeout))
 
-        self.do_index_metrics(instance_tags, url, username, password, timeout)
-        self.do_peer_metrics(instance_tags, url, username, password, timeout)
-        self.do_fixup_metrics(instance_tags, url, username, password, timeout)
+        # Grab a session key for authentication
+        r = requests.post(urljoin(url, '/services/auth/login'), verify=False, timeout=timeout, data={'username':username, 'password':password})
+        sessionkey = minidom.parseString(r.text).getElementsByTagName('sessionKey')[0].childNodes[0].nodeValue
 
-    def do_fixup_metrics(self, instance_tags, url, username, password, timeout):
+        self.do_index_metrics(instance_tags, url, sessionkey, timeout)
+        self.do_peer_metrics(instance_tags, url, sessionkey, timeout)
+        self.do_fixup_metrics(instance_tags, url, sessionkey, timeout)
+
+    def do_fixup_metrics(self, instance_tags, url, sessionkey, timeout):
         for level in self.FIXUP_LEVELS:
-            response = self.get_json(url, '/services/cluster/master/fixup', instance_tags, username, password, timeout, params={'level': level})
+            response = self.get_json(url, '/services/cluster/master/fixup', instance_tags, sessionkey, timeout, params={'level': level})
 
             # Accumulate a count by index so we can emit a gauge.
             index_tasks = defaultdict(lambda x: 0)
@@ -53,8 +58,8 @@ class Splunk(AgentCheck):
                     'fixup_level:{0}'.format(level)
                 ])
 
-    def do_peer_metrics(self, instance_tags, url, username, password, timeout):
-        response = self.get_json(url, '/services/cluster/master/peers', instance_tags, username, password, timeout)
+    def do_peer_metrics(self, instance_tags, url, sessionkey, timeout):
+        response = self.get_json(url, '/services/cluster/master/peers', instance_tags, sessionkey, timeout)
         peer_statuses = defaultdict(lambda x: 0)
         for peer in response['entry']:
             host = peer['content']['label']
@@ -95,8 +100,8 @@ class Splunk(AgentCheck):
             ])
 
 
-    def do_index_metrics(self, instance_tags, url, username, password, timeout):
-        response = self.get_json(url, '/services/cluster/master/indexes', instance_tags, username, password, timeout)
+    def do_index_metrics(self, instance_tags, url, sessionkey, timeout):
+        response = self.get_json(url, '/services/cluster/master/indexes', instance_tags, sessionkey, timeout)
         for index in response['entry']:
             name = index['name']
 
@@ -160,7 +165,7 @@ class Splunk(AgentCheck):
                             'index_copy:{0}'.format(index_index)
                         ])
 
-    def get_json(self, url, path, instance_tags, username, password, timeout, params={}):
+    def get_json(self, url, path, instance_tags, sessionkey, timeout, params={}):
         # For future reference
         # 'search': 'search earliest=-10@s | eval size=len(_raw) | stats sum(size) by host, source',
         # params
@@ -173,7 +178,7 @@ class Splunk(AgentCheck):
 
         try:
             start_time = time.time()
-            r = requests.get(urljoin(url, path), verify=False, timeout=timeout, auth=HTTPBasicAuth(username, password), data=request_params)
+            r = requests.get(urljoin(url, path), verify=False, headers={'Authorization': "Splunk {0}".format(sessionkey)}, timeout=timeout, data=request_params)
             r.raise_for_status()
             elapsed_time = time.time() - start_time
             self.histogram('splunk.stats_fetch_duration_seconds', int(elapsed_time), tags = [ 'path:{0}'.format(path) ])

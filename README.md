@@ -185,6 +185,8 @@ It emits these metrics:
   * `size_bytes` - The total size in bytes.
   * `total_excess_bucket_copies` - The total number of excess copies for all buckets.
   * `total_excess_searchable_copies` - The total number of excess searchable copies for all buckets.
+* `splunk.jobs`
+  * `present` all jobs the masters sees, tagged by `job_state`, `job_app` and `job_owner`
 * `splunk.peers` tagged by `peer_name`, and `site`
   * `bucket_count` - The number of buckets on this peer tagged additionally by `index`.
   * `bucket_status` - The number of buckets in a given status on this peer, tagged additionally by `bucket_status`.
@@ -193,6 +195,8 @@ It emits these metrics:
   * `primary_count` - The number of buckets for which the peer is primary in its local site, or the number of buckets that return search results from same site as the peer.
   * `primary_count_remote`  - The number of buckets for which the peer is primary that are not in its local site.
   * `replication_count` - The number of replications this peer is part of, as either source or target.
+* `splunk.searches`
+  * `in_progress` - In progress searches, tagged by `is_saved` and `search_owner`
 
 You can configure it thusly:
 ```yaml

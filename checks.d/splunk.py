@@ -1,6 +1,7 @@
 # stdlib
 import time
 from collections import defaultdict
+from urllib import quote_plus
 from urlparse import urljoin
 from xml.dom import minidom
 
@@ -38,9 +39,62 @@ class Splunk(AgentCheck):
         r = requests.post(urljoin(url, '/services/auth/login'), verify=False, timeout=timeout, data={'username':username, 'password':password})
         sessionkey = minidom.parseString(r.text).getElementsByTagName('sessionKey')[0].childNodes[0].nodeValue
 
-        self.do_index_metrics(instance_tags, url, sessionkey, timeout)
-        self.do_peer_metrics(instance_tags, url, sessionkey, timeout)
-        self.do_fixup_metrics(instance_tags, url, sessionkey, timeout)
+        if self.is_master(instance_tags, url, sessionkey, timeout):
+            self.do_index_metrics(instance_tags, url, sessionkey, timeout)
+            self.do_peer_metrics(instance_tags, url, sessionkey, timeout)
+            self.do_fixup_metrics(instance_tags, url, sessionkey, timeout)
+
+        if self.is_captain(instance_tags, url, sessionkey, timeout):
+            self.do_job_metrics(instance_tags, url, sessionkey, timeout)
+            self.do_search_metrics(instance_tags, url, sessionkey, timeout)
+
+    def is_master(self, instance_tags, url, sessionkey, timeout):
+        try:
+            self.get_json(url, '/services/cluster/master/info', instance_tags, sessionkey, timeout)
+        except:
+            return False
+        else:
+            return True
+
+    def is_captain(self, instance_tags, url, sessionkey, timeout):
+        try:
+            self.get_json(url, '/services/shcluster/captain/info', instance_tags, sessionkey, timeout)
+        except:
+            return False
+        else:
+            return True
+
+    def do_job_metrics(self, instance_tags, url, sessionkey, timeout):
+        response = self.get_json(url, '/services/shcluster/captain/jobs', instance_tags, sessionkey, timeout, params={'count': -1})
+
+        jobs = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0)))
+
+        for entry in response['entry']:
+            jobs[entry['content']['job_state']][entry['content']['search_app']][entry['content']['search_owner']] += 1
+
+        for job_state in jobs.keys():
+            for job_app in jobs[job_state].keys():
+                for job_owner in jobs[job_state][job_app].keys():
+                    self.gauge('splunk.jobs.present', jobs[job_state][job_app][job_owner], tags=instance_tags + [
+                        'job_state:{0}'.format(job_state),
+                        'job_app:{0}'.format(job_app),
+                        'job_owner:{0}'.format(job_owner)
+                    ])
+
+    def do_search_metrics(self, instance_tags, url, sessionkey, timeout):
+        response = self.get_json(url, '/services/search/jobs', instance_tags, sessionkey, timeout, params={'summarize': True, 'search': 'isDone=false'})
+
+        searches = defaultdict(lambda: defaultdict(lambda: 0))
+
+        for entry in response['entry']:
+            searches[entry['content']['isSavedSearch']][entry['author']] += 1
+
+        for search_saved in searches.keys():
+            for search_owner in searches[search_saved].keys():
+                self.gauge('splunk.searches.in_progress', searches[search_saved][search_owner], tags=instance_tags + [
+                    'is_saved:{0}'.format(search_saved),
+                    'search_owner:{0}'.format(search_owner)
+                ])
 
     def do_fixup_metrics(self, instance_tags, url, sessionkey, timeout):
         for level in self.FIXUP_LEVELS:
@@ -178,7 +232,7 @@ class Splunk(AgentCheck):
 
         try:
             start_time = time.time()
-            r = requests.get(urljoin(url, path), verify=False, headers={'Authorization': "Splunk {0}".format(sessionkey)}, timeout=timeout, data=request_params)
+            r = requests.get(urljoin(url, path), verify=False, headers={'Authorization': "Splunk {0}".format(sessionkey)}, timeout=timeout, params=request_params)
             r.raise_for_status()
             elapsed_time = time.time() - start_time
             self.histogram('splunk.stats_fetch_duration_seconds', int(elapsed_time), tags = [ 'path:{0}'.format(path) ])

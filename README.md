@@ -165,7 +165,8 @@ cache strip and the check.
 
 ## Splunk
 
-Collects metrics from a Splunk master about the status of a Splunk cluster.
+Collects metrics from a Splunk master about the status of a Splunk cluster. It assumes you are
+using Search Head Clustering and queries the SHC captain for search information.
 
 It emits these service checks:
   * `splunk.can_connect` when things break during fetching status
@@ -193,6 +194,8 @@ It emits these metrics:
   * `primary_count` - The number of buckets for which the peer is primary in its local site, or the number of buckets that return search results from same site as the peer.
   * `primary_count_remote`  - The number of buckets for which the peer is primary that are not in its local site.
   * `replication_count` - The number of replications this peer is part of, as either source or target.
+* `splunk.searches`
+  * `in_progress` - In progress search gauge, tagged by `is_saved` and `search_owner`.
 
 You can configure it thusly:
 ```yaml

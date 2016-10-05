@@ -1,0 +1,14 @@
+---
+instances:
+  - uri: ldaps://localhost
+    bind_dn: value                  # DN used to initially bind the connection
+    bind_password: password         # Password for the initial bind; if not
+                                    # set, perform an anonymous bind that
+                                    # ignores `bind_dn`
+    network_timeout: 10             # Timeout for connections
+    protocol_version: 3             # Protocol version (2 or 3)
+    starttls: false                 # Use STARTTLS (default: false)
+    tls_cacert: /path/to/cacert     # Server CA certificate path
+    tls_certfile: /path/to/cert     # Client certificate path
+    tls_keyfile: /path/to/keyfile   # Client certificate key file path
+    verify_cert: true               # If true, will enforce and verify TLS

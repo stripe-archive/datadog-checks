@@ -138,6 +138,45 @@ Inspects the Redis storage for a Resque instance and ouputs some metrics:
 * `resque.worker_count` - number of workers (gauge)
 
 
+## Slapd (OpenLDAP's Stand-alone LDAP Daemon)
+
+This check queries and surfaces statistics from the [`monitor`
+backend][ldapmon] of a running `slapd` instance.  It will emit the following
+metrics:
+
+* `slapd.connect_time` - time taken to connect to the server (histogram)
+* `slapd.connections.total` - total number of connections (monotonic_count)
+* `slapd.connections.current` - current number of connections (gauge)
+* `slapd.statistics.bytes_total` - total bytes sent (monotonic_count)
+* `slapd.statistics.entries_total` - total entries sent (monotonic_count)
+* `slapd.threads.active` - number of active threads (gauge)
+* `slapd.threads.open` - number of open threads (gauge)
+* `slapd.threads.pending` - number of pending threads (gauge)
+* `slapd.threads.starting` - number of threads being started (gauge)
+* `slapd.waiters.read` - the number of clients waiting to read (gauge)
+* `slapd.waiters.write` - the number of clients waiting to write (gauge)
+
+In addition, the check will emit a service check (`slapd.can_connect`) that
+indicates whether it was able to successfully connect to the LDAP server.
+
+[ldapmon]: http://www.openldap.org/doc/admin24/monitoringslapd.html
+
+### Slapd Configuration
+
+To enable the `monitor` backend, you can add the following lines to
+`slapd.conf`:
+
+```
+moduleload back_monitor
+database monitor
+access to dn="cn=monitor"
+  by peername=127.0.0.1 read
+  by * none
+```
+
+This allows only clients on the local machine to access the backend, since it
+may contain potentially-sensitive information.
+
 ## Storm REST API
 
 This check comes in two parts: One is a cronjob-able script in

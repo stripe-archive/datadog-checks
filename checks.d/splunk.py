@@ -1,7 +1,6 @@
 # stdlib
 import time
 from collections import defaultdict
-from urllib import quote_plus
 from urlparse import urljoin
 from xml.dom import minidom
 

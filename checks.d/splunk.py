@@ -79,7 +79,7 @@ class Splunk(AgentCheck):
 
     def do_fixup_metrics(self, instance_tags, url, sessionkey, timeout):
         for level in self.FIXUP_LEVELS:
-            response = self.get_json(url, '/services/cluster/master/fixup', instance_tags, sessionkey, timeout, params={'level': level})
+            response = self.get_json(url, '/services/cluster/master/fixup', instance_tags, sessionkey, timeout, params={'level': level, 'count': -1})
 
             # Accumulate a count by index so we can emit a gauge.
             index_tasks = defaultdict(lambda x: 0)
@@ -94,7 +94,7 @@ class Splunk(AgentCheck):
                 ])
 
     def do_peer_metrics(self, instance_tags, url, sessionkey, timeout):
-        response = self.get_json(url, '/services/cluster/master/peers', instance_tags, sessionkey, timeout)
+        response = self.get_json(url, '/services/cluster/master/peers', instance_tags, sessionkey, timeout, params={'count': -1})
         peer_statuses = defaultdict(lambda x: 0)
         for peer in response['entry']:
             host = peer['content']['label']
@@ -136,7 +136,7 @@ class Splunk(AgentCheck):
 
 
     def do_index_metrics(self, instance_tags, url, sessionkey, timeout):
-        response = self.get_json(url, '/services/cluster/master/indexes', instance_tags, sessionkey, timeout)
+        response = self.get_json(url, '/services/cluster/master/indexes', instance_tags, sessionkey, timeout, params={'count': -1})
         for index in response['entry']:
             name = index['name']
 

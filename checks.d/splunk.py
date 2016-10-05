@@ -44,7 +44,6 @@ class Splunk(AgentCheck):
             self.do_fixup_metrics(instance_tags, url, sessionkey, timeout)
 
         if self.is_captain(instance_tags, url, sessionkey, timeout):
-            self.do_job_metrics(instance_tags, url, sessionkey, timeout)
             self.do_search_metrics(instance_tags, url, sessionkey, timeout)
 
     def is_master(self, instance_tags, url, sessionkey, timeout):
@@ -62,23 +61,6 @@ class Splunk(AgentCheck):
             return False
         else:
             return True
-
-    def do_job_metrics(self, instance_tags, url, sessionkey, timeout):
-        response = self.get_json(url, '/services/shcluster/captain/jobs', instance_tags, sessionkey, timeout, params={'count': -1})
-
-        jobs = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0)))
-
-        for entry in response['entry']:
-            jobs[entry['content']['job_state']][entry['content']['search_app']][entry['content']['search_owner']] += 1
-
-        for job_state in jobs.keys():
-            for job_app in jobs[job_state].keys():
-                for job_owner in jobs[job_state][job_app].keys():
-                    self.gauge('splunk.jobs.present', jobs[job_state][job_app][job_owner], tags=instance_tags + [
-                        'job_state:{0}'.format(job_state),
-                        'job_app:{0}'.format(job_app),
-                        'job_owner:{0}'.format(job_owner)
-                    ])
 
     def do_search_metrics(self, instance_tags, url, sessionkey, timeout):
         response = self.get_json(url, '/services/search/jobs', instance_tags, sessionkey, timeout, params={'summarize': True, 'search': 'isDone=false'})

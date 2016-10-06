@@ -56,7 +56,7 @@ class Splunk(AgentCheck):
 
     def is_captain(self, instance_tags, url, sessionkey, timeout):
         try:
-            self.get_json(url, '/services/shcluster/captain/info', instance_tags, sessionkey, timeout)
+            self.get_json(url, '/services/shcluster/captain/jobs', instance_tags, sessionkey, timeout)
         except:
             return False
         else:

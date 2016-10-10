@@ -103,7 +103,7 @@ class Splunk(AgentCheck):
             used_bytes = entry['content']['used_bytes']
             used_percent = 0
             if effective_quota > 0:
-                used_percent = used_bytes / effective_quota
+                used_percent = used_bytes / float(effective_quota)
 
             self.gauge('splunk.license.quota_bytes', effective_quota, tags=instance_tags + [
                 'license_name:{0}'.format(license),

@@ -42,6 +42,7 @@ class Splunk(AgentCheck):
             self.do_index_metrics(instance_tags, url, sessionkey, timeout)
             self.do_peer_metrics(instance_tags, url, sessionkey, timeout)
             self.do_fixup_metrics(instance_tags, url, sessionkey, timeout)
+            self.do_license_metrics(instance_tags, url, sessionkey, timeout)
 
         if self.is_captain(instance_tags, url, sessionkey, timeout):
             self.do_search_metrics(instance_tags, url, sessionkey, timeout)
@@ -92,6 +93,27 @@ class Splunk(AgentCheck):
                     'index_name:{0}'.format(index),
                     'fixup_level:{0}'.format(level)
                 ])
+
+    def do_license_metrics(self, instance_tags, url, sessionkey, timeout):
+        response = self.get_json(url, '/services/licenser/pools', instance_tags, sessionkey, timeout, params={ 'count': -1})
+
+        for entry in response['entry']:
+            license = entry['name']
+            effective_quota = entry['content']['effective_quota']
+            used_bytes = entry['content']['used_bytes']
+            used_percent = 0
+            if effective_quota > 0:
+                used_percent = used_bytes / float(effective_quota)
+
+            self.gauge('splunk.license.quota_bytes', effective_quota, tags=instance_tags + [
+                'license_name:{0}'.format(license),
+            ])
+            self.gauge('splunk.license.used_bytes', used_bytes, tags=instance_tags + [
+                'license_name:{0}'.format(license),
+            ])
+            self.gauge('splunk.license.used_percent', used_percent, tags=instance_tags + [
+                'license_name:{0}'.format(license),
+            ])
 
     def do_peer_metrics(self, instance_tags, url, sessionkey, timeout):
         response = self.get_json(url, '/services/cluster/master/peers', instance_tags, sessionkey, timeout, params={'count': -1})

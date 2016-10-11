@@ -69,13 +69,18 @@ class Splunk(AgentCheck):
 
         members = defaultdict(lambda: defaultdict(lambda: 0))
 
+        captains = defaultdict(lambda: 0)
         for entry in response['entry']:
             members[entry['content']['site']][entry['content']['status']] += 1
 
+            # Count the # of captains so we can detect splitbrains
             if entry['content']['is_captain']:
-                self.gauge('splunk.search_cluster.captains', 1, tags=instance_tags + [
-                    'site:{0}'.format(entry['content']['site'])
-                ])
+                captains[entry['content']['site']] += 1
+
+        for site, count in captains.items():
+            self.gauge('splunk.search_cluster.captains', count, tags=instance_tags + [
+                'site:{0}'.format(site)
+            ])
 
         for member_site in members.keys():
             for status, count in members[member_site].items():

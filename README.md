@@ -233,6 +233,9 @@ It emits these metrics:
   * `primary_count` - The number of buckets for which the peer is primary in its local site, or the number of buckets that return search results from same site as the peer.
   * `primary_count_remote`  - The number of buckets for which the peer is primary that are not in its local site.
   * `replication_count` - The number of replications this peer is part of, as either source or target.
+* `splunk.search_cluster`
+  * `captains` - The count of captains tagged by `site`. This can be used to ensure a captain and detect splitbrain
+  * `member_statuses` - The number of members in the search cluster tagged by `status` and `site`.
 * `splunk.searches`
   * `in_progress` - In progress search gauge, tagged by `is_saved` and `search_owner`.
 

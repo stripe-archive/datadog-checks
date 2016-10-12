@@ -46,6 +46,7 @@ class Splunk(AgentCheck):
 
         if self.is_captain(instance_tags, url, sessionkey, timeout):
             self.do_search_metrics(instance_tags, url, sessionkey, timeout)
+            self.do_shmember_metrics(instance_tags, url, sessionkey, timeout)
 
     def is_master(self, instance_tags, url, sessionkey, timeout):
         try:
@@ -62,6 +63,31 @@ class Splunk(AgentCheck):
             return False
         else:
             return True
+
+    def do_shmember_metrics(self, instance_tags, url, sessionkey, timeout):
+        response = self.get_json(url, '/services/shcluster/captain/members', instance_tags, sessionkey, timeout, params={'count': -1})
+
+        members = defaultdict(lambda: defaultdict(lambda: 0))
+
+        captains = defaultdict(lambda: 0)
+        for entry in response['entry']:
+            members[entry['content']['site']][entry['content']['status']] += 1
+
+            # Count the # of captains so we can detect splitbrains
+            if entry['content']['is_captain']:
+                captains[entry['content']['site']] += 1
+
+        for site, count in captains.items():
+            self.gauge('splunk.search_cluster.captains', count, tags=instance_tags + [
+                'site:{0}'.format(site)
+            ])
+
+        for member_site in members.keys():
+            for status, count in members[member_site].items():
+                self.gauge('splunk.search_cluster.member_statuses', count, tags=instance_tags + [
+                    'site:{0}'.format(member_site),
+                    'status:{0}'.format(status)
+                ])
 
     def do_search_metrics(self, instance_tags, url, sessionkey, timeout):
         response = self.get_json(url, '/services/search/jobs', instance_tags, sessionkey, timeout, params={'summarize': True, 'search': 'isDone=false'})
@@ -117,7 +143,7 @@ class Splunk(AgentCheck):
 
     def do_peer_metrics(self, instance_tags, url, sessionkey, timeout):
         response = self.get_json(url, '/services/cluster/master/peers', instance_tags, sessionkey, timeout, params={'count': -1})
-        peer_statuses = defaultdict(lambda x: 0)
+        peer_statuses = defaultdict(lambda: defaultdict(lambda: 0))
         for peer in response['entry']:
             host = peer['content']['label']
             site = peer['content']['site']
@@ -126,6 +152,8 @@ class Splunk(AgentCheck):
                 'peer_name:{0}'.format(host),
                 'site:{0}'.format(site),
             ]
+
+            peer_statuses[site][peer['content']['status']] += 1
 
             searchable = peer['content']['is_searchable']
             if not searchable:
@@ -151,11 +179,12 @@ class Splunk(AgentCheck):
 
         # This is a synthetic metric to make it easier to count the number of peers
         # in whatever status.
-        for status, count in peer_statuses.items():
-            self.gauge('splunk.peers.peers_present', count, tags=tags + [
-                'status:{0}'.format(status)
-            ])
-
+        for site in peer_statuses.keys():
+            for status, count in peer_statuses[site].items():
+                self.gauge('splunk.peers.peers_present', count, tags=tags + [
+                    'status:{0}'.format(status),
+                    'site:{0}'.format(site)
+                ])
 
     def do_index_metrics(self, instance_tags, url, sessionkey, timeout):
         response = self.get_json(url, '/services/cluster/master/indexes', instance_tags, sessionkey, timeout, params={'count': -1})

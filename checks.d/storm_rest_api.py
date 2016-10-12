@@ -34,6 +34,7 @@ StormConfig = namedtuple(
         'topologies',
         'cache_file',
         'cache_staleness',
+        'task_id_cleaner_regex',
     ]
 )
 
@@ -81,6 +82,7 @@ class StormRESTCheck(AgentCheck):
             cache_file=cache_file,
             cache_staleness=instance.get('cache_staleness', self.DEFAULT_STALENESS),
             topologies=topologies_re,
+            task_id_cleaner_regex=instance.get('task_id_cleaner_regex', None),
         )
 
     def metric(self, config, name):
@@ -189,7 +191,12 @@ class StormRESTCheck(AgentCheck):
             self.gauge(self.metric(config, 'topologies.executors_total'), topo['executorsTotal'], tags=tags)
 
     def task_id_tags(self, config, component_type, task_id):
-        return config.task_tags.get(component_type, {}).get(task_id, [])
+        cleaner_id = task_id
+        if config.task_id_cleaner_regex is not None:
+            match = re.search(config.task_id_cleaner_regex, cleaner_id)
+            if match is not None:
+                cleaner_id = match.group(1)
+        return config.task_tags.get(component_type, {}).get(cleaner_id, [])
 
     def report_topology(self, config, name, details):
         """

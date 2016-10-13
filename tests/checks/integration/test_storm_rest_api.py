@@ -354,3 +354,68 @@ class TestFileUnit(AgentCheckTest):
         uptime_2 = self.find_metric(metrics, 'storm.rest.executor.uptime_seconds', ['storm_host:10.100.14.0'])
         self.assertEqual(152, uptime_1[2])
         self.assertEqual(240, uptime_2[2])
+
+    def test_executor_metrics_with_regexp(self):
+        data = {
+            "executors": 72,
+            "componentErrors": [],
+            "encodedId": "detail%3A%3Aspout",
+            "spoutSummary": [{"windowPretty": "10m 0s", "window": "600", "emitted": 0, "transferred": 0, "completeLatency": "0.000", "acked": 0, "failed": 0},
+                             {"windowPretty": "3h 0m 0s", "window": "10800", "emitted": 0, "transferred": 0, "completeLatency": "0.000", "acked": 0, "failed": 0},
+            ],
+            "topologyId": "a_topology-6-1464634734",
+            "name": "a_topology_8Y1e7Vi5fIvwSp",
+            "executorStats": [
+                {
+                    "workerLogLink": "http://10.100.14.0:8000/log?file=worker-6710.log",
+                    "emitted": 0,
+                    "port": 6710,
+                    "transferred": 0,
+                    "host": "10.100.14.0",
+                    "acked": 0,
+                    "uptime": "4m 0s",
+                    "encodedId": "%5B10751-10751%5D",
+                    "executeLatency": "0",
+                    "executed": 15,
+                    "processLatency": "0",
+                    "capacity": "0.000",
+                    "id": "[10751-10751]",
+                    "failed": 0
+                }],
+            "tasks": 72,
+            "window": "600",
+            "inputStats": [],
+            "componentType": "spout",
+            "windowHint": "10m 0s",
+            "encodedTopologyId": "a_topology-6-1464634734",
+            "id": "detail::spout:1234",
+            "outputStats": []
+        }
+        instance = {
+            'url': 'http://localhost:8080',
+            'timeout': 0,
+            'topologies': '^(a_topology)_.*$',
+            'executor_details_whitelist': ['detail::spout'],
+            'task_id_cleaner_regex': '([a-zA-z\:\-_]*)(:[0-9\-]+)+',
+            'task_tags': {
+                'spout': {
+                    'detail::spout': [
+                        'is_a_great_spout:true'
+                    ]
+                }
+            },
+            "cache_file": "/dev/null"
+        }
+        conf = {
+            'init_config': {},
+            'instances': [
+                instance
+            ],
+        }
+        self.check = load_check('storm_rest_api', conf, {})
+        self.check.report_executor_details(self.check.instance_config(instance), data)
+        self.check.report_executor_details(self.check.instance_config(instance), data)
+        metrics = self.check.get_metrics()
+        executor_count = self.find_metric(metrics, 'storm.rest.executor.executors_total')
+        self.assertEqual(72, executor_count[2])
+        self.assert_tags(['storm_task_id:detail::spout:1234', 'storm_component_type:spout', 'storm_topology:a_topology', 'is_a_great_spout:true'], executor_count[3]['tags'])

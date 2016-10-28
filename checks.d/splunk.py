@@ -56,8 +56,6 @@ class Splunk(AgentCheck):
                 tags = instance_tags
             )
 
-        self.get_json(url, '/services/server/info', instance_tags, sessionkey, timeout, True)
-
         if self.is_master(instance_tags, url, sessionkey, timeout):
             self.do_index_metrics(instance_tags, url, sessionkey, timeout)
             self.do_peer_metrics(instance_tags, url, sessionkey, timeout)

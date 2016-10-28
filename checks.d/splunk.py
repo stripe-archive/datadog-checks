@@ -35,8 +35,26 @@ class Splunk(AgentCheck):
         timeout = float(instance.get('timeout', default_timeout))
 
         # Grab a session key for authentication
-        r = requests.post(urljoin(url, '/services/auth/login'), verify=False, timeout=timeout, data={'username':username, 'password':password})
-        sessionkey = minidom.parseString(r.text).getElementsByTagName('sessionKey')[0].childNodes[0].nodeValue
+        try:
+            r = requests.post(urljoin(url, '/services/auth/login'), verify=False, timeout=timeout, data={'username':username, 'password':password})
+            sessionkey = minidom.parseString(r.text).getElementsByTagName('sessionKey')[0].childNodes[0].nodeValue
+        except requests.exceptions.Timeout:
+            # If there's a timeout
+            self.service_check(self.CONNECT_CHECK_NAME, AgentCheck.CRITICAL,
+                message='Timed out after {0} seconds.'.format(timeout),
+                tags = instance_tags)
+            raise Exception("Timeout when hitting URL")
+
+        except requests.exceptions.HTTPError:
+            self.service_check(self.CONNECT_CHECK_NAME, AgentCheck.CRITICAL,
+                message='Returned a status of {0}'.format(r.status_code),
+                tags = instance_tags)
+            raise Exception("Got {0} when hitting URL".format(r.status_code))
+
+        else:
+            self.service_check(self.CONNECT_CHECK_NAME, AgentCheck.OK,
+                tags = instance_tags
+            )
 
         if self.is_master(instance_tags, url, sessionkey, timeout):
             self.do_index_metrics(instance_tags, url, sessionkey, timeout)
@@ -270,19 +288,9 @@ class Splunk(AgentCheck):
             self.histogram('splunk.stats_fetch_duration_seconds', int(elapsed_time), tags = [ 'path:{0}'.format(path) ])
         except requests.exceptions.Timeout:
             # If there's a timeout
-            self.service_check(self.CONNECT_CHECK_NAME, AgentCheck.CRITICAL,
-                message='Timed out after {0} seconds.'.format(timeout),
-                tags = instance_tags)
             raise Exception("Timeout when hitting URL")
 
         except requests.exceptions.HTTPError:
-            self.service_check(self.CONNECT_CHECK_NAME, AgentCheck.CRITICAL,
-                message='Returned a status of {0}'.format(r.status_code),
-                tags = instance_tags)
             raise Exception("Got {0} when hitting URL".format(r.status_code))
 
-        else:
-            self.service_check(self.CONNECT_CHECK_NAME, AgentCheck.OK,
-                tags = instance_tags
-            )
         return r.json()

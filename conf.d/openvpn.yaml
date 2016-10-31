@@ -1,0 +1,24 @@
+# init_config:
+# # Not required for this check
+#
+# instances:
+#  - path: '/var/run/reboot-required'
+#    expected: absent
+#  - path: '/etc/passwd'
+#    expected: present
+
+init_config:
+  # Not required for this check
+
+instances:
+  - path: '/pay/log/openvpn-tcp-privileged.status'
+    expected: present
+  - path: '/pay/log/openvpn-tcp-unprivileged.status'
+    expected: present
+  - path: '/pay/log/openvpn-udp-dashboard.status'
+    expected: present
+  - path: '/pay/log/openvpn-udp-privileged.status'
+    expected: present
+  - path: '/pay/log/openvpn-udp-unprivileged.status'
+    expected: present
+

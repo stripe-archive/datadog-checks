@@ -105,6 +105,17 @@ instances:
     command: "/usr/lib/nagios/plugins/check_falafel -l 1234"
 ```
 
+## OpenVPN
+
+
+The OpenVPN check counts the number of active VPN connections per user. Combined with a Datadog monitor, it ensures that the same user isn't logged in mtoo many times (e.g., multiple, sustained VPN connections for the same user is indicative of a laptop compromise).
+
+Each VPN is accessible over both TCP and UDP, and is available to both privileged (Stripe employees) and unprivileged users (vendors). The unique combination of these is considered a VPN "level", and OpenVPN emits a status file every 10 seconds for each level to indicate the currently-active connections. When a user disconnects (e.g. if their Internet connection drops out) or if their IP address/port changes, they may appear in the status file multiple times. This is fine, as long as the number of connections per user drops down to 1 within a minute or so.
+
+The status file also contains useful information such as the IP (which can be used for geolookups), the connection duration (which can be used to ensure that the VPN is online and that it isn't cycling users), and the number of bytes sent/received (which could be used to detect erratic behavior).
+
+
+
 ## Outdated Packages
 
 This check verifies that the given packages are not outdated (currently, only

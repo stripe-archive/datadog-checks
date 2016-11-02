@@ -1,0 +1,30 @@
+init_config:
+  # Not required for this check
+
+instances:
+  - path: '/pay/log/openvpn-tcp-privileged.status'
+    vpn_name: openvpn-tcp-privileged
+    tags:
+      - 'transport:tcp'
+      - 'access_level:privileged'
+  - path: '/pay/log/openvpn-tcp-unprivileged.status'
+    vpn_name: openvpn-tcp-unprivileged
+    tags:
+      - 'transport:tcp'
+      - 'access_level:unprivileged'
+  - path: '/pay/log/openvpn-udp-dashboard.status'
+    vpn_name: openvpn-udp-dashboard
+    tags:
+      - 'transport:udp'
+      - 'access_level:dashboard'
+  - path: '/pay/log/openvpn-udp-privileged.status'
+    vpn_name: openvpn-udp-privileged
+    tags:
+      - 'transport:udp'
+      - 'access_level:privileged'
+  - path: '/pay/log/openvpn-udp-unprivileged.status'
+    vpn_name: openvpn-udp-unprivileged
+    tags:
+      - 'transport:udp'
+      - 'access_level:unprivileged'
+

@@ -70,6 +70,7 @@ class OpenVPN(AgentCheck):
 
             for user, addresses in users.iteritems():
                 c = Counter(addresses)
+                self.gauge('openvpn.users.connections.distinct_ip4', len(c), tags=instance_tags + ['common_name:{0}'.format(user)])
                 for address in c:
                     count = c[address]
                     subnet = infer_subnet_24(address)

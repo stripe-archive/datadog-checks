@@ -8,7 +8,7 @@ instances:
     #
     # unix_socket_path: /var/run/redis/redis.sock # optional, can be used in lieu of host/port
 
-    # Addional connection options
+    # Additional connection options
     #
     # db: 0
     # password: mypassword

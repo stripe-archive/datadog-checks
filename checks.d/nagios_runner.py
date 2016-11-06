@@ -5,7 +5,7 @@ import time
 from checks import AgentCheck
 
 # Runs arbitrary commands, but exects that the STDOUT from the process will
-# begin with a sigil that denotes the sucess or failure of the check.
+# begin with a sigil that denotes the success or failure of the check.
 # Config file looks like:
 # init_config:
 # # Not required for this check

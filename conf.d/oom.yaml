@@ -1,0 +1,6 @@
+---
+init_config:
+instances:
+  - logfile: '/var/log/kern.log'
+    kernel_line_regex: '^(?P<timestamp>.+?) (?P<host>\S+) kernel: \[\s*(?P<uptime>\d+(?:\.\d+)?)\] (?P<message>.*)$'
+    kill_message_regex: '^Out of memory: Kill process (?P<pid>\d+) \((?P<pname>.*?)\) score (?P<score>.*?) or sacrifice child'

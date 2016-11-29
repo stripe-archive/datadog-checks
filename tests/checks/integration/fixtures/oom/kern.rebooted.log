@@ -1,0 +1,1194 @@
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Initializing cgroup subsys cpuset
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Initializing cgroup subsys cpu
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Initializing cgroup subsys cpuacct
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Linux version 4.4.0-47-generic (buildd@lgw01-12) (gcc version 4.8.4 (Ubuntu 4.8.4-2ubuntu1~14.04.3) ) #68~14.04.1-Ubuntu SMP Wed Oct 26 19:42:11 UTC 2016 (Ubuntu 4.4.0-47.68~14.04.1-generic 4.4.24)
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Command line: BOOT_IMAGE=/boot/vmlinuz-4.4.0-47-generic root=UUID=f536a29c-36fb-4b05-b3a2-cd185f86231e ro console=tty1 root=LABEL=DOROOT notsc clocksource=kvm-clock net.ifnames=0
+Nov 28 22:00:27 oom-test kernel: [    0.000000] KERNEL supported cpus:
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   Intel GenuineIntel
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   AMD AuthenticAMD
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   Centaur CentaurHauls
+Nov 28 22:00:27 oom-test kernel: [    0.000000] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+Nov 28 22:00:27 oom-test kernel: [    0.000000] x86/fpu: Supporting XSAVE feature 0x01: 'x87 floating point registers'
+Nov 28 22:00:27 oom-test kernel: [    0.000000] x86/fpu: Supporting XSAVE feature 0x02: 'SSE registers'
+Nov 28 22:00:27 oom-test kernel: [    0.000000] x86/fpu: Supporting XSAVE feature 0x04: 'AVX registers'
+Nov 28 22:00:27 oom-test kernel: [    0.000000] x86/fpu: Enabled xstate features 0x7, context size is 832 bytes, using 'standard' format.
+Nov 28 22:00:27 oom-test kernel: [    0.000000] x86/fpu: Using 'eager' FPU context switches.
+Nov 28 22:00:27 oom-test kernel: [    0.000000] e820: BIOS-provided physical RAM map:
+Nov 28 22:00:27 oom-test kernel: [    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+Nov 28 22:00:27 oom-test kernel: [    0.000000] BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+Nov 28 22:00:27 oom-test kernel: [    0.000000] BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+Nov 28 22:00:27 oom-test kernel: [    0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000001fffdfff] usable
+Nov 28 22:00:27 oom-test kernel: [    0.000000] BIOS-e820: [mem 0x000000001fffe000-0x000000001fffffff] reserved
+Nov 28 22:00:27 oom-test kernel: [    0.000000] BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
+Nov 28 22:00:27 oom-test kernel: [    0.000000] BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+Nov 28 22:00:27 oom-test kernel: [    0.000000] NX (Execute Disable) protection: active
+Nov 28 22:00:27 oom-test kernel: [    0.000000] SMBIOS 2.4 present.
+Nov 28 22:00:27 oom-test kernel: [    0.000000] DMI: DigitalOcean Droplet, BIOS 20161103 11/03/2016
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Hypervisor detected: KVM
+Nov 28 22:00:27 oom-test kernel: [    0.000000] e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
+Nov 28 22:00:27 oom-test kernel: [    0.000000] e820: remove [mem 0x000a0000-0x000fffff] usable
+Nov 28 22:00:27 oom-test kernel: [    0.000000] e820: last_pfn = 0x1fffe max_arch_pfn = 0x400000000
+Nov 28 22:00:27 oom-test kernel: [    0.000000] MTRR default type: write-back
+Nov 28 22:00:27 oom-test kernel: [    0.000000] MTRR fixed ranges enabled:
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   00000-9FFFF write-back
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   A0000-BFFFF uncachable
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   C0000-FFFFF write-protect
+Nov 28 22:00:27 oom-test kernel: [    0.000000] MTRR variable ranges enabled:
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   0 base 0080000000 mask FF80000000 uncachable
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   1 disabled
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   2 disabled
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   3 disabled
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   4 disabled
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   5 disabled
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   6 disabled
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   7 disabled
+Nov 28 22:00:27 oom-test kernel: [    0.000000] x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WC  UC- WT
+Nov 28 22:00:27 oom-test kernel: [    0.000000] found SMP MP-table at [mem 0x000f1790-0x000f179f] mapped at [ffff8800000f1790]
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Scanning 1 areas for low memory corruption
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Base memory trampoline at [ffff880000099000] 99000 size 24576
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Using GB pages for direct mapping
+Nov 28 22:00:27 oom-test kernel: [    0.000000] BRK [0x02206000, 0x02206fff] PGTABLE
+Nov 28 22:00:27 oom-test kernel: [    0.000000] BRK [0x02207000, 0x02207fff] PGTABLE
+Nov 28 22:00:27 oom-test kernel: [    0.000000] BRK [0x02208000, 0x02208fff] PGTABLE
+Nov 28 22:00:27 oom-test kernel: [    0.000000] BRK [0x02209000, 0x02209fff] PGTABLE
+Nov 28 22:00:27 oom-test kernel: [    0.000000] RAMDISK: [mem 0x1d7ad000-0x1f519fff]
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: Early table checksum verification disabled
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: RSDP 0x00000000000F1600 000014 (v00 BOCHS )
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: RSDT 0x000000001FFFE470 000034 (v01 BOCHS  BXPCRSDT 00000001 BXPC 00000001)
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: FACP 0x000000001FFFFF80 000074 (v01 BOCHS  BXPCFACP 00000001 BXPC 00000001)
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: DSDT 0x000000001FFFE4B0 001135 (v01 BOCHS  BXPCDSDT 00000001 BXPC 00000001)
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: FACS 0x000000001FFFFF40 000040
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: SSDT 0x000000001FFFF720 000819 (v01 BOCHS  BXPCSSDT 00000001 BXPC 00000001)
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: APIC 0x000000001FFFF630 000078 (v01 BOCHS  BXPCAPIC 00000001 BXPC 00000001)
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: HPET 0x000000001FFFF5F0 000038 (v01 BOCHS  BXPCHPET 00000001 BXPC 00000001)
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: Local APIC address 0xfee00000
+Nov 28 22:00:27 oom-test kernel: [    0.000000] No NUMA configuration found
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Faking a node at [mem 0x0000000000000000-0x000000001fffdfff]
+Nov 28 22:00:27 oom-test kernel: [    0.000000] NODE_DATA(0) allocated [mem 0x1fff9000-0x1fffdfff]
+Nov 28 22:00:27 oom-test kernel: [    0.000000] kvm-clock: Using msrs 4b564d01 and 4b564d00
+Nov 28 22:00:27 oom-test kernel: [    0.000000] kvm-clock: cpu 0, msr 0:1fff5001, primary cpu clock
+Nov 28 22:00:27 oom-test kernel: [    0.000000] clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Zone ranges:
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   DMA32    [mem 0x0000000001000000-0x000000001fffdfff]
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   Normal   empty
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   Device   empty
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Movable zone start for each node
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Early memory node ranges
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   node   0: [mem 0x0000000000001000-0x000000000009efff]
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   node   0: [mem 0x0000000000100000-0x000000001fffdfff]
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Initmem setup node 0 [mem 0x0000000000001000-0x000000001fffdfff]
+Nov 28 22:00:27 oom-test kernel: [    0.000000] On node 0 totalpages: 130972
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   DMA zone: 64 pages used for memmap
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   DMA zone: 21 pages reserved
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   DMA zone: 3998 pages, LIFO batch:0
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   DMA32 zone: 1984 pages used for memmap
+Nov 28 22:00:27 oom-test kernel: [    0.000000]   DMA32 zone: 126974 pages, LIFO batch:31
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: PM-Timer IO Port: 0xb008
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: Local APIC address 0xfee00000
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: LAPIC_NMI (acpi_id[0xff] dfl dfl lint[0x1])
+Nov 28 22:00:27 oom-test kernel: [    0.000000] IOAPIC[0]: apic_id 0, version 17, address 0xfec00000, GSI 0-23
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 5 global_irq 5 high level)
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 10 global_irq 10 high level)
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 11 global_irq 11 high level)
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: IRQ0 used by override.
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: IRQ5 used by override.
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: IRQ9 used by override.
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: IRQ10 used by override.
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: IRQ11 used by override.
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Using ACPI (MADT) for SMP configuration information
+Nov 28 22:00:27 oom-test kernel: [    0.000000] ACPI: HPET id: 0x8086a201 base: 0xfed00000
+Nov 28 22:00:27 oom-test kernel: [    0.000000] smpboot: Allowing 1 CPUs, 0 hotplug CPUs
+Nov 28 22:00:27 oom-test kernel: [    0.000000] PM: Registered nosave memory: [mem 0x00000000-0x00000fff]
+Nov 28 22:00:27 oom-test kernel: [    0.000000] PM: Registered nosave memory: [mem 0x0009f000-0x0009ffff]
+Nov 28 22:00:27 oom-test kernel: [    0.000000] PM: Registered nosave memory: [mem 0x000a0000-0x000effff]
+Nov 28 22:00:27 oom-test kernel: [    0.000000] PM: Registered nosave memory: [mem 0x000f0000-0x000fffff]
+Nov 28 22:00:27 oom-test kernel: [    0.000000] e820: [mem 0x20000000-0xfeffbfff] available for PCI devices
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Booting paravirtualized kernel on KVM
+Nov 28 22:00:27 oom-test kernel: [    0.000000] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645519600211568 ns
+Nov 28 22:00:27 oom-test kernel: [    0.000000] setup_percpu: NR_CPUS:256 nr_cpumask_bits:256 nr_cpu_ids:1 nr_node_ids:1
+Nov 28 22:00:27 oom-test kernel: [    0.000000] PERCPU: Embedded 33 pages/cpu @ffff88001fc00000 s98008 r8192 d28968 u2097152
+Nov 28 22:00:27 oom-test kernel: [    0.000000] pcpu-alloc: s98008 r8192 d28968 u2097152 alloc=1*2097152
+Nov 28 22:00:27 oom-test kernel: [    0.000000] pcpu-alloc: [0] 0
+Nov 28 22:00:27 oom-test kernel: [    0.000000] KVM setup async PF for cpu 0
+Nov 28 22:00:27 oom-test kernel: [    0.000000] kvm-stealtime: cpu 0, msr 1fc0d940
+Nov 28 22:00:27 oom-test kernel: [    0.000000] PV qspinlock hash table entries: 256 (order: 0, 4096 bytes)
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Built 1 zonelists in Node order, mobility grouping on.  Total pages: 128903
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Policy zone: DMA32
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Kernel command line: BOOT_IMAGE=/boot/vmlinuz-4.4.0-47-generic root=UUID=f536a29c-36fb-4b05-b3a2-cd185f86231e ro console=tty1 root=LABEL=DOROOT notsc clocksource=kvm-clock net.ifnames=0
+Nov 28 22:00:27 oom-test kernel: [    0.000000] tsc: Kernel compiled with CONFIG_X86_TSC, cannot disable TSC completely
+Nov 28 22:00:27 oom-test kernel: [    0.000000] PID hash table entries: 2048 (order: 2, 16384 bytes)
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Calgary: detecting Calgary via BIOS EBDA area
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Calgary: Unable to locate Rio Grande table in EBDA - bailing!
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Memory: 466592K/523888K available (8205K kernel code, 1294K rwdata, 3968K rodata, 1488K init, 1292K bss, 57296K reserved, 0K cma-reserved)
+Nov 28 22:00:27 oom-test kernel: [    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Hierarchical RCU implementation.
+Nov 28 22:00:27 oom-test kernel: [    0.000000] 	Build-time adjustment of leaf fanout to 64.
+Nov 28 22:00:27 oom-test kernel: [    0.000000] 	RCU restricting CPUs from NR_CPUS=256 to nr_cpu_ids=1.
+Nov 28 22:00:27 oom-test kernel: [    0.000000] RCU: Adjusting geometry for rcu_fanout_leaf=64, nr_cpu_ids=1
+Nov 28 22:00:27 oom-test kernel: [    0.000000] NR_IRQS:16640 nr_irqs:256 16
+Nov 28 22:00:27 oom-test kernel: [    0.000000] Console: colour dummy device 80x25
+Nov 28 22:00:27 oom-test kernel: [    0.000000] console [tty1] enabled
+Nov 28 22:00:27 oom-test kernel: [    0.000000] clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604467 ns
+Nov 28 22:00:27 oom-test kernel: [    0.000000] hpet clockevent registered
+Nov 28 22:00:27 oom-test kernel: [    0.000000] tsc: Detected 2299.998 MHz processor
+Nov 28 22:00:27 oom-test kernel: [    0.008000] Calibrating delay loop (skipped) preset value.. 4599.99 BogoMIPS (lpj=9199992)
+Nov 28 22:00:27 oom-test kernel: [    0.008000] pid_max: default: 32768 minimum: 301
+Nov 28 22:00:27 oom-test kernel: [    0.008000] ACPI: Core revision 20150930
+Nov 28 22:00:27 oom-test kernel: [    0.008000] ACPI: 2 ACPI AML tables successfully acquired and loaded
+Nov 28 22:00:27 oom-test kernel: [    0.008000] Security Framework initialized
+Nov 28 22:00:27 oom-test kernel: [    0.008000] Yama: becoming mindful.
+Nov 28 22:00:27 oom-test kernel: [    0.008000] AppArmor: AppArmor initialized
+Nov 28 22:00:27 oom-test kernel: [    0.008000] Dentry cache hash table entries: 65536 (order: 7, 524288 bytes)
+Nov 28 22:00:27 oom-test kernel: [    0.008000] Inode-cache hash table entries: 32768 (order: 6, 262144 bytes)
+Nov 28 22:00:27 oom-test kernel: [    0.008000] Mount-cache hash table entries: 1024 (order: 1, 8192 bytes)
+Nov 28 22:00:27 oom-test kernel: [    0.008000] Mountpoint-cache hash table entries: 1024 (order: 1, 8192 bytes)
+Nov 28 22:00:27 oom-test kernel: [    0.008000] Initializing cgroup subsys io
+Nov 28 22:00:27 oom-test kernel: [    0.008000] Initializing cgroup subsys memory
+Nov 28 22:00:27 oom-test kernel: [    0.008000] Initializing cgroup subsys devices
+Nov 28 22:00:27 oom-test kernel: [    0.008000] Initializing cgroup subsys freezer
+Nov 28 22:00:27 oom-test kernel: [    0.008000] Initializing cgroup subsys net_cls
+Nov 28 22:00:27 oom-test kernel: [    0.008000] Initializing cgroup subsys perf_event
+Nov 28 22:00:27 oom-test kernel: [    0.008000] Initializing cgroup subsys net_prio
+Nov 28 22:00:27 oom-test kernel: [    0.008000] Initializing cgroup subsys hugetlb
+Nov 28 22:00:27 oom-test kernel: [    0.008000] Initializing cgroup subsys pids
+Nov 28 22:00:27 oom-test kernel: [    0.008000] mce: CPU supports 10 MCE banks
+Nov 28 22:00:27 oom-test kernel: [    0.008000] Last level iTLB entries: 4KB 512, 2MB 8, 4MB 8
+Nov 28 22:00:27 oom-test kernel: [    0.008000] Last level dTLB entries: 4KB 512, 2MB 32, 4MB 32, 1GB 0
+Nov 28 22:00:27 oom-test kernel: [    0.020411] Freeing SMP alternatives memory: 32K (ffffffff820b9000 - ffffffff820c1000)
+Nov 28 22:00:27 oom-test kernel: [    0.027580] ftrace: allocating 32084 entries in 126 pages
+Nov 28 22:00:27 oom-test kernel: [    0.036108] smpboot: Max logical packages: 1
+Nov 28 22:00:27 oom-test kernel: [    0.036115] smpboot: APIC(0) Converting physical 0 to logical package 0
+Nov 28 22:00:27 oom-test kernel: [    0.036345] x2apic enabled
+Nov 28 22:00:27 oom-test kernel: [    0.036565] Switched APIC routing to physical x2apic.
+Nov 28 22:00:27 oom-test kernel: [    0.040704] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+Nov 28 22:00:27 oom-test kernel: [    0.040747] TSC deadline timer enabled
+Nov 28 22:00:27 oom-test kernel: [    0.040763] smpboot: CPU0: Intel(R) Xeon(R) CPU E5-2630 0 @ 2.30GHz (family: 0x6, model: 0x2d, stepping: 0x7)
+Nov 28 22:00:27 oom-test kernel: [    0.040780] Performance Events: 16-deep LBR, SandyBridge events, Intel PMU driver.
+Nov 28 22:00:27 oom-test kernel: [    0.056016] core: PEBS disabled due to CPU errata, please upgrade microcode
+Nov 28 22:00:27 oom-test kernel: [    0.056023] ... version:                2
+Nov 28 22:00:27 oom-test kernel: [    0.056026] ... bit width:              48
+Nov 28 22:00:27 oom-test kernel: [    0.056028] ... generic registers:      4
+Nov 28 22:00:27 oom-test kernel: [    0.056031] ... value mask:             0000ffffffffffff
+Nov 28 22:00:27 oom-test kernel: [    0.056034] ... max period:             000000007fffffff
+Nov 28 22:00:27 oom-test kernel: [    0.056037] ... fixed-purpose events:   3
+Nov 28 22:00:27 oom-test kernel: [    0.056040] ... event mask:             000000070000000f
+Nov 28 22:00:27 oom-test kernel: [    0.056081] KVM setup paravirtual spinlock
+Nov 28 22:00:27 oom-test kernel: [    0.056798] x86: Booted up 1 node, 1 CPUs
+Nov 28 22:00:27 oom-test kernel: [    0.056802] smpboot: Total of 1 processors activated (4599.99 BogoMIPS)
+Nov 28 22:00:27 oom-test kernel: [    0.057081] devtmpfs: initialized
+Nov 28 22:00:27 oom-test kernel: [    0.059118] evm: security.selinux
+Nov 28 22:00:27 oom-test kernel: [    0.059121] evm: security.SMACK64
+Nov 28 22:00:27 oom-test kernel: [    0.059124] evm: security.SMACK64EXEC
+Nov 28 22:00:27 oom-test kernel: [    0.059126] evm: security.SMACK64TRANSMUTE
+Nov 28 22:00:27 oom-test kernel: [    0.059129] evm: security.SMACK64MMAP
+Nov 28 22:00:27 oom-test kernel: [    0.059132] evm: security.ima
+Nov 28 22:00:27 oom-test kernel: [    0.059134] evm: security.capability
+Nov 28 22:00:27 oom-test kernel: [    0.059277] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+Nov 28 22:00:27 oom-test kernel: [    0.059366] pinctrl core: initialized pinctrl subsystem
+Nov 28 22:00:27 oom-test kernel: [    0.059526] RTC time: 22:00:21, date: 11/28/16
+Nov 28 22:00:27 oom-test kernel: [    0.059640] NET: Registered protocol family 16
+Nov 28 22:00:27 oom-test kernel: [    0.059798] cpuidle: using governor ladder
+Nov 28 22:00:27 oom-test kernel: [    0.059803] cpuidle: using governor menu
+Nov 28 22:00:27 oom-test kernel: [    0.059807] PCCT header not found.
+Nov 28 22:00:27 oom-test kernel: [    0.059884] ACPI: bus type PCI registered
+Nov 28 22:00:27 oom-test kernel: [    0.059888] acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
+Nov 28 22:00:27 oom-test kernel: [    0.060009] PCI: Using configuration type 1 for base access
+Nov 28 22:00:27 oom-test kernel: [    0.060098] core: PMU erratum BJ122, BV98, HSD29 workaround disabled, HT off
+Nov 28 22:00:27 oom-test kernel: [    0.061212] ACPI: Added _OSI(Module Device)
+Nov 28 22:00:27 oom-test kernel: [    0.061216] ACPI: Added _OSI(Processor Device)
+Nov 28 22:00:27 oom-test kernel: [    0.061219] ACPI: Added _OSI(3.0 _SCP Extensions)
+Nov 28 22:00:27 oom-test kernel: [    0.061222] ACPI: Added _OSI(Processor Aggregator Device)
+Nov 28 22:00:27 oom-test kernel: [    0.062722] ACPI: Interpreter enabled
+Nov 28 22:00:27 oom-test kernel: [    0.062737] ACPI: (supports S0 S3 S4 S5)
+Nov 28 22:00:27 oom-test kernel: [    0.062740] ACPI: Using IOAPIC for interrupt routing
+Nov 28 22:00:27 oom-test kernel: [    0.062753] PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+Nov 28 22:00:27 oom-test kernel: [    0.065008] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+Nov 28 22:00:27 oom-test kernel: [    0.065016] acpi PNP0A03:00: _OSC: OS supports [ASPM ClockPM Segments MSI]
+Nov 28 22:00:27 oom-test kernel: [    0.065023] acpi PNP0A03:00: _OSC failed (AE_NOT_FOUND); disabling ASPM
+Nov 28 22:00:27 oom-test kernel: [    0.065030] acpi PNP0A03:00: fail to add MMCONFIG information, can't access extended PCI configuration space under this bridge.
+Nov 28 22:00:27 oom-test kernel: [    0.065333] acpiphp: Slot [3] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065357] acpiphp: Slot [4] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065379] acpiphp: Slot [5] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065400] acpiphp: Slot [6] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065422] acpiphp: Slot [7] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065443] acpiphp: Slot [8] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065464] acpiphp: Slot [9] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065486] acpiphp: Slot [10] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065508] acpiphp: Slot [11] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065528] acpiphp: Slot [12] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065549] acpiphp: Slot [13] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065570] acpiphp: Slot [14] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065591] acpiphp: Slot [15] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065612] acpiphp: Slot [16] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065633] acpiphp: Slot [17] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065655] acpiphp: Slot [18] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065676] acpiphp: Slot [19] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065697] acpiphp: Slot [20] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065717] acpiphp: Slot [21] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065738] acpiphp: Slot [22] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065760] acpiphp: Slot [23] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065782] acpiphp: Slot [24] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065803] acpiphp: Slot [25] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065824] acpiphp: Slot [26] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065845] acpiphp: Slot [27] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065865] acpiphp: Slot [28] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065889] acpiphp: Slot [29] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065912] acpiphp: Slot [30] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065933] acpiphp: Slot [31] registered
+Nov 28 22:00:27 oom-test kernel: [    0.065949] PCI host bridge to bus 0000:00
+Nov 28 22:00:27 oom-test kernel: [    0.065954] pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+Nov 28 22:00:27 oom-test kernel: [    0.065957] pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+Nov 28 22:00:27 oom-test kernel: [    0.065961] pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+Nov 28 22:00:27 oom-test kernel: [    0.065967] pci_bus 0000:00: root bus resource [mem 0x80000000-0xfebfffff window]
+Nov 28 22:00:27 oom-test kernel: [    0.065972] pci_bus 0000:00: root bus resource [bus 00-ff]
+Nov 28 22:00:27 oom-test kernel: [    0.066012] pci 0000:00:00.0: [8086:1237] type 00 class 0x060000
+Nov 28 22:00:27 oom-test kernel: [    0.066376] pci 0000:00:01.0: [8086:7000] type 00 class 0x060100
+Nov 28 22:00:27 oom-test kernel: [    0.066871] pci 0000:00:01.1: [8086:7010] type 00 class 0x010180
+Nov 28 22:00:27 oom-test kernel: [    0.072788] pci 0000:00:01.1: reg 0x20: [io  0xc120-0xc12f]
+Nov 28 22:00:27 oom-test kernel: [    0.075917] pci 0000:00:01.1: legacy IDE quirk: reg 0x10: [io  0x01f0-0x01f7]
+Nov 28 22:00:27 oom-test kernel: [    0.075923] pci 0000:00:01.1: legacy IDE quirk: reg 0x14: [io  0x03f6]
+Nov 28 22:00:27 oom-test kernel: [    0.075927] pci 0000:00:01.1: legacy IDE quirk: reg 0x18: [io  0x0170-0x0177]
+Nov 28 22:00:27 oom-test kernel: [    0.075931] pci 0000:00:01.1: legacy IDE quirk: reg 0x1c: [io  0x0376]
+Nov 28 22:00:27 oom-test kernel: [    0.076110] pci 0000:00:01.2: [8086:7020] type 00 class 0x0c0300
+Nov 28 22:00:27 oom-test kernel: [    0.082278] pci 0000:00:01.2: reg 0x20: [io  0xc080-0xc09f]
+Nov 28 22:00:27 oom-test kernel: [    0.084177] pci 0000:00:01.3: [8086:7113] type 00 class 0x068000
+Nov 28 22:00:27 oom-test kernel: [    0.084574] pci 0000:00:01.3: quirk: [io  0xb000-0xb03f] claimed by PIIX4 ACPI
+Nov 28 22:00:27 oom-test kernel: [    0.084590] pci 0000:00:01.3: quirk: [io  0xb100-0xb10f] claimed by PIIX4 SMB
+Nov 28 22:00:27 oom-test kernel: [    0.084812] pci 0000:00:02.0: [1b36:0100] type 00 class 0x030000
+Nov 28 22:00:27 oom-test kernel: [    0.090199] pci 0000:00:02.0: reg 0x10: [mem 0xf8000000-0xfbffffff]
+Nov 28 22:00:27 oom-test kernel: [    0.094199] pci 0000:00:02.0: reg 0x14: [mem 0xfc000000-0xfcffffff]
+Nov 28 22:00:27 oom-test kernel: [    0.098950] pci 0000:00:02.0: reg 0x18: [mem 0xfd090000-0xfd091fff]
+Nov 28 22:00:27 oom-test kernel: [    0.103530] pci 0000:00:02.0: reg 0x1c: [io  0xc0a0-0xc0bf]
+Nov 28 22:00:27 oom-test kernel: [    0.115502] pci 0000:00:02.0: reg 0x30: [mem 0xfd080000-0xfd08ffff pref]
+Nov 28 22:00:27 oom-test kernel: [    0.115752] pci 0000:00:03.0: [1af4:1000] type 00 class 0x020000
+Nov 28 22:00:27 oom-test kernel: [    0.116990] pci 0000:00:03.0: reg 0x10: [io  0xc0c0-0xc0df]
+Nov 28 22:00:27 oom-test kernel: [    0.118901] pci 0000:00:03.0: reg 0x14: [mem 0xfd092000-0xfd092fff]
+Nov 28 22:00:27 oom-test kernel: [    0.128010] pci 0000:00:03.0: reg 0x30: [mem 0xfd000000-0xfd03ffff pref]
+Nov 28 22:00:27 oom-test kernel: [    0.128306] pci 0000:00:04.0: [1af4:1000] type 00 class 0x020000
+Nov 28 22:00:27 oom-test kernel: [    0.130275] pci 0000:00:04.0: reg 0x10: [io  0xc0e0-0xc0ff]
+Nov 28 22:00:27 oom-test kernel: [    0.132007] pci 0000:00:04.0: reg 0x14: [mem 0xfd093000-0xfd093fff]
+Nov 28 22:00:27 oom-test kernel: [    0.141853] pci 0000:00:04.0: reg 0x30: [mem 0xfd040000-0xfd07ffff pref]
+Nov 28 22:00:27 oom-test kernel: [    0.142151] pci 0000:00:05.0: [1af4:1004] type 00 class 0x010000
+Nov 28 22:00:27 oom-test kernel: [    0.144007] pci 0000:00:05.0: reg 0x10: [io  0xc000-0xc03f]
+Nov 28 22:00:27 oom-test kernel: [    0.145848] pci 0000:00:05.0: reg 0x14: [mem 0xfd094000-0xfd094fff]
+Nov 28 22:00:27 oom-test kernel: [    0.155942] pci 0000:00:06.0: [1af4:1001] type 00 class 0x010000
+Nov 28 22:00:27 oom-test kernel: [    0.157903] pci 0000:00:06.0: reg 0x10: [io  0xc040-0xc07f]
+Nov 28 22:00:27 oom-test kernel: [    0.161085] pci 0000:00:06.0: reg 0x14: [mem 0xfd095000-0xfd095fff]
+Nov 28 22:00:27 oom-test kernel: [    0.170275] pci 0000:00:07.0: [1af4:1002] type 00 class 0x00ff00
+Nov 28 22:00:27 oom-test kernel: [    0.171360] pci 0000:00:07.0: reg 0x10: [io  0xc100-0xc11f]
+Nov 28 22:00:27 oom-test kernel: [    0.177264] ACPI: PCI Interrupt Link [LNKA] (IRQs 5 *10 11)
+Nov 28 22:00:27 oom-test kernel: [    0.177372] ACPI: PCI Interrupt Link [LNKB] (IRQs 5 *10 11)
+Nov 28 22:00:27 oom-test kernel: [    0.177458] ACPI: PCI Interrupt Link [LNKC] (IRQs 5 10 *11)
+Nov 28 22:00:27 oom-test kernel: [    0.177543] ACPI: PCI Interrupt Link [LNKD] (IRQs 5 10 *11)
+Nov 28 22:00:27 oom-test kernel: [    0.177590] ACPI: PCI Interrupt Link [LNKS] (IRQs *9)
+Nov 28 22:00:27 oom-test kernel: [    0.177886] ACPI: Enabled 16 GPEs in block 00 to 0F
+Nov 28 22:00:27 oom-test kernel: [    0.178045] vgaarb: setting as boot device: PCI:0000:00:02.0
+Nov 28 22:00:27 oom-test kernel: [    0.178051] vgaarb: device added: PCI:0000:00:02.0,decodes=io+mem,owns=io+mem,locks=none
+Nov 28 22:00:27 oom-test kernel: [    0.178056] vgaarb: loaded
+Nov 28 22:00:27 oom-test kernel: [    0.178059] vgaarb: bridge control possible 0000:00:02.0
+Nov 28 22:00:27 oom-test kernel: [    0.178302] SCSI subsystem initialized
+Nov 28 22:00:27 oom-test kernel: [    0.178349] libata version 3.00 loaded.
+Nov 28 22:00:27 oom-test kernel: [    0.178372] ACPI: bus type USB registered
+Nov 28 22:00:27 oom-test kernel: [    0.178392] usbcore: registered new interface driver usbfs
+Nov 28 22:00:27 oom-test kernel: [    0.178401] usbcore: registered new interface driver hub
+Nov 28 22:00:27 oom-test kernel: [    0.178413] usbcore: registered new device driver usb
+Nov 28 22:00:27 oom-test kernel: [    0.178536] PCI: Using ACPI for IRQ routing
+Nov 28 22:00:27 oom-test kernel: [    0.178541] PCI: pci_cache_line_size set to 64 bytes
+Nov 28 22:00:27 oom-test kernel: [    0.178716] e820: reserve RAM buffer [mem 0x0009fc00-0x0009ffff]
+Nov 28 22:00:27 oom-test kernel: [    0.178718] e820: reserve RAM buffer [mem 0x1fffe000-0x1fffffff]
+Nov 28 22:00:27 oom-test kernel: [    0.178837] NetLabel: Initializing
+Nov 28 22:00:27 oom-test kernel: [    0.178841] NetLabel:  domain hash size = 128
+Nov 28 22:00:27 oom-test kernel: [    0.178843] NetLabel:  protocols = UNLABELED CIPSOv4
+Nov 28 22:00:27 oom-test kernel: [    0.178861] NetLabel:  unlabeled traffic allowed by default
+Nov 28 22:00:27 oom-test kernel: [    0.178964] hpet0: at MMIO 0xfed00000, IRQs 2, 8, 0
+Nov 28 22:00:27 oom-test kernel: [    0.178970] hpet0: 3 comparators, 64-bit 100.000000 MHz counter
+Nov 28 22:00:27 oom-test kernel: [    0.182079] amd_nb: Cannot enumerate AMD northbridges
+Nov 28 22:00:27 oom-test kernel: [    0.182097] clocksource: Switched to clocksource kvm-clock
+Nov 28 22:00:27 oom-test kernel: [    0.186902] AppArmor: AppArmor Filesystem Enabled
+Nov 28 22:00:27 oom-test kernel: [    0.186976] pnp: PnP ACPI init
+Nov 28 22:00:27 oom-test kernel: [    0.187040] pnp 00:00: Plug and Play ACPI device, IDs PNP0b00 (active)
+Nov 28 22:00:27 oom-test kernel: [    0.187089] pnp 00:01: Plug and Play ACPI device, IDs PNP0303 (active)
+Nov 28 22:00:27 oom-test kernel: [    0.187114] pnp 00:02: Plug and Play ACPI device, IDs PNP0f13 (active)
+Nov 28 22:00:27 oom-test kernel: [    0.187139] pnp 00:03: [dma 2]
+Nov 28 22:00:27 oom-test kernel: [    0.187155] pnp 00:03: Plug and Play ACPI device, IDs PNP0700 (active)
+Nov 28 22:00:27 oom-test kernel: [    0.187265] pnp 00:04: Plug and Play ACPI device, IDs PNP0501 (active)
+Nov 28 22:00:27 oom-test kernel: [    0.187453] pnp: PnP ACPI: found 5 devices
+Nov 28 22:00:27 oom-test kernel: [    0.192703] clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+Nov 28 22:00:27 oom-test kernel: [    0.192723] pci_bus 0000:00: resource 4 [io  0x0000-0x0cf7 window]
+Nov 28 22:00:27 oom-test kernel: [    0.192725] pci_bus 0000:00: resource 5 [io  0x0d00-0xffff window]
+Nov 28 22:00:27 oom-test kernel: [    0.192727] pci_bus 0000:00: resource 6 [mem 0x000a0000-0x000bffff window]
+Nov 28 22:00:27 oom-test kernel: [    0.192728] pci_bus 0000:00: resource 7 [mem 0x80000000-0xfebfffff window]
+Nov 28 22:00:27 oom-test kernel: [    0.192760] NET: Registered protocol family 2
+Nov 28 22:00:27 oom-test kernel: [    0.192915] TCP established hash table entries: 4096 (order: 3, 32768 bytes)
+Nov 28 22:00:27 oom-test kernel: [    0.192927] TCP bind hash table entries: 4096 (order: 4, 65536 bytes)
+Nov 28 22:00:27 oom-test kernel: [    0.192936] TCP: Hash tables configured (established 4096 bind 4096)
+Nov 28 22:00:27 oom-test kernel: [    0.192952] UDP hash table entries: 256 (order: 1, 8192 bytes)
+Nov 28 22:00:27 oom-test kernel: [    0.192957] UDP-Lite hash table entries: 256 (order: 1, 8192 bytes)
+Nov 28 22:00:27 oom-test kernel: [    0.192989] NET: Registered protocol family 1
+Nov 28 22:00:27 oom-test kernel: [    0.193003] pci 0000:00:00.0: Limiting direct PCI/PCI transfers
+Nov 28 22:00:27 oom-test kernel: [    0.193023] pci 0000:00:01.0: PIIX3: Enabling Passive Release
+Nov 28 22:00:27 oom-test kernel: [    0.193046] pci 0000:00:01.0: Activating ISA DMA hang workarounds
+Nov 28 22:00:27 oom-test kernel: [    0.193308] ACPI: PCI Interrupt Link [LNKD] enabled at IRQ 11
+Nov 28 22:00:27 oom-test kernel: [    0.194099] pci 0000:00:02.0: Video device with shadowed ROM
+Nov 28 22:00:27 oom-test kernel: [    0.194149] PCI: CLS 0 bytes, default 64
+Nov 28 22:00:27 oom-test kernel: [    0.194196] Trying to unpack rootfs image as initramfs...
+Nov 28 22:00:27 oom-test kernel: [    0.635769] Freeing initrd memory: 30132K (ffff88001d7ad000 - ffff88001f51a000)
+Nov 28 22:00:27 oom-test kernel: [    0.647783] Scanning for low memory corruption every 60 seconds
+Nov 28 22:00:27 oom-test kernel: [    0.648096] futex hash table entries: 256 (order: 2, 16384 bytes)
+Nov 28 22:00:27 oom-test kernel: [    0.648120] audit: initializing netlink subsys (disabled)
+Nov 28 22:00:27 oom-test kernel: [    0.648143] audit: type=2000 audit(1480370421.813:1): initialized
+Nov 28 22:00:27 oom-test kernel: [    0.648435] Initialise system trusted keyring
+Nov 28 22:00:27 oom-test kernel: [    0.648524] HugeTLB registered 1 GB page size, pre-allocated 0 pages
+Nov 28 22:00:27 oom-test kernel: [    0.648528] HugeTLB registered 2 MB page size, pre-allocated 0 pages
+Nov 28 22:00:27 oom-test kernel: [    0.649808] zbud: loaded
+Nov 28 22:00:27 oom-test kernel: [    0.650017] VFS: Disk quotas dquot_6.6.0
+Nov 28 22:00:27 oom-test kernel: [    0.650048] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+Nov 28 22:00:27 oom-test kernel: [    0.650281] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+Nov 28 22:00:27 oom-test kernel: [    0.650483] fuse init (API version 7.23)
+Nov 28 22:00:27 oom-test kernel: [    0.650606] Key type big_key registered
+Nov 28 22:00:27 oom-test kernel: [    0.650632] Allocating IMA MOK and blacklist keyrings.
+Nov 28 22:00:27 oom-test kernel: [    0.650862] Key type asymmetric registered
+Nov 28 22:00:27 oom-test kernel: [    0.650868] Asymmetric key parser 'x509' registered
+Nov 28 22:00:27 oom-test kernel: [    0.650901] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 249)
+Nov 28 22:00:27 oom-test kernel: [    0.650927] io scheduler noop registered
+Nov 28 22:00:27 oom-test kernel: [    0.650931] io scheduler deadline registered (default)
+Nov 28 22:00:27 oom-test kernel: [    0.650958] io scheduler cfq registered
+Nov 28 22:00:27 oom-test kernel: [    0.651034] pci_hotplug: PCI Hot Plug PCI Core version: 0.5
+Nov 28 22:00:27 oom-test kernel: [    0.651042] pciehp: PCI Express Hot Plug Controller Driver version: 0.4
+Nov 28 22:00:27 oom-test kernel: [    0.651068] vesafb: mode is 640x480x32, linelength=2560, pages=0
+Nov 28 22:00:27 oom-test kernel: [    0.651070] vesafb: scrolling: redraw
+Nov 28 22:00:27 oom-test kernel: [    0.651074] vesafb: Truecolor: size=8:8:8:8, shift=24:16:8:0
+Nov 28 22:00:27 oom-test kernel: [    0.651086] vesafb: framebuffer at 0xf8000000, mapped to 0xffffc90000200000, using 1216k, total 1216k
+Nov 28 22:00:27 oom-test kernel: [    0.652233] Console: switching to colour frame buffer device 80x30
+Nov 28 22:00:27 oom-test kernel: [    0.652877] fb0: VESA VGA frame buffer device
+Nov 28 22:00:27 oom-test kernel: [    0.652908] intel_idle: does not run on family 6 model 45
+Nov 28 22:00:27 oom-test kernel: [    0.652966] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
+Nov 28 22:00:27 oom-test kernel: [    0.652994] ACPI: Power Button [PWRF]
+Nov 28 22:00:27 oom-test kernel: [    0.653161] GHES: HEST is not enabled!
+Nov 28 22:00:27 oom-test kernel: [    0.653859] ACPI: PCI Interrupt Link [LNKC] enabled at IRQ 10
+Nov 28 22:00:27 oom-test kernel: [    0.654318] virtio-pci 0000:00:03.0: virtio_pci: leaving for legacy driver
+Nov 28 22:00:27 oom-test kernel: [    0.656687] virtio-pci 0000:00:04.0: virtio_pci: leaving for legacy driver
+Nov 28 22:00:27 oom-test kernel: [    0.658293] ACPI: PCI Interrupt Link [LNKA] enabled at IRQ 10
+Nov 28 22:00:27 oom-test kernel: [    0.658761] virtio-pci 0000:00:05.0: virtio_pci: leaving for legacy driver
+Nov 28 22:00:27 oom-test kernel: [    0.659520] ACPI: PCI Interrupt Link [LNKB] enabled at IRQ 11
+Nov 28 22:00:27 oom-test kernel: [    0.659988] virtio-pci 0000:00:06.0: virtio_pci: leaving for legacy driver
+Nov 28 22:00:27 oom-test kernel: [    0.660823] virtio-pci 0000:00:07.0: virtio_pci: leaving for legacy driver
+Nov 28 22:00:27 oom-test kernel: [    0.662265] Serial: 8250/16550 driver, 32 ports, IRQ sharing enabled
+Nov 28 22:00:27 oom-test kernel: [    0.684545] 00:04: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+Nov 28 22:00:27 oom-test kernel: [    0.688066] Linux agpgart interface v0.103
+Nov 28 22:00:27 oom-test kernel: [    0.690861] brd: module loaded
+Nov 28 22:00:27 oom-test kernel: [    0.692098] loop: module loaded
+Nov 28 22:00:27 oom-test kernel: [    0.693834] GPT:Primary header thinks Alt. header is not at the end of the disk.
+Nov 28 22:00:27 oom-test kernel: [    0.694685] GPT:40959999 != 41943039
+Nov 28 22:00:27 oom-test kernel: [    0.695109] GPT:Alternate GPT header not at the end of the disk.
+Nov 28 22:00:27 oom-test kernel: [    0.695548] GPT:40959999 != 41943039
+Nov 28 22:00:27 oom-test kernel: [    0.695968] GPT: Use GNU Parted to correct GPT errors.
+Nov 28 22:00:27 oom-test kernel: [    0.696415]  vda: vda1 vda15
+Nov 28 22:00:27 oom-test kernel: [    0.697075] ata_piix 0000:00:01.1: version 2.13
+Nov 28 22:00:27 oom-test kernel: [    0.698278] scsi host0: ata_piix
+Nov 28 22:00:27 oom-test kernel: [    0.698763] scsi host1: ata_piix
+Nov 28 22:00:27 oom-test kernel: [    0.699188] ata1: PATA max MWDMA2 cmd 0x1f0 ctl 0x3f6 bmdma 0xc120 irq 14
+Nov 28 22:00:27 oom-test kernel: [    0.699599] ata2: PATA max MWDMA2 cmd 0x170 ctl 0x376 bmdma 0xc128 irq 15
+Nov 28 22:00:27 oom-test kernel: [    0.700319] libphy: Fixed MDIO Bus: probed
+Nov 28 22:00:27 oom-test kernel: [    0.700730] tun: Universal TUN/TAP device driver, 1.6
+Nov 28 22:00:27 oom-test kernel: [    0.701104] tun: (C) 1999-2004 Max Krasnyansky <maxk@qualcomm.com>
+Nov 28 22:00:27 oom-test kernel: [    0.908054] PPP generic driver version 2.4.2
+Nov 28 22:00:27 oom-test kernel: [    0.908893] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+Nov 28 22:00:27 oom-test kernel: [    0.909297] ehci-pci: EHCI PCI platform driver
+Nov 28 22:00:27 oom-test kernel: [    0.909694] ehci-platform: EHCI generic platform driver
+Nov 28 22:00:27 oom-test kernel: [    0.910101] ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+Nov 28 22:00:27 oom-test kernel: [    0.910501] ohci-pci: OHCI PCI platform driver
+Nov 28 22:00:27 oom-test kernel: [    0.910923] ohci-platform: OHCI generic platform driver
+Nov 28 22:00:27 oom-test kernel: [    0.911315] uhci_hcd: USB Universal Host Controller Interface driver
+Nov 28 22:00:27 oom-test kernel: [    0.912837] uhci_hcd 0000:00:01.2: UHCI Host Controller
+Nov 28 22:00:27 oom-test kernel: [    0.913241] uhci_hcd 0000:00:01.2: new USB bus registered, assigned bus number 1
+Nov 28 22:00:27 oom-test kernel: [    0.914030] uhci_hcd 0000:00:01.2: detected 2 ports
+Nov 28 22:00:27 oom-test kernel: [    0.914533] uhci_hcd 0000:00:01.2: irq 11, io base 0x0000c080
+Nov 28 22:00:27 oom-test kernel: [    0.915000] usb usb1: New USB device found, idVendor=1d6b, idProduct=0001
+Nov 28 22:00:27 oom-test kernel: [    0.915396] usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+Nov 28 22:00:27 oom-test kernel: [    0.916226] usb usb1: Product: UHCI Host Controller
+Nov 28 22:00:27 oom-test kernel: [    0.916617] usb usb1: Manufacturer: Linux 4.4.0-47-generic uhci_hcd
+Nov 28 22:00:27 oom-test kernel: [    0.917012] usb usb1: SerialNumber: 0000:00:01.2
+Nov 28 22:00:27 oom-test kernel: [    0.917505] hub 1-0:1.0: USB hub found
+Nov 28 22:00:27 oom-test kernel: [    0.917915] hub 1-0:1.0: 2 ports detected
+Nov 28 22:00:27 oom-test kernel: [    0.918468] i8042: PNP: PS/2 Controller [PNP0303:KBD,PNP0f13:MOU] at 0x60,0x64 irq 1,12
+Nov 28 22:00:27 oom-test kernel: [    0.919933] serio: i8042 KBD port at 0x60,0x64 irq 1
+Nov 28 22:00:27 oom-test kernel: [    0.920387] serio: i8042 AUX port at 0x60,0x64 irq 12
+Nov 28 22:00:27 oom-test kernel: [    0.920900] mousedev: PS/2 mouse device common for all mice
+Nov 28 22:00:27 oom-test kernel: [    0.921697] input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input1
+Nov 28 22:00:27 oom-test kernel: [    0.922905] rtc_cmos 00:00: RTC can wake from S4
+Nov 28 22:00:27 oom-test kernel: [    0.923590] rtc_cmos 00:00: rtc core: registered rtc_cmos as rtc0
+Nov 28 22:00:27 oom-test kernel: [    0.924173] rtc_cmos 00:00: alarms up to one day, 114 bytes nvram, hpet irqs
+Nov 28 22:00:27 oom-test kernel: [    0.924602] i2c /dev entries driver
+Nov 28 22:00:27 oom-test kernel: [    0.925064] device-mapper: uevent: version 1.0.3
+Nov 28 22:00:27 oom-test kernel: [    0.925540] device-mapper: ioctl: 4.34.0-ioctl (2015-10-28) initialised: dm-devel@redhat.com
+Nov 28 22:00:27 oom-test kernel: [    0.926412] ledtrig-cpu: registered to indicate activity on CPUs
+Nov 28 22:00:27 oom-test kernel: [    0.927142] NET: Registered protocol family 10
+Nov 28 22:00:27 oom-test kernel: [    0.927823] NET: Registered protocol family 17
+Nov 28 22:00:27 oom-test kernel: [    0.928273] Key type dns_resolver registered
+Nov 28 22:00:27 oom-test kernel: [    0.928834] microcode: CPU0 sig=0x206d7, pf=0x1, revision=0x1
+Nov 28 22:00:27 oom-test kernel: [    0.929274] microcode: Microcode Update Driver: v2.01 <tigran@aivazian.fsnet.co.uk>, Peter Oruba
+Nov 28 22:00:27 oom-test kernel: [    0.930221] registered taskstats version 1
+Nov 28 22:00:27 oom-test kernel: [    0.930656] Loading compiled-in X.509 certificates
+Nov 28 22:00:27 oom-test kernel: [    0.931910] Loaded X.509 cert 'Build time autogenerated kernel key: a1f61691bd0a3817b529766167cef00cb5321db5'
+Nov 28 22:00:27 oom-test kernel: [    0.932815] zswap: loaded using pool lzo/zbud
+Nov 28 22:00:27 oom-test kernel: [    0.934669] Key type trusted registered
+Nov 28 22:00:27 oom-test kernel: [    0.937393] Key type encrypted registered
+Nov 28 22:00:27 oom-test kernel: [    0.938123] AppArmor: AppArmor sha1 policy hashing enabled
+Nov 28 22:00:27 oom-test kernel: [    0.938780] ima: No TPM chip found, activating TPM-bypass!
+Nov 28 22:00:27 oom-test kernel: [    0.939605] evm: HMAC attrs: 0x1
+Nov 28 22:00:27 oom-test kernel: [    0.940958]   Magic number: 8:432:48
+Nov 28 22:00:27 oom-test kernel: [    0.941884] rtc_cmos 00:00: setting system clock to 2016-11-28 22:00:21 UTC (1480370421)
+Nov 28 22:00:27 oom-test kernel: [    0.943591] BIOS EDD facility v0.16 2004-Jun-25, 0 devices found
+Nov 28 22:00:27 oom-test kernel: [    0.944179] EDD information not available.
+Nov 28 22:00:27 oom-test kernel: [    0.944700] PM: Hibernation image not present or could not be loaded.
+Nov 28 22:00:27 oom-test kernel: [    0.961030] Freeing unused kernel memory: 1488K (ffffffff81f45000 - ffffffff820b9000)
+Nov 28 22:00:27 oom-test kernel: [    0.961927] Write protecting the kernel read-only data: 14336k
+Nov 28 22:00:27 oom-test kernel: [    0.963028] Freeing unused kernel memory: 2024K (ffff880001806000 - ffff880001a00000)
+Nov 28 22:00:27 oom-test kernel: [    0.964275] Freeing unused kernel memory: 128K (ffff880001de0000 - ffff880001e00000)
+Nov 28 22:00:27 oom-test kernel: [    1.018858] scsi host2: Virtio SCSI HBA
+Nov 28 22:00:27 oom-test kernel: [    1.026647] input: VirtualPS/2 VMware VMMouse as /devices/platform/i8042/serio1/input/input4
+Nov 28 22:00:27 oom-test kernel: [    1.027873] input: VirtualPS/2 VMware VMMouse as /devices/platform/i8042/serio1/input/input3
+Nov 28 22:00:27 oom-test kernel: [    1.038073] [drm] Initialized drm 1.1.0 20060810
+Nov 28 22:00:27 oom-test kernel: [    1.048681] FDC 0 is a S82078B
+Nov 28 22:00:27 oom-test kernel: [    1.075337] AVX version of gcm_enc/dec engaged.
+Nov 28 22:00:27 oom-test kernel: [    1.076230] AES CTR mode by8 optimization enabled
+Nov 28 22:00:27 oom-test kernel: [    1.100609] [drm] Device Version 0.0
+Nov 28 22:00:27 oom-test kernel: [    1.101403] [drm] Compression level 0 log level 0
+Nov 28 22:00:27 oom-test kernel: [    1.101907] [drm] Currently using mode #0, list at 0x488
+Nov 28 22:00:27 oom-test kernel: [    1.102378] [drm] 12286 io pages at offset 0x1000000
+Nov 28 22:00:27 oom-test kernel: [    1.102817] [drm] 16777216 byte draw area at offset 0x0
+Nov 28 22:00:27 oom-test kernel: [    1.103267] [drm] RAM header offset: 0x3ffe000
+Nov 28 22:00:27 oom-test kernel: [    1.103739] [drm] rom modes offset 0x488 for 128 modes
+Nov 28 22:00:27 oom-test kernel: [    1.111438] [TTM] Zone  kernel: Available graphics memory: 250198 kiB
+Nov 28 22:00:27 oom-test kernel: [    1.111926] [TTM] Initializing pool allocator
+Nov 28 22:00:27 oom-test kernel: [    1.112465] [TTM] Initializing DMA pool allocator
+Nov 28 22:00:27 oom-test kernel: [    1.112910] [drm] qxl: 16M of VRAM memory size
+Nov 28 22:00:27 oom-test kernel: [    1.113341] [drm] qxl: 63M of IO pages memory ready (VRAM domain)
+Nov 28 22:00:27 oom-test kernel: [    1.113818] [drm] qxl: 16M of Surface memory size
+Nov 28 22:00:27 oom-test kernel: [    1.124128] [drm] main mem slot 1 [f8000000,3ffe000]
+Nov 28 22:00:27 oom-test kernel: [    1.124916] [drm] surface mem slot 2 [fc000000,1000000]
+Nov 28 22:00:27 oom-test kernel: [    1.126583] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+Nov 28 22:00:27 oom-test kernel: [    1.127001] [drm] No driver support for vblank timestamp query.
+Nov 28 22:00:27 oom-test kernel: [    1.127936] [drm] fb mappable at 0xF8000000, size 3145728
+Nov 28 22:00:27 oom-test kernel: [    1.128353] [drm] fb: depth 24, pitch 4096, width 1024, height 768
+Nov 28 22:00:27 oom-test kernel: [    1.128820] checking generic (f8000000 130000) vs hw (f8000000 1000000)
+Nov 28 22:00:27 oom-test kernel: [    1.128821] fb: switching to qxldrmfb from VESA VGA
+Nov 28 22:00:27 oom-test kernel: [    1.129463] Console: switching to colour dummy device 80x25
+Nov 28 22:00:27 oom-test kernel: [    1.130027] fbcon: qxldrmfb (fb0) is primary device
+Nov 28 22:00:27 oom-test kernel: [    1.130966] [drm:qxl_enc_commit [qxl]] *ERROR* head number too large or missing monitors config: ffffc90000104000, 0
+Nov 28 22:00:27 oom-test kernel: [    1.130968] Console: switching to colour frame buffer device 128x48
+Nov 28 22:00:27 oom-test kernel: [    1.134262] qxl 0000:00:02.0: fb0: qxldrmfb frame buffer device
+Nov 28 22:00:27 oom-test kernel: [    1.134370] [drm] Initialized qxl 0.1.0 20120117 for 0000:00:02.0 on minor 0
+Nov 28 22:00:27 oom-test kernel: [    1.193607] EXT4-fs (vda1): mounted filesystem with ordered data mode. Opts: (null)
+Nov 28 22:00:27 oom-test kernel: [    1.271290] random: init: uninitialized urandom read (12 bytes read, 13 bits of entropy available)
+Nov 28 22:00:27 oom-test kernel: [    1.313543] random: mountall: uninitialized urandom read (12 bytes read, 15 bits of entropy available)
+Nov 28 22:00:27 oom-test kernel: [    1.428690] EXT4-fs (vda1): re-mounted. Opts: errors=remount-ro
+Nov 28 22:00:27 oom-test kernel: [    1.516128] random: cloud-init: uninitialized urandom read (32 bytes read, 21 bits of entropy available)
+Nov 28 22:00:27 oom-test kernel: [    1.622062] random: landscape-sysin: uninitialized urandom read (32 bytes read, 25 bits of entropy available)
+Nov 28 22:00:27 oom-test kernel: [    1.623604] random: landscape-sysin: uninitialized urandom read (32 bytes read, 25 bits of entropy available)
+Nov 28 22:00:27 oom-test kernel: [    1.810091] random: cloud-init: uninitialized urandom read (32 bytes read, 30 bits of entropy available)
+Nov 28 22:00:27 oom-test kernel: [    1.846694] random: lsb_release: uninitialized urandom read (24 bytes read, 31 bits of entropy available)
+Nov 28 22:00:27 oom-test kernel: [    1.950543] random: check-new-relea: uninitialized urandom read (24 bytes read, 33 bits of entropy available)
+Nov 28 22:00:27 oom-test kernel: [    2.165930] random: mktemp: uninitialized urandom read (10 bytes read, 36 bits of entropy available)
+Nov 28 22:00:27 oom-test kernel: [    2.171009] lp: driver loaded but no devices found
+Nov 28 22:00:27 oom-test kernel: [    2.198221] random: hwe-support-sta: uninitialized urandom read (24 bytes read, 36 bits of entropy available)
+Nov 28 22:00:27 oom-test kernel: [    2.261018] piix4_smbus 0000:00:01.3: SMBus Host Controller at 0xb100, revision 0
+Nov 28 22:00:27 oom-test kernel: [    2.366063] audit: type=1400 audit(1480370422.920:2): apparmor="STATUS" operation="profile_load" profile="unconfined" name="/sbin/dhclient" pid=729 comm="apparmor_parser"
+Nov 28 22:00:27 oom-test kernel: [    2.366071] audit: type=1400 audit(1480370422.920:3): apparmor="STATUS" operation="profile_load" profile="unconfined" name="/usr/lib/NetworkManager/nm-dhcp-client.action" pid=729 comm="apparmor_parser"
+Nov 28 22:00:27 oom-test kernel: [    2.366074] audit: type=1400 audit(1480370422.920:4): apparmor="STATUS" operation="profile_load" profile="unconfined" name="/usr/lib/connman/scripts/dhclient-script" pid=729 comm="apparmor_parser"
+Nov 28 22:00:27 oom-test kernel: [    2.366568] audit: type=1400 audit(1480370422.920:5): apparmor="STATUS" operation="profile_replace" profile="unconfined" name="/usr/lib/NetworkManager/nm-dhcp-client.action" pid=729 comm="apparmor_parser"
+Nov 28 22:00:27 oom-test kernel: [    2.366573] audit: type=1400 audit(1480370422.920:6): apparmor="STATUS" operation="profile_replace" profile="unconfined" name="/usr/lib/connman/scripts/dhclient-script" pid=729 comm="apparmor_parser"
+Nov 28 22:00:27 oom-test kernel: [    2.366826] audit: type=1400 audit(1480370422.920:7): apparmor="STATUS" operation="profile_replace" profile="unconfined" name="/usr/lib/connman/scripts/dhclient-script" pid=729 comm="apparmor_parser"
+Nov 28 22:00:27 oom-test kernel: [    2.369221] audit: type=1400 audit(1480370422.924:8): apparmor="STATUS" operation="profile_replace" profile="unconfined" name="/sbin/dhclient" pid=726 comm="apparmor_parser"
+Nov 28 22:00:27 oom-test kernel: [    2.369227] audit: type=1400 audit(1480370422.924:9): apparmor="STATUS" operation="profile_replace" profile="unconfined" name="/usr/lib/NetworkManager/nm-dhcp-client.action" pid=726 comm="apparmor_parser"
+Nov 28 22:00:27 oom-test kernel: [    2.369231] audit: type=1400 audit(1480370422.924:10): apparmor="STATUS" operation="profile_replace" profile="unconfined" name="/usr/lib/connman/scripts/dhclient-script" pid=726 comm="apparmor_parser"
+Nov 28 22:00:27 oom-test kernel: [    2.906184] ppdev: user-space parallel port driver
+Nov 28 22:00:27 oom-test kernel: [    2.974556] intel_rapl: no valid rapl domains found in package 0
+Nov 28 22:00:27 oom-test kernel: [    6.112083] EXT4-fs (vda1): resizing filesystem from 5119232 to 5242363 blocks
+Nov 28 22:00:27 oom-test kernel: [    6.112685] EXT4-fs (vda1): resized filesystem to 5242363
+Nov 28 22:00:27 oom-test kernel: [    7.240233] audit_printk_skb: 9 callbacks suppressed
+Nov 28 22:00:27 oom-test kernel: [    7.240237] audit: type=1400 audit(1480370427.796:14): apparmor="STATUS" operation="profile_replace" profile="unconfined" name="/sbin/dhclient" pid=1264 comm="apparmor_parser"
+Nov 28 22:00:27 oom-test kernel: [    7.240244] audit: type=1400 audit(1480370427.796:15): apparmor="STATUS" operation="profile_replace" profile="unconfined" name="/usr/lib/NetworkManager/nm-dhcp-client.action" pid=1264 comm="apparmor_parser"
+Nov 28 22:00:27 oom-test kernel: [    7.240249] audit: type=1400 audit(1480370427.796:16): apparmor="STATUS" operation="profile_replace" profile="unconfined" name="/usr/lib/connman/scripts/dhclient-script" pid=1264 comm="apparmor_parser"
+Nov 28 22:00:27 oom-test kernel: [    7.240754] audit: type=1400 audit(1480370427.796:17): apparmor="STATUS" operation="profile_replace" profile="unconfined" name="/usr/lib/NetworkManager/nm-dhcp-client.action" pid=1264 comm="apparmor_parser"
+Nov 28 22:00:27 oom-test kernel: [    7.240757] audit: type=1400 audit(1480370427.796:18): apparmor="STATUS" operation="profile_replace" profile="unconfined" name="/usr/lib/connman/scripts/dhclient-script" pid=1264 comm="apparmor_parser"
+Nov 28 22:00:27 oom-test kernel: [    7.241003] audit: type=1400 audit(1480370427.796:19): apparmor="STATUS" operation="profile_replace" profile="unconfined" name="/usr/lib/connman/scripts/dhclient-script" pid=1264 comm="apparmor_parser"
+Nov 28 22:00:27 oom-test kernel: [    7.257131] audit: type=1400 audit(1480370427.812:20): apparmor="STATUS" operation="profile_load" profile="unconfined" name="/usr/sbin/tcpdump" pid=1266 comm="apparmor_parser"
+Nov 28 22:02:04 oom-test kernel: [  103.461853] random: nonblocking pool is initialized
+Nov 28 22:08:31 oom-test kernel: [  490.357683] SignalSender invoked oom-killer: gfp_mask=0x24201ca, order=0, oom_score_adj=0
+Nov 28 22:08:31 oom-test kernel: [  490.357687] SignalSender cpuset=/ mems_allowed=0
+Nov 28 22:08:31 oom-test kernel: [  490.357693] CPU: 0 PID: 2090 Comm: SignalSender Not tainted 4.4.0-47-generic #68~14.04.1-Ubuntu
+Nov 28 22:08:31 oom-test kernel: [  490.357694] Hardware name: DigitalOcean Droplet, BIOS 20161103 11/03/2016
+Nov 28 22:08:31 oom-test kernel: [  490.357696]  0000000000000000 ffff88001f0739f8 ffffffff813d8a8c ffff88001f073be8
+Nov 28 22:08:31 oom-test kernel: [  490.357699]  0000000000000000 ffff88001f073a88 ffffffff811f90a6 ffff88001f073a58
+Nov 28 22:08:31 oom-test kernel: [  490.357701]  ffffffff810c4e11 0000000000000000 0000000000000000 ffffffff81cd1d75
+Nov 28 22:08:31 oom-test kernel: [  490.357703] Call Trace:
+Nov 28 22:08:31 oom-test kernel: [  490.357711]  [<ffffffff813d8a8c>] dump_stack+0x63/0x87
+Nov 28 22:08:31 oom-test kernel: [  490.357715]  [<ffffffff811f90a6>] dump_header+0x5b/0x1d5
+Nov 28 22:08:31 oom-test kernel: [  490.357719]  [<ffffffff810c4e11>] ? __raw_callee_save___pv_queued_spin_unlock+0x11/0x20
+Nov 28 22:08:31 oom-test kernel: [  490.357724]  [<ffffffff811865a5>] oom_kill_process+0x205/0x3d0
+Nov 28 22:08:31 oom-test kernel: [  490.357726]  [<ffffffff81186bdb>] out_of_memory+0x40b/0x460
+Nov 28 22:08:31 oom-test kernel: [  490.357729]  [<ffffffff8118c1cc>] __alloc_pages_nodemask+0x97c/0xac0
+Nov 28 22:08:31 oom-test kernel: [  490.357733]  [<ffffffff811d1f88>] alloc_pages_current+0x88/0x120
+Nov 28 22:08:31 oom-test kernel: [  490.357735]  [<ffffffff81182d9e>] __page_cache_alloc+0xae/0xc0
+Nov 28 22:08:31 oom-test kernel: [  490.357738]  [<ffffffff81185123>] filemap_fault+0x193/0x400
+Nov 28 22:08:31 oom-test kernel: [  490.357741]  [<ffffffff8128d386>] ext4_filemap_fault+0x36/0x50
+Nov 28 22:08:31 oom-test kernel: [  490.357744]  [<ffffffff811aea5d>] __do_fault+0x3d/0xa0
+Nov 28 22:08:31 oom-test kernel: [  490.357746]  [<ffffffff811b1fb9>] handle_pte_fault+0xb29/0x1470
+Nov 28 22:08:31 oom-test kernel: [  490.357749]  [<ffffffff810a4e13>] ? finish_task_switch+0x73/0x290
+Nov 28 22:08:31 oom-test kernel: [  490.357753]  [<ffffffff817fa969>] ? __schedule+0x359/0x980
+Nov 28 22:08:31 oom-test kernel: [  490.357755]  [<ffffffff811b3770>] handle_mm_fault+0x250/0x540
+Nov 28 22:08:31 oom-test kernel: [  490.357758]  [<ffffffff81067c0a>] __do_page_fault+0x19a/0x430
+Nov 28 22:08:31 oom-test kernel: [  490.357762]  [<ffffffff810e8430>] ? hrtimer_init+0x180/0x180
+Nov 28 22:08:31 oom-test kernel: [  490.357764]  [<ffffffff81067f07>] trace_do_page_fault+0x37/0xe0
+Nov 28 22:08:31 oom-test kernel: [  490.357767]  [<ffffffff81060c09>] do_async_page_fault+0x19/0x80
+Nov 28 22:08:31 oom-test kernel: [  490.357769]  [<ffffffff818009e8>] async_page_fault+0x28/0x30
+Nov 28 22:08:31 oom-test kernel: [  490.357771] Mem-Info:
+Nov 28 22:08:31 oom-test kernel: [  490.357775] active_anon:115159 inactive_anon:68 isolated_anon:0
+Nov 28 22:08:31 oom-test kernel: [  490.357775]  active_file:17 inactive_file:20 isolated_file:0
+Nov 28 22:08:31 oom-test kernel: [  490.357775]  unevictable:0 dirty:4 writeback:0 unstable:0
+Nov 28 22:08:31 oom-test kernel: [  490.357775]  slab_reclaimable:2236 slab_unreclaimable:2385
+Nov 28 22:08:31 oom-test kernel: [  490.357775]  mapped:16 shmem:96 pagetables:750 bounce:0
+Nov 28 22:08:31 oom-test kernel: [  490.357775]  free:1114 free_pcp:66 free_cma:0
+Nov 28 22:08:31 oom-test kernel: [  490.357778] Node 0 DMA free:1848kB min:92kB low:112kB high:136kB active_anon:12952kB inactive_anon:4kB active_file:0kB inactive_file:0kB unevictable:0kB isolated(anon):0kB isolated(file):0kB present:15992kB managed:15908kB mlocked:0kB dirty:0kB writeback:0kB mapped:0kB shmem:4kB slab_reclaimable:268kB slab_unreclaimable:296kB kernel_stack:16kB pagetables:100kB unstable:0kB bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:0kB writeback_tmp:0kB pages_scanned:0 all_unreclaimable? yes
+Nov 28 22:08:31 oom-test kernel: [  490.357782] lowmem_reserve[]: 0 440 440 440 440
+Nov 28 22:08:31 oom-test kernel: [  490.357785] Node 0 DMA32 free:2608kB min:2636kB low:3292kB high:3952kB active_anon:447684kB inactive_anon:268kB active_file:68kB inactive_file:80kB unevictable:0kB isolated(anon):0kB isolated(file):0kB present:507896kB managed:484488kB mlocked:0kB dirty:16kB writeback:0kB mapped:68kB shmem:380kB slab_reclaimable:8676kB slab_unreclaimable:9244kB kernel_stack:1792kB pagetables:2900kB unstable:0kB bounce:0kB free_pcp:264kB local_pcp:264kB free_cma:0kB writeback_tmp:0kB pages_scanned:1276 all_unreclaimable? yes
+Nov 28 22:08:31 oom-test kernel: [  490.357790] lowmem_reserve[]: 0 0 0 0 0
+Nov 28 22:08:31 oom-test kernel: [  490.357792] Node 0 DMA: 7*4kB (UM) 10*8kB (UM) 5*16kB (UM) 4*32kB (U) 0*64kB 0*128kB 2*256kB (U) 2*512kB (UM) 0*1024kB 0*2048kB 0*4096kB = 1852kB
+Nov 28 22:08:31 oom-test kernel: [  490.357800] Node 0 DMA32: 30*4kB (UME) 47*8kB (UME) 66*16kB (UME) 19*32kB (UME) 7*64kB (M) 0*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 0*4096kB = 2608kB
+Nov 28 22:08:31 oom-test kernel: [  490.357808] Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=1048576kB
+Nov 28 22:08:31 oom-test kernel: [  490.357810] Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=2048kB
+Nov 28 22:08:31 oom-test kernel: [  490.357811] 133 total pagecache pages
+Nov 28 22:08:31 oom-test kernel: [  490.357812] 0 pages in swap cache
+Nov 28 22:08:31 oom-test kernel: [  490.357813] Swap cache stats: add 0, delete 0, find 0/0
+Nov 28 22:08:31 oom-test kernel: [  490.357814] Free swap  = 0kB
+Nov 28 22:08:31 oom-test kernel: [  490.357815] Total swap = 0kB
+Nov 28 22:08:31 oom-test kernel: [  490.357816] 130972 pages RAM
+Nov 28 22:08:31 oom-test kernel: [  490.357817] 0 pages HighMem/MovableOnly
+Nov 28 22:08:31 oom-test kernel: [  490.357817] 5873 pages reserved
+Nov 28 22:08:31 oom-test kernel: [  490.357818] 0 pages cma reserved
+Nov 28 22:08:31 oom-test kernel: [  490.357819] 0 pages hwpoisoned
+Nov 28 22:08:31 oom-test kernel: [  490.357820] [ pid ]   uid  tgid total_vm      rss nr_ptes nr_pmds swapents oom_score_adj name
+Nov 28 22:08:31 oom-test kernel: [  490.357824] [  667]     0   667     4870       45      15       3        0             0 upstart-udev-br
+Nov 28 22:08:31 oom-test kernel: [  490.357826] [  673]     0   673    12918      170      28       3        0         -1000 systemd-udevd
+Nov 28 22:08:31 oom-test kernel: [  490.357828] [  910]     0   910     3849       83      13       3        0             0 upstart-socket-
+Nov 28 22:08:31 oom-test kernel: [  490.357830] [ 1087]   102  1087     9805       95      23       3        0             0 dbus-daemon
+Nov 28 22:08:31 oom-test kernel: [  490.357831] [ 1152]     0  1152    10863       89      26       3        0             0 systemd-logind
+Nov 28 22:08:31 oom-test kernel: [  490.357833] [ 1167]   101  1167    63961      135      28       3        0             0 rsyslogd
+Nov 28 22:08:31 oom-test kernel: [  490.357834] [ 1211]     0  1211     3820       69      12       3        0             0 upstart-file-br
+Nov 28 22:08:31 oom-test kernel: [  490.357836] [ 1289]     0  1289     4015       40      13       3        0             0 getty
+Nov 28 22:08:31 oom-test kernel: [  490.357838] [ 1292]     0  1292     4015       43      12       3        0             0 getty
+Nov 28 22:08:31 oom-test kernel: [  490.357839] [ 1296]     0  1296     4015       43      13       3        0             0 getty
+Nov 28 22:08:31 oom-test kernel: [  490.357841] [ 1297]     0  1297     4015       42      12       3        0             0 getty
+Nov 28 22:08:31 oom-test kernel: [  490.357843] [ 1300]     0  1300     4015       41      13       3        0             0 getty
+Nov 28 22:08:31 oom-test kernel: [  490.357844] [ 1339]     0  1339     1093       37       8       3        0             0 acpid
+Nov 28 22:08:31 oom-test kernel: [  490.357846] [ 1340]     0  1340     4785       41      13       3        0             0 atd
+Nov 28 22:08:31 oom-test kernel: [  490.357847] [ 1341]     0  1341     5914       54      17       3        0             0 cron
+Nov 28 22:08:31 oom-test kernel: [  490.357849] [ 1424]     0  1424     4015       41      14       3        0             0 getty
+Nov 28 22:08:31 oom-test kernel: [  490.357851] [ 1518]     0  1518    15346      172      33       3        0         -1000 sshd
+Nov 28 22:08:31 oom-test kernel: [  490.357852] [ 1650]     0  1650    26929      273      57       3        0             0 sshd
+Nov 28 22:08:31 oom-test kernel: [  490.357854] [ 1719]     0  1719     5655      456      16       3        0             0 bash
+Nov 28 22:08:31 oom-test kernel: [  490.357855] [ 2017]     0  2017     3951       76      14       3        0             0 tmux
+Nov 28 22:08:31 oom-test kernel: [  490.357857] [ 2019]     0  2019     6138      183      18       3        0             0 tmux
+Nov 28 22:08:31 oom-test kernel: [  490.357858] [ 2020]     0  2020     5673      473      16       3        0             0 bash
+Nov 28 22:08:31 oom-test kernel: [  490.357860] [ 2034]     0  2034     5673      472      17       3        0             0 bash
+Nov 28 22:08:31 oom-test kernel: [  490.357861] [ 2050]     0  2050     1870       19       9       3        0             0 tail
+Nov 28 22:08:31 oom-test kernel: [  490.357863] [ 2062]     0  2062     5673      447      16       3        0             0 bash
+Nov 28 22:08:31 oom-test kernel: [  490.357864] [ 2076]     0  2076     6265      111      18       3        0             0 top
+Nov 28 22:08:31 oom-test kernel: [  490.357866] [ 2089]     0  2089   330738   110965     257      18        0             0 node
+Nov 28 22:08:31 oom-test kernel: [  490.357867] Out of memory: Kill process 2089 (node) score 862 or sacrifice child
+Nov 28 22:08:31 oom-test kernel: [  490.357906] Killed process 2089 (node) total-vm:1322952kB, anon-rss:443860kB, file-rss:0kB
+Nov 28 22:09:07 oom-test kernel: [  525.832194] tmux invoked oom-killer: gfp_mask=0x24201ca, order=0, oom_score_adj=0
+Nov 28 22:09:07 oom-test kernel: [  525.832200] tmux cpuset=/ mems_allowed=0
+Nov 28 22:09:07 oom-test kernel: [  525.832207] CPU: 0 PID: 2019 Comm: tmux Not tainted 4.4.0-47-generic #68~14.04.1-Ubuntu
+Nov 28 22:09:07 oom-test kernel: [  525.832209] Hardware name: DigitalOcean Droplet, BIOS 20161103 11/03/2016
+Nov 28 22:09:07 oom-test kernel: [  525.832211]  0000000000000000 ffff88001e65b9f8 ffffffff813d8a8c ffff88001e65bbe8
+Nov 28 22:09:07 oom-test kernel: [  525.832214]  0000000000000000 ffff88001e65ba88 ffffffff811f90a6 ffffffff81134d46
+Nov 28 22:09:07 oom-test kernel: [  525.832217]  ffffffff810c4e11 0000000000000000 0000000000000000 ffffffff81cd1d75
+Nov 28 22:09:07 oom-test kernel: [  525.832221] Call Trace:
+Nov 28 22:09:07 oom-test kernel: [  525.832235]  [<ffffffff813d8a8c>] dump_stack+0x63/0x87
+Nov 28 22:09:07 oom-test kernel: [  525.832241]  [<ffffffff811f90a6>] dump_header+0x5b/0x1d5
+Nov 28 22:09:07 oom-test kernel: [  525.832247]  [<ffffffff81134d46>] ? delayacct_end+0x56/0x60
+Nov 28 22:09:07 oom-test kernel: [  525.832251]  [<ffffffff810c4e11>] ? __raw_callee_save___pv_queued_spin_unlock+0x11/0x20
+Nov 28 22:09:07 oom-test kernel: [  525.832257]  [<ffffffff811865a5>] oom_kill_process+0x205/0x3d0
+Nov 28 22:09:07 oom-test kernel: [  525.832260]  [<ffffffff81186bdb>] out_of_memory+0x40b/0x460
+Nov 28 22:09:07 oom-test kernel: [  525.832265]  [<ffffffff8118c1cc>] __alloc_pages_nodemask+0x97c/0xac0
+Nov 28 22:09:07 oom-test kernel: [  525.832270]  [<ffffffff811d1f88>] alloc_pages_current+0x88/0x120
+Nov 28 22:09:07 oom-test kernel: [  525.832273]  [<ffffffff81182d9e>] __page_cache_alloc+0xae/0xc0
+Nov 28 22:09:07 oom-test kernel: [  525.832276]  [<ffffffff81185123>] filemap_fault+0x193/0x400
+Nov 28 22:09:07 oom-test kernel: [  525.832281]  [<ffffffff8128d386>] ext4_filemap_fault+0x36/0x50
+Nov 28 22:09:07 oom-test kernel: [  525.832284]  [<ffffffff811aea5d>] __do_fault+0x3d/0xa0
+Nov 28 22:09:07 oom-test kernel: [  525.832287]  [<ffffffff811b1fb9>] handle_pte_fault+0xb29/0x1470
+Nov 28 22:09:07 oom-test kernel: [  525.832293]  [<ffffffff81211b30>] ? poll_select_copy_remaining+0x120/0x120
+Nov 28 22:09:07 oom-test kernel: [  525.832296]  [<ffffffff81211b30>] ? poll_select_copy_remaining+0x120/0x120
+Nov 28 22:09:07 oom-test kernel: [  525.832299]  [<ffffffff811b3770>] handle_mm_fault+0x250/0x540
+Nov 28 22:09:07 oom-test kernel: [  525.832303]  [<ffffffff81067c0a>] __do_page_fault+0x19a/0x430
+Nov 28 22:09:07 oom-test kernel: [  525.832309]  [<ffffffff810ee7ac>] ? __getnstimeofday64+0x3c/0xd0
+Nov 28 22:09:07 oom-test kernel: [  525.832312]  [<ffffffff81067f07>] trace_do_page_fault+0x37/0xe0
+Nov 28 22:09:07 oom-test kernel: [  525.832316]  [<ffffffff81060c09>] do_async_page_fault+0x19/0x80
+Nov 28 22:09:07 oom-test kernel: [  525.832320]  [<ffffffff818009e8>] async_page_fault+0x28/0x30
+Nov 28 22:09:07 oom-test kernel: [  525.832336] Mem-Info:
+Nov 28 22:09:07 oom-test kernel: [  525.832342] active_anon:115223 inactive_anon:68 isolated_anon:0
+Nov 28 22:09:07 oom-test kernel: [  525.832342]  active_file:10 inactive_file:10 isolated_file:0
+Nov 28 22:09:07 oom-test kernel: [  525.832342]  unevictable:0 dirty:0 writeback:0 unstable:0
+Nov 28 22:09:07 oom-test kernel: [  525.832342]  slab_reclaimable:2242 slab_unreclaimable:2389
+Nov 28 22:09:07 oom-test kernel: [  525.832342]  mapped:3 shmem:96 pagetables:753 bounce:0
+Nov 28 22:09:07 oom-test kernel: [  525.832342]  free:1107 free_pcp:31 free_cma:0
+Nov 28 22:09:07 oom-test kernel: [  525.832347] Node 0 DMA free:1848kB min:92kB low:112kB high:136kB active_anon:12888kB inactive_anon:4kB active_file:0kB inactive_file:0kB unevictable:0kB isolated(anon):0kB isolated(file):0kB present:15992kB managed:15908kB mlocked:0kB dirty:0kB writeback:0kB mapped:0kB shmem:4kB slab_reclaimable:268kB slab_unreclaimable:296kB kernel_stack:32kB pagetables:112kB unstable:0kB bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:0kB writeback_tmp:0kB pages_scanned:8 all_unreclaimable? yes
+Nov 28 22:09:07 oom-test kernel: [  525.832354] lowmem_reserve[]: 0 440 440 440 440
+Nov 28 22:09:07 oom-test kernel: [  525.832358] Node 0 DMA32 free:2580kB min:2636kB low:3292kB high:3952kB active_anon:448004kB inactive_anon:268kB active_file:40kB inactive_file:40kB unevictable:0kB isolated(anon):0kB isolated(file):0kB present:507896kB managed:484488kB mlocked:0kB dirty:0kB writeback:0kB mapped:12kB shmem:380kB slab_reclaimable:8700kB slab_unreclaimable:9260kB kernel_stack:1776kB pagetables:2900kB unstable:0kB bounce:0kB free_pcp:124kB local_pcp:124kB free_cma:0kB writeback_tmp:0kB pages_scanned:496 all_unreclaimable? yes
+Nov 28 22:09:07 oom-test kernel: [  525.832365] lowmem_reserve[]: 0 0 0 0 0
+Nov 28 22:09:07 oom-test kernel: [  525.832368] Node 0 DMA: 4*4kB (UM) 9*8kB (U) 4*16kB (UM) 3*32kB (U) 1*64kB (M) 0*128kB 2*256kB (U) 2*512kB (UM) 0*1024kB 0*2048kB 0*4096kB = 1848kB
+Nov 28 22:09:07 oom-test kernel: [  525.832382] Node 0 DMA32: 39*4kB (UME) 23*8kB (ME) 60*16kB (UME) 20*32kB (UE) 4*64kB (E) 1*128kB (U) 1*256kB (M) 0*512kB 0*1024kB 0*2048kB 0*4096kB = 2580kB
+Nov 28 22:09:07 oom-test kernel: [  525.832396] Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=1048576kB
+Nov 28 22:09:07 oom-test kernel: [  525.832397] Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=2048kB
+Nov 28 22:09:07 oom-test kernel: [  525.832399] 116 total pagecache pages
+Nov 28 22:09:07 oom-test kernel: [  525.832401] 0 pages in swap cache
+Nov 28 22:09:07 oom-test kernel: [  525.832402] Swap cache stats: add 0, delete 0, find 0/0
+Nov 28 22:09:07 oom-test kernel: [  525.832404] Free swap  = 0kB
+Nov 28 22:09:07 oom-test kernel: [  525.832405] Total swap = 0kB
+Nov 28 22:09:07 oom-test kernel: [  525.832406] 130972 pages RAM
+Nov 28 22:09:07 oom-test kernel: [  525.832407] 0 pages HighMem/MovableOnly
+Nov 28 22:09:07 oom-test kernel: [  525.832408] 5873 pages reserved
+Nov 28 22:09:07 oom-test kernel: [  525.832409] 0 pages cma reserved
+Nov 28 22:09:07 oom-test kernel: [  525.832411] 0 pages hwpoisoned
+Nov 28 22:09:07 oom-test kernel: [  525.832412] [ pid ]   uid  tgid total_vm      rss nr_ptes nr_pmds swapents oom_score_adj name
+Nov 28 22:09:07 oom-test kernel: [  525.832418] [  667]     0   667     4870       45      15       3        0             0 upstart-udev-br
+Nov 28 22:09:07 oom-test kernel: [  525.832421] [  673]     0   673    12918      170      28       3        0         -1000 systemd-udevd
+Nov 28 22:09:07 oom-test kernel: [  525.832424] [  910]     0   910     3849       83      13       3        0             0 upstart-socket-
+Nov 28 22:09:07 oom-test kernel: [  525.832427] [ 1087]   102  1087     9805       95      23       3        0             0 dbus-daemon
+Nov 28 22:09:07 oom-test kernel: [  525.832429] [ 1152]     0  1152    10863       89      26       3        0             0 systemd-logind
+Nov 28 22:09:07 oom-test kernel: [  525.832432] [ 1167]   101  1167    63961      135      28       3        0             0 rsyslogd
+Nov 28 22:09:07 oom-test kernel: [  525.832434] [ 1211]     0  1211     3820       69      12       3        0             0 upstart-file-br
+Nov 28 22:09:07 oom-test kernel: [  525.832437] [ 1289]     0  1289     4015       40      13       3        0             0 getty
+Nov 28 22:09:07 oom-test kernel: [  525.832439] [ 1292]     0  1292     4015       43      12       3        0             0 getty
+Nov 28 22:09:07 oom-test kernel: [  525.832442] [ 1296]     0  1296     4015       43      13       3        0             0 getty
+Nov 28 22:09:07 oom-test kernel: [  525.832444] [ 1297]     0  1297     4015       42      12       3        0             0 getty
+Nov 28 22:09:07 oom-test kernel: [  525.832446] [ 1300]     0  1300     4015       41      13       3        0             0 getty
+Nov 28 22:09:07 oom-test kernel: [  525.832449] [ 1339]     0  1339     1093       37       8       3        0             0 acpid
+Nov 28 22:09:07 oom-test kernel: [  525.832451] [ 1340]     0  1340     4785       41      13       3        0             0 atd
+Nov 28 22:09:07 oom-test kernel: [  525.832454] [ 1341]     0  1341     5914       52      17       3        0             0 cron
+Nov 28 22:09:07 oom-test kernel: [  525.832456] [ 1424]     0  1424     4015       41      14       3        0             0 getty
+Nov 28 22:09:07 oom-test kernel: [  525.832459] [ 1518]     0  1518    15346      172      33       3        0         -1000 sshd
+Nov 28 22:09:07 oom-test kernel: [  525.832461] [ 1650]     0  1650    26929      270      57       3        0             0 sshd
+Nov 28 22:09:07 oom-test kernel: [  525.832464] [ 1719]     0  1719     5655      456      16       3        0             0 bash
+Nov 28 22:09:07 oom-test kernel: [  525.832466] [ 2017]     0  2017     3951       76      14       3        0             0 tmux
+Nov 28 22:09:07 oom-test kernel: [  525.832469] [ 2019]     0  2019     6171      214      18       3        0             0 tmux
+Nov 28 22:09:07 oom-test kernel: [  525.832471] [ 2020]     0  2020     5673      473      16       3        0             0 bash
+Nov 28 22:09:07 oom-test kernel: [  525.832473] [ 2034]     0  2034     5673      472      17       3        0             0 bash
+Nov 28 22:09:07 oom-test kernel: [  525.832476] [ 2050]     0  2050     1870       19       9       3        0             0 tail
+Nov 28 22:09:07 oom-test kernel: [  525.832478] [ 2062]     0  2062     5673      447      16       3        0             0 bash
+Nov 28 22:09:07 oom-test kernel: [  525.832481] [ 2076]     0  2076     6265      111      18       3        0             0 top
+Nov 28 22:09:07 oom-test kernel: [  525.832483] [ 2093]     0  2093   330738   111021     257      19        0             0 node
+Nov 28 22:09:07 oom-test kernel: [  525.832486] Out of memory: Kill process 2093 (node) score 862 or sacrifice child
+Nov 28 22:09:07 oom-test kernel: [  525.832547] Killed process 2093 (node) total-vm:1322952kB, anon-rss:444084kB, file-rss:0kB
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Initializing cgroup subsys cpuset
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Initializing cgroup subsys cpu
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Initializing cgroup subsys cpuacct
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Linux version 4.4.0-47-generic (buildd@lgw01-12) (gcc version 4.8.4 (Ubuntu 4.8.4-2ubuntu1~14.04.3) ) #68~14.04.1-Ubuntu SMP Wed Oct 26 19:42:11 UTC 2016 (Ubuntu 4.4.0-47.68~14.04.1-generic 4.4.24)
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Command line: BOOT_IMAGE=/boot/vmlinuz-4.4.0-47-generic root=UUID=f536a29c-36fb-4b05-b3a2-cd185f86231e ro console=tty1 root=LABEL=DOROOT notsc clocksource=kvm-clock net.ifnames=0
+Nov 28 22:27:26 oom-test kernel: [    0.000000] KERNEL supported cpus:
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   Intel GenuineIntel
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   AMD AuthenticAMD
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   Centaur CentaurHauls
+Nov 28 22:27:26 oom-test kernel: [    0.000000] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+Nov 28 22:27:26 oom-test kernel: [    0.000000] x86/fpu: Supporting XSAVE feature 0x01: 'x87 floating point registers'
+Nov 28 22:27:26 oom-test kernel: [    0.000000] x86/fpu: Supporting XSAVE feature 0x02: 'SSE registers'
+Nov 28 22:27:26 oom-test kernel: [    0.000000] x86/fpu: Supporting XSAVE feature 0x04: 'AVX registers'
+Nov 28 22:27:26 oom-test kernel: [    0.000000] x86/fpu: Enabled xstate features 0x7, context size is 832 bytes, using 'standard' format.
+Nov 28 22:27:26 oom-test kernel: [    0.000000] x86/fpu: Using 'eager' FPU context switches.
+Nov 28 22:27:26 oom-test kernel: [    0.000000] e820: BIOS-provided physical RAM map:
+Nov 28 22:27:26 oom-test kernel: [    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+Nov 28 22:27:26 oom-test kernel: [    0.000000] BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+Nov 28 22:27:26 oom-test kernel: [    0.000000] BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+Nov 28 22:27:26 oom-test kernel: [    0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000001fffdfff] usable
+Nov 28 22:27:26 oom-test kernel: [    0.000000] BIOS-e820: [mem 0x000000001fffe000-0x000000001fffffff] reserved
+Nov 28 22:27:26 oom-test kernel: [    0.000000] BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
+Nov 28 22:27:26 oom-test kernel: [    0.000000] BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+Nov 28 22:27:26 oom-test kernel: [    0.000000] NX (Execute Disable) protection: active
+Nov 28 22:27:26 oom-test kernel: [    0.000000] SMBIOS 2.4 present.
+Nov 28 22:27:26 oom-test kernel: [    0.000000] DMI: DigitalOcean Droplet, BIOS 20161103 11/03/2016
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Hypervisor detected: KVM
+Nov 28 22:27:26 oom-test kernel: [    0.000000] e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
+Nov 28 22:27:26 oom-test kernel: [    0.000000] e820: remove [mem 0x000a0000-0x000fffff] usable
+Nov 28 22:27:26 oom-test kernel: [    0.000000] e820: last_pfn = 0x1fffe max_arch_pfn = 0x400000000
+Nov 28 22:27:26 oom-test kernel: [    0.000000] MTRR default type: write-back
+Nov 28 22:27:26 oom-test kernel: [    0.000000] MTRR fixed ranges enabled:
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   00000-9FFFF write-back
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   A0000-BFFFF uncachable
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   C0000-FFFFF write-protect
+Nov 28 22:27:26 oom-test kernel: [    0.000000] MTRR variable ranges enabled:
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   0 base 0080000000 mask FF80000000 uncachable
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   1 disabled
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   2 disabled
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   3 disabled
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   4 disabled
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   5 disabled
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   6 disabled
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   7 disabled
+Nov 28 22:27:26 oom-test kernel: [    0.000000] x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WC  UC- WT
+Nov 28 22:27:26 oom-test kernel: [    0.000000] found SMP MP-table at [mem 0x000f1790-0x000f179f] mapped at [ffff8800000f1790]
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Scanning 1 areas for low memory corruption
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Base memory trampoline at [ffff880000099000] 99000 size 24576
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Using GB pages for direct mapping
+Nov 28 22:27:26 oom-test kernel: [    0.000000] BRK [0x02206000, 0x02206fff] PGTABLE
+Nov 28 22:27:26 oom-test kernel: [    0.000000] BRK [0x02207000, 0x02207fff] PGTABLE
+Nov 28 22:27:26 oom-test kernel: [    0.000000] BRK [0x02208000, 0x02208fff] PGTABLE
+Nov 28 22:27:26 oom-test kernel: [    0.000000] BRK [0x02209000, 0x02209fff] PGTABLE
+Nov 28 22:27:26 oom-test kernel: [    0.000000] RAMDISK: [mem 0x1d7ad000-0x1f519fff]
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: Early table checksum verification disabled
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: RSDP 0x00000000000F1600 000014 (v00 BOCHS )
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: RSDT 0x000000001FFFE470 000034 (v01 BOCHS  BXPCRSDT 00000001 BXPC 00000001)
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: FACP 0x000000001FFFFF80 000074 (v01 BOCHS  BXPCFACP 00000001 BXPC 00000001)
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: DSDT 0x000000001FFFE4B0 001135 (v01 BOCHS  BXPCDSDT 00000001 BXPC 00000001)
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: FACS 0x000000001FFFFF40 000040
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: SSDT 0x000000001FFFF720 000819 (v01 BOCHS  BXPCSSDT 00000001 BXPC 00000001)
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: APIC 0x000000001FFFF630 000078 (v01 BOCHS  BXPCAPIC 00000001 BXPC 00000001)
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: HPET 0x000000001FFFF5F0 000038 (v01 BOCHS  BXPCHPET 00000001 BXPC 00000001)
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: Local APIC address 0xfee00000
+Nov 28 22:27:26 oom-test kernel: [    0.000000] No NUMA configuration found
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Faking a node at [mem 0x0000000000000000-0x000000001fffdfff]
+Nov 28 22:27:26 oom-test kernel: [    0.000000] NODE_DATA(0) allocated [mem 0x1fff9000-0x1fffdfff]
+Nov 28 22:27:26 oom-test kernel: [    0.000000] kvm-clock: Using msrs 4b564d01 and 4b564d00
+Nov 28 22:27:26 oom-test kernel: [    0.000000] kvm-clock: cpu 0, msr 0:1fff5001, primary cpu clock
+Nov 28 22:27:26 oom-test kernel: [    0.000000] clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Zone ranges:
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   DMA32    [mem 0x0000000001000000-0x000000001fffdfff]
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   Normal   empty
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   Device   empty
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Movable zone start for each node
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Early memory node ranges
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   node   0: [mem 0x0000000000001000-0x000000000009efff]
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   node   0: [mem 0x0000000000100000-0x000000001fffdfff]
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Initmem setup node 0 [mem 0x0000000000001000-0x000000001fffdfff]
+Nov 28 22:27:26 oom-test kernel: [    0.000000] On node 0 totalpages: 130972
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   DMA zone: 64 pages used for memmap
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   DMA zone: 21 pages reserved
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   DMA zone: 3998 pages, LIFO batch:0
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   DMA32 zone: 1984 pages used for memmap
+Nov 28 22:27:26 oom-test kernel: [    0.000000]   DMA32 zone: 126974 pages, LIFO batch:31
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: PM-Timer IO Port: 0xb008
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: Local APIC address 0xfee00000
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: LAPIC_NMI (acpi_id[0xff] dfl dfl lint[0x1])
+Nov 28 22:27:26 oom-test kernel: [    0.000000] IOAPIC[0]: apic_id 0, version 17, address 0xfec00000, GSI 0-23
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 5 global_irq 5 high level)
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 10 global_irq 10 high level)
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: INT_SRC_OVR (bus 0 bus_irq 11 global_irq 11 high level)
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: IRQ0 used by override.
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: IRQ5 used by override.
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: IRQ9 used by override.
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: IRQ10 used by override.
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: IRQ11 used by override.
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Using ACPI (MADT) for SMP configuration information
+Nov 28 22:27:26 oom-test kernel: [    0.000000] ACPI: HPET id: 0x8086a201 base: 0xfed00000
+Nov 28 22:27:26 oom-test kernel: [    0.000000] smpboot: Allowing 1 CPUs, 0 hotplug CPUs
+Nov 28 22:27:26 oom-test kernel: [    0.000000] PM: Registered nosave memory: [mem 0x00000000-0x00000fff]
+Nov 28 22:27:26 oom-test kernel: [    0.000000] PM: Registered nosave memory: [mem 0x0009f000-0x0009ffff]
+Nov 28 22:27:26 oom-test kernel: [    0.000000] PM: Registered nosave memory: [mem 0x000a0000-0x000effff]
+Nov 28 22:27:26 oom-test kernel: [    0.000000] PM: Registered nosave memory: [mem 0x000f0000-0x000fffff]
+Nov 28 22:27:26 oom-test kernel: [    0.000000] e820: [mem 0x20000000-0xfeffbfff] available for PCI devices
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Booting paravirtualized kernel on KVM
+Nov 28 22:27:26 oom-test kernel: [    0.000000] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645519600211568 ns
+Nov 28 22:27:26 oom-test kernel: [    0.000000] setup_percpu: NR_CPUS:256 nr_cpumask_bits:256 nr_cpu_ids:1 nr_node_ids:1
+Nov 28 22:27:26 oom-test kernel: [    0.000000] PERCPU: Embedded 33 pages/cpu @ffff88001fc00000 s98008 r8192 d28968 u2097152
+Nov 28 22:27:26 oom-test kernel: [    0.000000] pcpu-alloc: s98008 r8192 d28968 u2097152 alloc=1*2097152
+Nov 28 22:27:26 oom-test kernel: [    0.000000] pcpu-alloc: [0] 0
+Nov 28 22:27:26 oom-test kernel: [    0.000000] KVM setup async PF for cpu 0
+Nov 28 22:27:26 oom-test kernel: [    0.000000] kvm-stealtime: cpu 0, msr 1fc0d940
+Nov 28 22:27:26 oom-test kernel: [    0.000000] PV qspinlock hash table entries: 256 (order: 0, 4096 bytes)
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Built 1 zonelists in Node order, mobility grouping on.  Total pages: 128903
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Policy zone: DMA32
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Kernel command line: BOOT_IMAGE=/boot/vmlinuz-4.4.0-47-generic root=UUID=f536a29c-36fb-4b05-b3a2-cd185f86231e ro console=tty1 root=LABEL=DOROOT notsc clocksource=kvm-clock net.ifnames=0
+Nov 28 22:27:26 oom-test kernel: [    0.000000] tsc: Kernel compiled with CONFIG_X86_TSC, cannot disable TSC completely
+Nov 28 22:27:26 oom-test kernel: [    0.000000] PID hash table entries: 2048 (order: 2, 16384 bytes)
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Calgary: detecting Calgary via BIOS EBDA area
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Calgary: Unable to locate Rio Grande table in EBDA - bailing!
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Memory: 466592K/523888K available (8205K kernel code, 1294K rwdata, 3968K rodata, 1488K init, 1292K bss, 57296K reserved, 0K cma-reserved)
+Nov 28 22:27:26 oom-test kernel: [    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Hierarchical RCU implementation.
+Nov 28 22:27:26 oom-test kernel: [    0.000000] 	Build-time adjustment of leaf fanout to 64.
+Nov 28 22:27:26 oom-test kernel: [    0.000000] 	RCU restricting CPUs from NR_CPUS=256 to nr_cpu_ids=1.
+Nov 28 22:27:26 oom-test kernel: [    0.000000] RCU: Adjusting geometry for rcu_fanout_leaf=64, nr_cpu_ids=1
+Nov 28 22:27:26 oom-test kernel: [    0.000000] NR_IRQS:16640 nr_irqs:256 16
+Nov 28 22:27:26 oom-test kernel: [    0.000000] Console: colour dummy device 80x25
+Nov 28 22:27:26 oom-test kernel: [    0.000000] console [tty1] enabled
+Nov 28 22:27:26 oom-test kernel: [    0.000000] clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604467 ns
+Nov 28 22:27:26 oom-test kernel: [    0.000000] hpet clockevent registered
+Nov 28 22:27:26 oom-test kernel: [    0.000000] tsc: Detected 2299.998 MHz processor
+Nov 28 22:27:26 oom-test kernel: [    0.008000] Calibrating delay loop (skipped) preset value.. 4599.99 BogoMIPS (lpj=9199992)
+Nov 28 22:27:26 oom-test kernel: [    0.008000] pid_max: default: 32768 minimum: 301
+Nov 28 22:27:26 oom-test kernel: [    0.008000] ACPI: Core revision 20150930
+Nov 28 22:27:26 oom-test kernel: [    0.008000] ACPI: 2 ACPI AML tables successfully acquired and loaded
+Nov 28 22:27:26 oom-test kernel: [    0.008000] Security Framework initialized
+Nov 28 22:27:26 oom-test kernel: [    0.008000] Yama: becoming mindful.
+Nov 28 22:27:26 oom-test kernel: [    0.008000] AppArmor: AppArmor initialized
+Nov 28 22:27:26 oom-test kernel: [    0.008000] Dentry cache hash table entries: 65536 (order: 7, 524288 bytes)
+Nov 28 22:27:26 oom-test kernel: [    0.008000] Inode-cache hash table entries: 32768 (order: 6, 262144 bytes)
+Nov 28 22:27:26 oom-test kernel: [    0.008000] Mount-cache hash table entries: 1024 (order: 1, 8192 bytes)
+Nov 28 22:27:26 oom-test kernel: [    0.008000] Mountpoint-cache hash table entries: 1024 (order: 1, 8192 bytes)
+Nov 28 22:27:26 oom-test kernel: [    0.008000] Initializing cgroup subsys io
+Nov 28 22:27:26 oom-test kernel: [    0.008000] Initializing cgroup subsys memory
+Nov 28 22:27:26 oom-test kernel: [    0.008000] Initializing cgroup subsys devices
+Nov 28 22:27:26 oom-test kernel: [    0.008000] Initializing cgroup subsys freezer
+Nov 28 22:27:26 oom-test kernel: [    0.008000] Initializing cgroup subsys net_cls
+Nov 28 22:27:26 oom-test kernel: [    0.008000] Initializing cgroup subsys perf_event
+Nov 28 22:27:26 oom-test kernel: [    0.008000] Initializing cgroup subsys net_prio
+Nov 28 22:27:26 oom-test kernel: [    0.008000] Initializing cgroup subsys hugetlb
+Nov 28 22:27:26 oom-test kernel: [    0.008000] Initializing cgroup subsys pids
+Nov 28 22:27:26 oom-test kernel: [    0.008000] mce: CPU supports 10 MCE banks
+Nov 28 22:27:26 oom-test kernel: [    0.008000] Last level iTLB entries: 4KB 512, 2MB 8, 4MB 8
+Nov 28 22:27:26 oom-test kernel: [    0.008000] Last level dTLB entries: 4KB 512, 2MB 32, 4MB 32, 1GB 0
+Nov 28 22:27:26 oom-test kernel: [    0.020597] Freeing SMP alternatives memory: 32K (ffffffff820b9000 - ffffffff820c1000)
+Nov 28 22:27:26 oom-test kernel: [    0.027802] ftrace: allocating 32084 entries in 126 pages
+Nov 28 22:27:26 oom-test kernel: [    0.036093] smpboot: Max logical packages: 1
+Nov 28 22:27:26 oom-test kernel: [    0.036099] smpboot: APIC(0) Converting physical 0 to logical package 0
+Nov 28 22:27:26 oom-test kernel: [    0.036326] x2apic enabled
+Nov 28 22:27:26 oom-test kernel: [    0.036536] Switched APIC routing to physical x2apic.
+Nov 28 22:27:26 oom-test kernel: [    0.040322] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+Nov 28 22:27:26 oom-test kernel: [    0.040365] TSC deadline timer enabled
+Nov 28 22:27:26 oom-test kernel: [    0.040380] smpboot: CPU0: Intel(R) Xeon(R) CPU E5-2630 0 @ 2.30GHz (family: 0x6, model: 0x2d, stepping: 0x7)
+Nov 28 22:27:26 oom-test kernel: [    0.040396] Performance Events: 16-deep LBR, SandyBridge events, Intel PMU driver.
+Nov 28 22:27:26 oom-test kernel: [    0.056025] core: PEBS disabled due to CPU errata, please upgrade microcode
+Nov 28 22:27:26 oom-test kernel: [    0.056036] ... version:                2
+Nov 28 22:27:26 oom-test kernel: [    0.056040] ... bit width:              48
+Nov 28 22:27:26 oom-test kernel: [    0.056044] ... generic registers:      4
+Nov 28 22:27:26 oom-test kernel: [    0.056049] ... value mask:             0000ffffffffffff
+Nov 28 22:27:26 oom-test kernel: [    0.056054] ... max period:             000000007fffffff
+Nov 28 22:27:26 oom-test kernel: [    0.056058] ... fixed-purpose events:   3
+Nov 28 22:27:26 oom-test kernel: [    0.056063] ... event mask:             000000070000000f
+Nov 28 22:27:26 oom-test kernel: [    0.056111] KVM setup paravirtual spinlock
+Nov 28 22:27:26 oom-test kernel: [    0.056869] x86: Booted up 1 node, 1 CPUs
+Nov 28 22:27:26 oom-test kernel: [    0.056873] smpboot: Total of 1 processors activated (4599.99 BogoMIPS)
+Nov 28 22:27:26 oom-test kernel: [    0.057178] devtmpfs: initialized
+Nov 28 22:27:26 oom-test kernel: [    0.059259] evm: security.selinux
+Nov 28 22:27:26 oom-test kernel: [    0.059263] evm: security.SMACK64
+Nov 28 22:27:26 oom-test kernel: [    0.059266] evm: security.SMACK64EXEC
+Nov 28 22:27:26 oom-test kernel: [    0.059268] evm: security.SMACK64TRANSMUTE
+Nov 28 22:27:26 oom-test kernel: [    0.059271] evm: security.SMACK64MMAP
+Nov 28 22:27:26 oom-test kernel: [    0.059274] evm: security.ima
+Nov 28 22:27:26 oom-test kernel: [    0.059277] evm: security.capability
+Nov 28 22:27:26 oom-test kernel: [    0.059400] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+Nov 28 22:27:26 oom-test kernel: [    0.059476] pinctrl core: initialized pinctrl subsystem
+Nov 28 22:27:26 oom-test kernel: [    0.059665] RTC time: 22:27:22, date: 11/28/16
+Nov 28 22:27:26 oom-test kernel: [    0.059834] NET: Registered protocol family 16
+Nov 28 22:27:26 oom-test kernel: [    0.060021] cpuidle: using governor ladder
+Nov 28 22:27:26 oom-test kernel: [    0.060026] cpuidle: using governor menu
+Nov 28 22:27:26 oom-test kernel: [    0.060031] PCCT header not found.
+Nov 28 22:27:26 oom-test kernel: [    0.060110] ACPI: bus type PCI registered
+Nov 28 22:27:26 oom-test kernel: [    0.060114] acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
+Nov 28 22:27:26 oom-test kernel: [    0.060249] PCI: Using configuration type 1 for base access
+Nov 28 22:27:26 oom-test kernel: [    0.060325] core: PMU erratum BJ122, BV98, HSD29 workaround disabled, HT off
+Nov 28 22:27:26 oom-test kernel: [    0.061532] ACPI: Added _OSI(Module Device)
+Nov 28 22:27:26 oom-test kernel: [    0.061536] ACPI: Added _OSI(Processor Device)
+Nov 28 22:27:26 oom-test kernel: [    0.061539] ACPI: Added _OSI(3.0 _SCP Extensions)
+Nov 28 22:27:26 oom-test kernel: [    0.061542] ACPI: Added _OSI(Processor Aggregator Device)
+Nov 28 22:27:26 oom-test kernel: [    0.063273] ACPI: Interpreter enabled
+Nov 28 22:27:26 oom-test kernel: [    0.063288] ACPI: (supports S0 S3 S4 S5)
+Nov 28 22:27:26 oom-test kernel: [    0.063291] ACPI: Using IOAPIC for interrupt routing
+Nov 28 22:27:26 oom-test kernel: [    0.063305] PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+Nov 28 22:27:26 oom-test kernel: [    0.065611] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+Nov 28 22:27:26 oom-test kernel: [    0.065619] acpi PNP0A03:00: _OSC: OS supports [ASPM ClockPM Segments MSI]
+Nov 28 22:27:26 oom-test kernel: [    0.065626] acpi PNP0A03:00: _OSC failed (AE_NOT_FOUND); disabling ASPM
+Nov 28 22:27:26 oom-test kernel: [    0.065633] acpi PNP0A03:00: fail to add MMCONFIG information, can't access extended PCI configuration space under this bridge.
+Nov 28 22:27:26 oom-test kernel: [    0.065934] acpiphp: Slot [3] registered
+Nov 28 22:27:26 oom-test kernel: [    0.065957] acpiphp: Slot [4] registered
+Nov 28 22:27:26 oom-test kernel: [    0.065979] acpiphp: Slot [5] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066000] acpiphp: Slot [6] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066021] acpiphp: Slot [7] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066042] acpiphp: Slot [8] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066063] acpiphp: Slot [9] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066085] acpiphp: Slot [10] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066107] acpiphp: Slot [11] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066127] acpiphp: Slot [12] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066148] acpiphp: Slot [13] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066168] acpiphp: Slot [14] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066189] acpiphp: Slot [15] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066209] acpiphp: Slot [16] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066231] acpiphp: Slot [17] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066253] acpiphp: Slot [18] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066273] acpiphp: Slot [19] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066294] acpiphp: Slot [20] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066314] acpiphp: Slot [21] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066334] acpiphp: Slot [22] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066356] acpiphp: Slot [23] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066378] acpiphp: Slot [24] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066398] acpiphp: Slot [25] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066418] acpiphp: Slot [26] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066439] acpiphp: Slot [27] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066460] acpiphp: Slot [28] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066485] acpiphp: Slot [29] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066523] acpiphp: Slot [30] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066575] acpiphp: Slot [31] registered
+Nov 28 22:27:26 oom-test kernel: [    0.066602] PCI host bridge to bus 0000:00
+Nov 28 22:27:26 oom-test kernel: [    0.066608] pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+Nov 28 22:27:26 oom-test kernel: [    0.066612] pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+Nov 28 22:27:26 oom-test kernel: [    0.066616] pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+Nov 28 22:27:26 oom-test kernel: [    0.066623] pci_bus 0000:00: root bus resource [mem 0x80000000-0xfebfffff window]
+Nov 28 22:27:26 oom-test kernel: [    0.066631] pci_bus 0000:00: root bus resource [bus 00-ff]
+Nov 28 22:27:26 oom-test kernel: [    0.066698] pci 0000:00:00.0: [8086:1237] type 00 class 0x060000
+Nov 28 22:27:26 oom-test kernel: [    0.067120] pci 0000:00:01.0: [8086:7000] type 00 class 0x060100
+Nov 28 22:27:26 oom-test kernel: [    0.067645] pci 0000:00:01.1: [8086:7010] type 00 class 0x010180
+Nov 28 22:27:26 oom-test kernel: [    0.074354] pci 0000:00:01.1: reg 0x20: [io  0xc120-0xc12f]
+Nov 28 22:27:26 oom-test kernel: [    0.079420] pci 0000:00:01.1: legacy IDE quirk: reg 0x10: [io  0x01f0-0x01f7]
+Nov 28 22:27:26 oom-test kernel: [    0.079432] pci 0000:00:01.1: legacy IDE quirk: reg 0x14: [io  0x03f6]
+Nov 28 22:27:26 oom-test kernel: [    0.079436] pci 0000:00:01.1: legacy IDE quirk: reg 0x18: [io  0x0170-0x0177]
+Nov 28 22:27:26 oom-test kernel: [    0.079440] pci 0000:00:01.1: legacy IDE quirk: reg 0x1c: [io  0x0376]
+Nov 28 22:27:26 oom-test kernel: [    0.079684] pci 0000:00:01.2: [8086:7020] type 00 class 0x0c0300
+Nov 28 22:27:26 oom-test kernel: [    0.085169] pci 0000:00:01.2: reg 0x20: [io  0xc080-0xc09f]
+Nov 28 22:27:26 oom-test kernel: [    0.087663] pci 0000:00:01.3: [8086:7113] type 00 class 0x068000
+Nov 28 22:27:26 oom-test kernel: [    0.088093] pci 0000:00:01.3: quirk: [io  0xb000-0xb03f] claimed by PIIX4 ACPI
+Nov 28 22:27:26 oom-test kernel: [    0.088112] pci 0000:00:01.3: quirk: [io  0xb100-0xb10f] claimed by PIIX4 SMB
+Nov 28 22:27:26 oom-test kernel: [    0.088350] pci 0000:00:02.0: [1b36:0100] type 00 class 0x030000
+Nov 28 22:27:26 oom-test kernel: [    0.094448] pci 0000:00:02.0: reg 0x10: [mem 0xf8000000-0xfbffffff]
+Nov 28 22:27:26 oom-test kernel: [    0.098422] pci 0000:00:02.0: reg 0x14: [mem 0xfc000000-0xfcffffff]
+Nov 28 22:27:26 oom-test kernel: [    0.102634] pci 0000:00:02.0: reg 0x18: [mem 0xfd090000-0xfd091fff]
+Nov 28 22:27:26 oom-test kernel: [    0.108023] pci 0000:00:02.0: reg 0x1c: [io  0xc0a0-0xc0bf]
+Nov 28 22:27:26 oom-test kernel: [    0.122296] pci 0000:00:02.0: reg 0x30: [mem 0xfd080000-0xfd08ffff pref]
+Nov 28 22:27:26 oom-test kernel: [    0.122594] pci 0000:00:03.0: [1af4:1000] type 00 class 0x020000
+Nov 28 22:27:26 oom-test kernel: [    0.124016] pci 0000:00:03.0: reg 0x10: [io  0xc0c0-0xc0df]
+Nov 28 22:27:26 oom-test kernel: [    0.127370] pci 0000:00:03.0: reg 0x14: [mem 0xfd092000-0xfd092fff]
+Nov 28 22:27:26 oom-test kernel: [    0.135973] pci 0000:00:03.0: reg 0x30: [mem 0xfd000000-0xfd03ffff pref]
+Nov 28 22:27:26 oom-test kernel: [    0.138231] pci 0000:00:04.0: [1af4:1000] type 00 class 0x020000
+Nov 28 22:27:26 oom-test kernel: [    0.140017] pci 0000:00:04.0: reg 0x10: [io  0xc0e0-0xc0ff]
+Nov 28 22:27:26 oom-test kernel: [    0.141958] pci 0000:00:04.0: reg 0x14: [mem 0xfd093000-0xfd093fff]
+Nov 28 22:27:26 oom-test kernel: [    0.153009] pci 0000:00:04.0: reg 0x30: [mem 0xfd040000-0xfd07ffff pref]
+Nov 28 22:27:26 oom-test kernel: [    0.153475] pci 0000:00:05.0: [1af4:1004] type 00 class 0x010000
+Nov 28 22:27:26 oom-test kernel: [    0.155571] pci 0000:00:05.0: reg 0x10: [io  0xc000-0xc03f]
+Nov 28 22:27:26 oom-test kernel: [    0.156995] pci 0000:00:05.0: reg 0x14: [mem 0xfd094000-0xfd094fff]
+Nov 28 22:27:26 oom-test kernel: [    0.167248] pci 0000:00:06.0: [1af4:1001] type 00 class 0x010000
+Nov 28 22:27:26 oom-test kernel: [    0.169005] pci 0000:00:06.0: reg 0x10: [io  0xc040-0xc07f]
+Nov 28 22:27:26 oom-test kernel: [    0.172019] pci 0000:00:06.0: reg 0x14: [mem 0xfd095000-0xfd095fff]
+Nov 28 22:27:26 oom-test kernel: [    0.183315] pci 0000:00:07.0: [1af4:1002] type 00 class 0x00ff00
+Nov 28 22:27:26 oom-test kernel: [    0.184016] pci 0000:00:07.0: reg 0x10: [io  0xc100-0xc11f]
+Nov 28 22:27:26 oom-test kernel: [    0.190850] ACPI: PCI Interrupt Link [LNKA] (IRQs 5 *10 11)
+Nov 28 22:27:26 oom-test kernel: [    0.191003] ACPI: PCI Interrupt Link [LNKB] (IRQs 5 *10 11)
+Nov 28 22:27:26 oom-test kernel: [    0.191095] ACPI: PCI Interrupt Link [LNKC] (IRQs 5 10 *11)
+Nov 28 22:27:26 oom-test kernel: [    0.191184] ACPI: PCI Interrupt Link [LNKD] (IRQs 5 10 *11)
+Nov 28 22:27:26 oom-test kernel: [    0.191234] ACPI: PCI Interrupt Link [LNKS] (IRQs *9)
+Nov 28 22:27:26 oom-test kernel: [    0.192000] ACPI: Enabled 16 GPEs in block 00 to 0F
+Nov 28 22:27:26 oom-test kernel: [    0.192225] vgaarb: setting as boot device: PCI:0000:00:02.0
+Nov 28 22:27:26 oom-test kernel: [    0.192231] vgaarb: device added: PCI:0000:00:02.0,decodes=io+mem,owns=io+mem,locks=none
+Nov 28 22:27:26 oom-test kernel: [    0.192237] vgaarb: loaded
+Nov 28 22:27:26 oom-test kernel: [    0.192240] vgaarb: bridge control possible 0000:00:02.0
+Nov 28 22:27:26 oom-test kernel: [    0.192511] SCSI subsystem initialized
+Nov 28 22:27:26 oom-test kernel: [    0.192571] libata version 3.00 loaded.
+Nov 28 22:27:26 oom-test kernel: [    0.192596] ACPI: bus type USB registered
+Nov 28 22:27:26 oom-test kernel: [    0.192619] usbcore: registered new interface driver usbfs
+Nov 28 22:27:26 oom-test kernel: [    0.192629] usbcore: registered new interface driver hub
+Nov 28 22:27:26 oom-test kernel: [    0.192641] usbcore: registered new device driver usb
+Nov 28 22:27:26 oom-test kernel: [    0.192780] PCI: Using ACPI for IRQ routing
+Nov 28 22:27:26 oom-test kernel: [    0.192785] PCI: pci_cache_line_size set to 64 bytes
+Nov 28 22:27:26 oom-test kernel: [    0.192972] e820: reserve RAM buffer [mem 0x0009fc00-0x0009ffff]
+Nov 28 22:27:26 oom-test kernel: [    0.192975] e820: reserve RAM buffer [mem 0x1fffe000-0x1fffffff]
+Nov 28 22:27:26 oom-test kernel: [    0.193109] NetLabel: Initializing
+Nov 28 22:27:26 oom-test kernel: [    0.193113] NetLabel:  domain hash size = 128
+Nov 28 22:27:26 oom-test kernel: [    0.193115] NetLabel:  protocols = UNLABELED CIPSOv4
+Nov 28 22:27:26 oom-test kernel: [    0.193135] NetLabel:  unlabeled traffic allowed by default
+Nov 28 22:27:26 oom-test kernel: [    0.193254] hpet0: at MMIO 0xfed00000, IRQs 2, 8, 0
+Nov 28 22:27:26 oom-test kernel: [    0.193261] hpet0: 3 comparators, 64-bit 100.000000 MHz counter
+Nov 28 22:27:26 oom-test kernel: [    0.196023] amd_nb: Cannot enumerate AMD northbridges
+Nov 28 22:27:26 oom-test kernel: [    0.196055] clocksource: Switched to clocksource kvm-clock
+Nov 28 22:27:26 oom-test kernel: [    0.201885] AppArmor: AppArmor Filesystem Enabled
+Nov 28 22:27:26 oom-test kernel: [    0.201964] pnp: PnP ACPI init
+Nov 28 22:27:26 oom-test kernel: [    0.202033] pnp 00:00: Plug and Play ACPI device, IDs PNP0b00 (active)
+Nov 28 22:27:26 oom-test kernel: [    0.202074] pnp 00:01: Plug and Play ACPI device, IDs PNP0303 (active)
+Nov 28 22:27:26 oom-test kernel: [    0.202101] pnp 00:02: Plug and Play ACPI device, IDs PNP0f13 (active)
+Nov 28 22:27:26 oom-test kernel: [    0.202128] pnp 00:03: [dma 2]
+Nov 28 22:27:26 oom-test kernel: [    0.202145] pnp 00:03: Plug and Play ACPI device, IDs PNP0700 (active)
+Nov 28 22:27:26 oom-test kernel: [    0.202246] pnp 00:04: Plug and Play ACPI device, IDs PNP0501 (active)
+Nov 28 22:27:26 oom-test kernel: [    0.202449] pnp: PnP ACPI: found 5 devices
+Nov 28 22:27:26 oom-test kernel: [    0.208057] clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+Nov 28 22:27:26 oom-test kernel: [    0.208078] pci_bus 0000:00: resource 4 [io  0x0000-0x0cf7 window]
+Nov 28 22:27:26 oom-test kernel: [    0.208080] pci_bus 0000:00: resource 5 [io  0x0d00-0xffff window]
+Nov 28 22:27:26 oom-test kernel: [    0.208082] pci_bus 0000:00: resource 6 [mem 0x000a0000-0x000bffff window]
+Nov 28 22:27:26 oom-test kernel: [    0.208084] pci_bus 0000:00: resource 7 [mem 0x80000000-0xfebfffff window]
+Nov 28 22:27:26 oom-test kernel: [    0.208119] NET: Registered protocol family 2
+Nov 28 22:27:26 oom-test kernel: [    0.208281] TCP established hash table entries: 4096 (order: 3, 32768 bytes)
+Nov 28 22:27:26 oom-test kernel: [    0.208295] TCP bind hash table entries: 4096 (order: 4, 65536 bytes)
+Nov 28 22:27:26 oom-test kernel: [    0.208307] TCP: Hash tables configured (established 4096 bind 4096)
+Nov 28 22:27:26 oom-test kernel: [    0.208331] UDP hash table entries: 256 (order: 1, 8192 bytes)
+Nov 28 22:27:26 oom-test kernel: [    0.208337] UDP-Lite hash table entries: 256 (order: 1, 8192 bytes)
+Nov 28 22:27:26 oom-test kernel: [    0.208370] NET: Registered protocol family 1
+Nov 28 22:27:26 oom-test kernel: [    0.208385] pci 0000:00:00.0: Limiting direct PCI/PCI transfers
+Nov 28 22:27:26 oom-test kernel: [    0.208407] pci 0000:00:01.0: PIIX3: Enabling Passive Release
+Nov 28 22:27:26 oom-test kernel: [    0.208431] pci 0000:00:01.0: Activating ISA DMA hang workarounds
+Nov 28 22:27:26 oom-test kernel: [    0.208720] ACPI: PCI Interrupt Link [LNKD] enabled at IRQ 11
+Nov 28 22:27:26 oom-test kernel: [    0.209571] pci 0000:00:02.0: Video device with shadowed ROM
+Nov 28 22:27:26 oom-test kernel: [    0.209626] PCI: CLS 0 bytes, default 64
+Nov 28 22:27:26 oom-test kernel: [    0.209676] Trying to unpack rootfs image as initramfs...
+Nov 28 22:27:26 oom-test kernel: [    0.675769] Freeing initrd memory: 30132K (ffff88001d7ad000 - ffff88001f51a000)
+Nov 28 22:27:26 oom-test kernel: [    0.687801] Scanning for low memory corruption every 60 seconds
+Nov 28 22:27:26 oom-test kernel: [    0.688129] futex hash table entries: 256 (order: 2, 16384 bytes)
+Nov 28 22:27:26 oom-test kernel: [    0.688153] audit: initializing netlink subsys (disabled)
+Nov 28 22:27:26 oom-test kernel: [    0.688173] audit: type=2000 audit(1480372043.036:1): initialized
+Nov 28 22:27:26 oom-test kernel: [    0.688478] Initialise system trusted keyring
+Nov 28 22:27:26 oom-test kernel: [    0.688575] HugeTLB registered 1 GB page size, pre-allocated 0 pages
+Nov 28 22:27:26 oom-test kernel: [    0.688579] HugeTLB registered 2 MB page size, pre-allocated 0 pages
+Nov 28 22:27:26 oom-test kernel: [    0.689904] zbud: loaded
+Nov 28 22:27:26 oom-test kernel: [    0.690091] VFS: Disk quotas dquot_6.6.0
+Nov 28 22:27:26 oom-test kernel: [    0.690123] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+Nov 28 22:27:26 oom-test kernel: [    0.690362] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+Nov 28 22:27:26 oom-test kernel: [    0.690573] fuse init (API version 7.23)
+Nov 28 22:27:26 oom-test kernel: [    0.690702] Key type big_key registered
+Nov 28 22:27:26 oom-test kernel: [    0.690728] Allocating IMA MOK and blacklist keyrings.
+Nov 28 22:27:26 oom-test kernel: [    0.690967] Key type asymmetric registered
+Nov 28 22:27:26 oom-test kernel: [    0.690973] Asymmetric key parser 'x509' registered
+Nov 28 22:27:26 oom-test kernel: [    0.691008] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 249)
+Nov 28 22:27:26 oom-test kernel: [    0.691035] io scheduler noop registered
+Nov 28 22:27:26 oom-test kernel: [    0.691039] io scheduler deadline registered (default)
+Nov 28 22:27:26 oom-test kernel: [    0.691068] io scheduler cfq registered
+Nov 28 22:27:26 oom-test kernel: [    0.691147] pci_hotplug: PCI Hot Plug PCI Core version: 0.5
+Nov 28 22:27:26 oom-test kernel: [    0.691155] pciehp: PCI Express Hot Plug Controller Driver version: 0.4
+Nov 28 22:27:26 oom-test kernel: [    0.691182] vesafb: mode is 640x480x32, linelength=2560, pages=0
+Nov 28 22:27:26 oom-test kernel: [    0.691185] vesafb: scrolling: redraw
+Nov 28 22:27:26 oom-test kernel: [    0.691188] vesafb: Truecolor: size=8:8:8:8, shift=24:16:8:0
+Nov 28 22:27:26 oom-test kernel: [    0.691201] vesafb: framebuffer at 0xf8000000, mapped to 0xffffc90000200000, using 1216k, total 1216k
+Nov 28 22:27:26 oom-test kernel: [    0.692388] Console: switching to colour frame buffer device 80x30
+Nov 28 22:27:26 oom-test kernel: [    0.693053] fb0: VESA VGA frame buffer device
+Nov 28 22:27:26 oom-test kernel: [    0.693084] intel_idle: does not run on family 6 model 45
+Nov 28 22:27:26 oom-test kernel: [    0.693145] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
+Nov 28 22:27:26 oom-test kernel: [    0.693174] ACPI: Power Button [PWRF]
+Nov 28 22:27:26 oom-test kernel: [    0.693345] GHES: HEST is not enabled!
+Nov 28 22:27:26 oom-test kernel: [    0.694074] ACPI: PCI Interrupt Link [LNKC] enabled at IRQ 10
+Nov 28 22:27:26 oom-test kernel: [    0.694550] virtio-pci 0000:00:03.0: virtio_pci: leaving for legacy driver
+Nov 28 22:27:26 oom-test kernel: [    0.695982] virtio-pci 0000:00:04.0: virtio_pci: leaving for legacy driver
+Nov 28 22:27:26 oom-test kernel: [    0.697444] ACPI: PCI Interrupt Link [LNKA] enabled at IRQ 10
+Nov 28 22:27:26 oom-test kernel: [    0.697931] virtio-pci 0000:00:05.0: virtio_pci: leaving for legacy driver
+Nov 28 22:27:26 oom-test kernel: [    0.698720] ACPI: PCI Interrupt Link [LNKB] enabled at IRQ 11
+Nov 28 22:27:26 oom-test kernel: [    0.699206] virtio-pci 0000:00:06.0: virtio_pci: leaving for legacy driver
+Nov 28 22:27:26 oom-test kernel: [    0.700110] virtio-pci 0000:00:07.0: virtio_pci: leaving for legacy driver
+Nov 28 22:27:26 oom-test kernel: [    0.701715] Serial: 8250/16550 driver, 32 ports, IRQ sharing enabled
+Nov 28 22:27:26 oom-test kernel: [    0.725986] 00:04: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+Nov 28 22:27:26 oom-test kernel: [    0.728718] Linux agpgart interface v0.103
+Nov 28 22:27:26 oom-test kernel: [    0.731545] brd: module loaded
+Nov 28 22:27:26 oom-test kernel: [    0.733886] loop: module loaded
+Nov 28 22:27:26 oom-test kernel: [    0.737257]  vda: vda1 vda15
+Nov 28 22:27:26 oom-test kernel: [    0.738067] ata_piix 0000:00:01.1: version 2.13
+Nov 28 22:27:26 oom-test kernel: [    0.739364] scsi host0: ata_piix
+Nov 28 22:27:26 oom-test kernel: [    0.739894] scsi host1: ata_piix
+Nov 28 22:27:26 oom-test kernel: [    0.740371] ata1: PATA max MWDMA2 cmd 0x1f0 ctl 0x3f6 bmdma 0xc120 irq 14
+Nov 28 22:27:26 oom-test kernel: [    0.740795] ata2: PATA max MWDMA2 cmd 0x170 ctl 0x376 bmdma 0xc128 irq 15
+Nov 28 22:27:26 oom-test kernel: [    0.741517] libphy: Fixed MDIO Bus: probed
+Nov 28 22:27:26 oom-test kernel: [    0.741944] tun: Universal TUN/TAP device driver, 1.6
+Nov 28 22:27:26 oom-test kernel: [    0.742368] tun: (C) 1999-2004 Max Krasnyansky <maxk@qualcomm.com>
+Nov 28 22:27:26 oom-test kernel: [    1.087825] PPP generic driver version 2.4.2
+Nov 28 22:27:26 oom-test kernel: [    1.088760] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+Nov 28 22:27:26 oom-test kernel: [    1.089180] ehci-pci: EHCI PCI platform driver
+Nov 28 22:27:26 oom-test kernel: [    1.089591] ehci-platform: EHCI generic platform driver
+Nov 28 22:27:26 oom-test kernel: [    1.089996] ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+Nov 28 22:27:26 oom-test kernel: [    1.090424] ohci-pci: OHCI PCI platform driver
+Nov 28 22:27:26 oom-test kernel: [    1.090838] ohci-platform: OHCI generic platform driver
+Nov 28 22:27:26 oom-test kernel: [    1.091243] uhci_hcd: USB Universal Host Controller Interface driver
+Nov 28 22:27:26 oom-test kernel: [    1.092847] uhci_hcd 0000:00:01.2: UHCI Host Controller
+Nov 28 22:27:26 oom-test kernel: [    1.093253] uhci_hcd 0000:00:01.2: new USB bus registered, assigned bus number 1
+Nov 28 22:27:26 oom-test kernel: [    1.094076] uhci_hcd 0000:00:01.2: detected 2 ports
+Nov 28 22:27:26 oom-test kernel: [    1.094576] uhci_hcd 0000:00:01.2: irq 11, io base 0x0000c080
+Nov 28 22:27:26 oom-test kernel: [    1.095106] usb usb1: New USB device found, idVendor=1d6b, idProduct=0001
+Nov 28 22:27:26 oom-test kernel: [    1.095514] usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+Nov 28 22:27:26 oom-test kernel: [    1.096325] usb usb1: Product: UHCI Host Controller
+Nov 28 22:27:26 oom-test kernel: [    1.096724] usb usb1: Manufacturer: Linux 4.4.0-47-generic uhci_hcd
+Nov 28 22:27:26 oom-test kernel: [    1.097119] usb usb1: SerialNumber: 0000:00:01.2
+Nov 28 22:27:26 oom-test kernel: [    1.097619] hub 1-0:1.0: USB hub found
+Nov 28 22:27:26 oom-test kernel: [    1.098019] hub 1-0:1.0: 2 ports detected
+Nov 28 22:27:26 oom-test kernel: [    1.098570] i8042: PNP: PS/2 Controller [PNP0303:KBD,PNP0f13:MOU] at 0x60,0x64 irq 1,12
+Nov 28 22:27:26 oom-test kernel: [    1.100085] serio: i8042 KBD port at 0x60,0x64 irq 1
+Nov 28 22:27:26 oom-test kernel: [    1.100524] serio: i8042 AUX port at 0x60,0x64 irq 12
+Nov 28 22:27:26 oom-test kernel: [    1.101094] mousedev: PS/2 mouse device common for all mice
+Nov 28 22:27:26 oom-test kernel: [    1.101827] input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input1
+Nov 28 22:27:26 oom-test kernel: [    1.102969] rtc_cmos 00:00: RTC can wake from S4
+Nov 28 22:27:26 oom-test kernel: [    1.103690] rtc_cmos 00:00: rtc core: registered rtc_cmos as rtc0
+Nov 28 22:27:26 oom-test kernel: [    1.104373] rtc_cmos 00:00: alarms up to one day, 114 bytes nvram, hpet irqs
+Nov 28 22:27:26 oom-test kernel: [    1.104819] i2c /dev entries driver
+Nov 28 22:27:26 oom-test kernel: [    1.105299] device-mapper: uevent: version 1.0.3
+Nov 28 22:27:26 oom-test kernel: [    1.105793] device-mapper: ioctl: 4.34.0-ioctl (2015-10-28) initialised: dm-devel@redhat.com
+Nov 28 22:27:26 oom-test kernel: [    1.106678] ledtrig-cpu: registered to indicate activity on CPUs
+Nov 28 22:27:26 oom-test kernel: [    1.107421] NET: Registered protocol family 10
+Nov 28 22:27:26 oom-test kernel: [    1.108083] NET: Registered protocol family 17
+Nov 28 22:27:26 oom-test kernel: [    1.108528] Key type dns_resolver registered
+Nov 28 22:27:26 oom-test kernel: [    1.109109] microcode: CPU0 sig=0x206d7, pf=0x1, revision=0x1
+Nov 28 22:27:26 oom-test kernel: [    1.109564] microcode: Microcode Update Driver: v2.01 <tigran@aivazian.fsnet.co.uk>, Peter Oruba
+Nov 28 22:27:26 oom-test kernel: [    1.110543] registered taskstats version 1
+Nov 28 22:27:26 oom-test kernel: [    1.110994] Loading compiled-in X.509 certificates
+Nov 28 22:27:26 oom-test kernel: [    1.112303] Loaded X.509 cert 'Build time autogenerated kernel key: a1f61691bd0a3817b529766167cef00cb5321db5'
+Nov 28 22:27:26 oom-test kernel: [    1.113186] zswap: loaded using pool lzo/zbud
+Nov 28 22:27:26 oom-test kernel: [    1.115184] Key type trusted registered
+Nov 28 22:27:26 oom-test kernel: [    1.117982] Key type encrypted registered
+Nov 28 22:27:26 oom-test kernel: [    1.118793] AppArmor: AppArmor sha1 policy hashing enabled
+Nov 28 22:27:26 oom-test kernel: [    1.119237] ima: No TPM chip found, activating TPM-bypass!
+Nov 28 22:27:26 oom-test kernel: [    1.119721] evm: HMAC attrs: 0x1
+Nov 28 22:27:26 oom-test kernel: [    1.120567]   Magic number: 8:397:503
+Nov 28 22:27:26 oom-test kernel: [    1.121110] rtc_cmos 00:00: setting system clock to 2016-11-28 22:27:23 UTC (1480372043)
+Nov 28 22:27:26 oom-test kernel: [    1.122052] BIOS EDD facility v0.16 2004-Jun-25, 0 devices found
+Nov 28 22:27:26 oom-test kernel: [    1.122498] EDD information not available.
+Nov 28 22:27:26 oom-test kernel: [    1.122973] PM: Hibernation image not present or could not be loaded.
+Nov 28 22:27:26 oom-test kernel: [    1.123878] Freeing unused kernel memory: 1488K (ffffffff81f45000 - ffffffff820b9000)
+Nov 28 22:27:26 oom-test kernel: [    1.124790] Write protecting the kernel read-only data: 14336k
+Nov 28 22:27:26 oom-test kernel: [    1.125938] Freeing unused kernel memory: 2024K (ffff880001806000 - ffff880001a00000)
+Nov 28 22:27:26 oom-test kernel: [    1.127173] Freeing unused kernel memory: 128K (ffff880001de0000 - ffff880001e00000)
+Nov 28 22:27:26 oom-test kernel: [    1.180556] scsi host2: Virtio SCSI HBA
+Nov 28 22:27:26 oom-test kernel: [    1.183627] input: VirtualPS/2 VMware VMMouse as /devices/platform/i8042/serio1/input/input4
+Nov 28 22:27:26 oom-test kernel: [    1.184861] input: VirtualPS/2 VMware VMMouse as /devices/platform/i8042/serio1/input/input3
+Nov 28 22:27:26 oom-test kernel: [    1.198248] [drm] Initialized drm 1.1.0 20060810
+Nov 28 22:27:26 oom-test kernel: [    1.204589] FDC 0 is a S82078B
+Nov 28 22:27:26 oom-test kernel: [    1.241630] AVX version of gcm_enc/dec engaged.
+Nov 28 22:27:26 oom-test kernel: [    1.242518] AES CTR mode by8 optimization enabled
+Nov 28 22:27:26 oom-test kernel: [    1.264763] [drm] Device Version 0.0
+Nov 28 22:27:26 oom-test kernel: [    1.265289] [drm] Compression level 0 log level 0
+Nov 28 22:27:26 oom-test kernel: [    1.265765] [drm] Currently using mode #0, list at 0x488
+Nov 28 22:27:26 oom-test kernel: [    1.266245] [drm] 12286 io pages at offset 0x1000000
+Nov 28 22:27:26 oom-test kernel: [    1.266719] [drm] 16777216 byte draw area at offset 0x0
+Nov 28 22:27:26 oom-test kernel: [    1.267190] [drm] RAM header offset: 0x3ffe000
+Nov 28 22:27:26 oom-test kernel: [    1.267671] [drm] rom modes offset 0x488 for 128 modes
+Nov 28 22:27:26 oom-test kernel: [    1.268365] [TTM] Zone  kernel: Available graphics memory: 250198 kiB
+Nov 28 22:27:26 oom-test kernel: [    1.268844] [TTM] Initializing pool allocator
+Nov 28 22:27:26 oom-test kernel: [    1.269311] [TTM] Initializing DMA pool allocator
+Nov 28 22:27:26 oom-test kernel: [    1.269770] [drm] qxl: 16M of VRAM memory size
+Nov 28 22:27:26 oom-test kernel: [    1.270216] [drm] qxl: 63M of IO pages memory ready (VRAM domain)
+Nov 28 22:27:26 oom-test kernel: [    1.270962] [drm] qxl: 16M of Surface memory size
+Nov 28 22:27:26 oom-test kernel: [    1.282957] [drm] main mem slot 1 [f8000000,3ffe000]
+Nov 28 22:27:26 oom-test kernel: [    1.283837] [drm] surface mem slot 2 [fc000000,1000000]
+Nov 28 22:27:26 oom-test kernel: [    1.284337] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+Nov 28 22:27:26 oom-test kernel: [    1.284767] [drm] No driver support for vblank timestamp query.
+Nov 28 22:27:26 oom-test kernel: [    1.285722] [drm] fb mappable at 0xF8000000, size 3145728
+Nov 28 22:27:26 oom-test kernel: [    1.286127] [drm] fb: depth 24, pitch 4096, width 1024, height 768
+Nov 28 22:27:26 oom-test kernel: [    1.286558] checking generic (f8000000 130000) vs hw (f8000000 1000000)
+Nov 28 22:27:26 oom-test kernel: [    1.286560] fb: switching to qxldrmfb from VESA VGA
+Nov 28 22:27:26 oom-test kernel: [    1.287008] Console: switching to colour dummy device 80x25
+Nov 28 22:27:26 oom-test kernel: [    1.287711] fbcon: qxldrmfb (fb0) is primary device
+Nov 28 22:27:26 oom-test kernel: [    1.288410] [drm:qxl_enc_commit [qxl]] *ERROR* head number too large or missing monitors config: ffffc90000134000, 0
+Nov 28 22:27:26 oom-test kernel: [    1.288412] Console: switching to colour frame buffer device 128x48
+Nov 28 22:27:26 oom-test kernel: [    1.291566] qxl 0000:00:02.0: fb0: qxldrmfb frame buffer device
+Nov 28 22:27:26 oom-test kernel: [    1.291590] [drm] Initialized qxl 0.1.0 20120117 for 0000:00:02.0 on minor 0
+Nov 28 22:27:26 oom-test kernel: [    1.354812] EXT4-fs (vda1): mounted filesystem with ordered data mode. Opts: (null)
+Nov 28 22:27:26 oom-test kernel: [    1.421989] random: init: uninitialized urandom read (12 bytes read, 13 bits of entropy available)
+Nov 28 22:27:26 oom-test kernel: [    1.467264] random: mountall: uninitialized urandom read (12 bytes read, 15 bits of entropy available)
+Nov 28 22:27:26 oom-test kernel: [    1.590557] EXT4-fs (vda1): re-mounted. Opts: errors=remount-ro
+Nov 28 22:27:26 oom-test kernel: [    1.681064] random: cloud-init: uninitialized urandom read (32 bytes read, 22 bits of entropy available)
+Nov 28 22:27:26 oom-test kernel: [    1.791824] random: landscape-sysin: uninitialized urandom read (32 bytes read, 26 bits of entropy available)
+Nov 28 22:27:26 oom-test kernel: [    1.793281] random: landscape-sysin: uninitialized urandom read (32 bytes read, 26 bits of entropy available)
+Nov 28 22:27:26 oom-test kernel: [    1.995289] random: cloud-init: uninitialized urandom read (32 bytes read, 31 bits of entropy available)
+Nov 28 22:27:26 oom-test kernel: [    2.028490] random: lsb_release: uninitialized urandom read (24 bytes read, 31 bits of entropy available)
+Nov 28 22:27:26 oom-test kernel: [    2.198617] random: mktemp: uninitialized urandom read (10 bytes read, 34 bits of entropy available)
+Nov 28 22:27:26 oom-test kernel: [    2.203420] random: hwe-support-sta: uninitialized urandom read (24 bytes read, 34 bits of entropy available)
+Nov 28 22:27:26 oom-test kernel: [    2.414234] lp: driver loaded but no devices found
+Nov 28 22:27:26 oom-test kernel: [    2.505366] random: hwe-support-sta: uninitialized urandom read (2500 bytes read, 37 bits of entropy available)
+Nov 28 22:27:26 oom-test kernel: [    2.540511] piix4_smbus 0000:00:01.3: SMBus Host Controller at 0xb100, revision 0
+Nov 28 22:27:26 oom-test kernel: [    2.656934] audit: type=1400 audit(1480372045.031:2): apparmor="STATUS" operation="profile_load" profile="unconfined" name="/sbin/dhclient" pid=725 comm="apparmor_parser"
+Nov 28 22:27:26 oom-test kernel: [    2.656943] audit: type=1400 audit(1480372045.031:3): apparmor="STATUS" operation="profile_load" profile="unconfined" name="/usr/lib/NetworkManager/nm-dhcp-client.action" pid=725 comm="apparmor_parser"
+Nov 28 22:27:26 oom-test kernel: [    2.656946] audit: type=1400 audit(1480372045.031:4): apparmor="STATUS" operation="profile_load" profile="unconfined" name="/usr/lib/connman/scripts/dhclient-script" pid=725 comm="apparmor_parser"
+Nov 28 22:27:26 oom-test kernel: [    2.657505] audit: type=1400 audit(1480372045.031:5): apparmor="STATUS" operation="profile_replace" profile="unconfined" name="/usr/lib/NetworkManager/nm-dhcp-client.action" pid=725 comm="apparmor_parser"
+Nov 28 22:27:26 oom-test kernel: [    2.657511] audit: type=1400 audit(1480372045.031:6): apparmor="STATUS" operation="profile_replace" profile="unconfined" name="/usr/lib/connman/scripts/dhclient-script" pid=725 comm="apparmor_parser"
+Nov 28 22:27:26 oom-test kernel: [    2.657799] audit: type=1400 audit(1480372045.031:7): apparmor="STATUS" operation="profile_replace" profile="unconfined" name="/usr/lib/connman/scripts/dhclient-script" pid=725 comm="apparmor_parser"
+Nov 28 22:27:26 oom-test kernel: [    2.664869] audit: type=1400 audit(1480372045.039:8): apparmor="STATUS" operation="profile_replace" profile="unconfined" name="/sbin/dhclient" pid=728 comm="apparmor_parser"
+Nov 28 22:27:26 oom-test kernel: [    2.664878] audit: type=1400 audit(1480372045.039:9): apparmor="STATUS" operation="profile_replace" profile="unconfined" name="/usr/lib/NetworkManager/nm-dhcp-client.action" pid=728 comm="apparmor_parser"
+Nov 28 22:27:26 oom-test kernel: [    2.664883] audit: type=1400 audit(1480372045.039:10): apparmor="STATUS" operation="profile_replace" profile="unconfined" name="/usr/lib/connman/scripts/dhclient-script" pid=728 comm="apparmor_parser"
+Nov 28 22:27:26 oom-test kernel: [    3.264860] ppdev: user-space parallel port driver
+Nov 28 22:27:26 oom-test kernel: [    3.316106] intel_rapl: no valid rapl domains found in package 0
+Nov 28 22:33:13 oom-test kernel: [  351.288552] random: nonblocking pool is initialized

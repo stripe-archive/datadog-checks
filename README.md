@@ -114,6 +114,29 @@ Each VPN is accessible over both TCP and UDP, and is available to both privilege
 
 The status file also contains useful information such as the IP (which can be used for geolookups), the connection duration (which can be used to ensure that the VPN is online and that it isn't cycling users), and the number of bytes sent/received (which could be used to detect erratic behavior).
 
+## Out of memory killer (OOM)
+
+This check emits a failure when any process has been killed by the OOM killer
+since the system last started up. It continues to emit criticals until the log file is removed or the system is restarted (providing the log file contains uptimes to detect a reboot)
+
+It reads the configured `logfile` as syslog kernel output for lines matching the `kernel_line_regex` property. The regular expression should provide named capture groups for `message` and, optionally, `uptime`. The `uptime` capture group is how it detects system reboots; it will stop looking for OOM instances when it detects a reboot. The second configurable regular expression extracts information from the `message` data itself, which is included in the service check message (not as tags, as this would pose problems with alert recovery).
+
+An example configuration for a base Ubuntu system goes like this:
+
+```yaml
+---
+init_config:
+instances:
+  - logfile: '/var/log/kern.log'
+    kernel_line_regex: '^(?P<timestamp>.+?) (?P<host>\S+) kernel: \[\s*(?P<uptime>\d+(?:\.\d+)?)\] (?P<message>.*)$'
+    kill_message_regex: '^Out of memory: Kill process (?P<pid>\d+) \((?P<pname>.*?)\) score (?P<score>.*?) or sacrifice child'
+```
+
+This file is included in `conf.d/oom.yaml`.
+
+Two error cases also emit service checks:
+1. If the log file is not present, a warning is emitted; this is not inherently a problem but could indicate misconfiguration
+2. If a permission error prevents dd-agent from reading the file, a critical is emitted; this is a definite failure and needs correcting
 
 
 ## Outdated Packages

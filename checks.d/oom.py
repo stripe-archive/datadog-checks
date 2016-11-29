@@ -1,5 +1,6 @@
 import os
 import re
+import errno
 
 from checks import AgentCheck
 
@@ -44,8 +45,7 @@ class OOM(AgentCheck):
         try:
             fh = open(instance.get('logfile'), 'rt')
         except IOError, err:
-            level = AgentCheck.UNKNOWN
-            if err.errno == 2:
+            if err.errno == errno.ENOENT:
                 level = AgentCheck.WARNING
             else:
                 level = AgentCheck.CRITICAL

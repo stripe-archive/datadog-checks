@@ -13,7 +13,7 @@ test-requirements: /src/venv requirements.txt requirements-test.txt
 
 test: test-requirements
 	ln -sf /src/checks.d/* /opt/datadog-agent/agent/checks.d/
-	sh -c '. /src/venv/bin/activate ; env PYTHONPATH=$(echo $PYTHONPATH):/opt/datadog-agent/agent nosetests tests/checks/integration/test_*.py tests/lib/test_*.py'
+	su dd-agent -c '. /src/venv/bin/activate ; env PYTHONPATH=$(echo $PYTHONPATH):/opt/datadog-agent/agent nosetests --nocapture tests/checks/integration/test_*.py tests/lib/test_*.py'
 
 dockertest:
 	docker build -t localbuild . && docker run --rm -ti localbuild:latest make -C /src test install

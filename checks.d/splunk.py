@@ -127,7 +127,7 @@ class Splunk(AgentCheck):
             response = self.get_json(url, '/services/cluster/master/fixup', instance_tags, sessionkey, timeout, params={'level': level, 'count': -1})
 
             # Accumulate a count by index so we can emit a gauge.
-            index_tasks = defaultdict(lambda x: 0)
+            index_tasks = defaultdict(lambda: 0)
             for entry in response['entry']:
                 index = entry['content']['index']
                 index_tasks[index] += 1

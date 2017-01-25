@@ -112,7 +112,10 @@ class NSQ(AgentCheck):
                         # so we'll do that by splitting on the . and left-justifying up to
                         # 2 spaces, filling with 0. Note that `ljust` returns the whole strong
                         # if it is >= the length. This converts 0.5 in to '50' and .9999 in to '9999'
-                        quantile = str(latency['quantile']).split(".")[1].ljust(2, "0")
+                        if latency['quantile'] == 1:
+                            quantile = '100'
+                        else:
+                            quantile = str(latency['quantile']).split(".")[1].ljust(2, "0")
                         self.gauge('nsq.topic.channel.e2e_processing_latency.p' + quantile, latency['value'], tags=channel_tags)
 
     def get_json(self, url, timeout):

@@ -1,26 +1,33 @@
 import datetime
 import os
 import json
-from tempfile import mkstemp, gettempdir
+from tempfile import mkstemp
 
 # 3rd party
 from botocore import stub
 
 # project
-from checks import AgentCheck
 from tests.checks.common import AgentCheckTest, load_check
 
 
 class TestFileUnit(AgentCheckTest):
     CHECK_NAME = 's3_object_exists'
 
+    def setUp(self):
+        AgentCheckTest.setUp(self)
+        self.fd, self.path = mkstemp()
+
+    def tearDown(self):
+        AgentCheckTest.tearDown(self)
+        if self.path and os.path.isfile(self.path):
+            os.unlink(self.path)
+
     def check_with_contents(self, *contents, **instance_config):
-        fd, path = mkstemp()
-        with os.fdopen(fd, 'w') as conf_file:
+        with os.fdopen(self.fd, 'w') as conf_file:
             json.dump({"id": "the_id", "key": "the_key"}, conf_file)
         conf = {
             "init_config": {
-                "credentials_json_file_path": path,
+                "credentials_json_file_path": self.path,
                 "aws_access_key_id_field_name": "id",
                 "aws_secret_access_key_field_name": "key",
             },
@@ -58,6 +65,7 @@ class TestFileUnit(AgentCheckTest):
         stub_s3.add_response(
             'list_objects',
             response,
+            {"Bucket": "my-bucket", "Prefix": "my/path/prefix/20161201"},
         )
         with stub_s3:
             check.check(conf["instances"][0])

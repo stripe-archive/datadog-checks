@@ -15,6 +15,13 @@ from checks import AgentCheck
 
 
 class S3ObjectExists(AgentCheck):
+    """
+    Ensure that one or more S3 objects with a URL prefix exists by that time
+    `sla_seconds` have passed since the start of the day.
+
+    This is particularly helpful for determining if daily-generated files
+    have been created on time, and to alert if they are missing.
+    """
 
     def __init__(self, name, init_config, agentConfig, instances=None):
         AgentCheck.__init__(self, name, init_config, agentConfig, instances)
@@ -77,7 +84,7 @@ class S3ObjectExists(AgentCheck):
 
         client = self.get_client()
         objects = []
-        list_args = {"Bucket": uri.netloc, "Prefix": uri.path}
+        list_args = {"Bucket": uri.netloc, "Prefix": uri.path.lstrip('/')}
         while True:
             resp = client.list_objects(**list_args)
             objects.extend(resp['Contents'])

@@ -17,6 +17,7 @@
 ###########################################################
 
 boto==2.36.0
+boto3==1.4.4
 ntplib==0.3.3
 # the libyaml bindings are optional
 pyyaml==3.11

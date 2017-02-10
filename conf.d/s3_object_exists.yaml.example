@@ -1,0 +1,9 @@
+init_config:
+  credentials_json_file_path: "/my/very/secret/secrets.json"
+  aws_access_key_id_field_name: "my_key_id"
+  aws_secret_access_key_field_name: "my_secret_access_key"
+
+instances:
+  - uri: s3://my-bucket/my/path/prefix
+    sla_seconds: 360000
+    min_size_bytes: 10000

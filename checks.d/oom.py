@@ -52,7 +52,9 @@ class OOM(AgentCheck):
 
             self.service_check('system.oom', level, message=str(err))
         else:
-            killed = None
+            last_killed = None
+            count = 0
+
             with fh:
                 for line in reverse_readline(fh):
                     result = kernlogRE.match(line)
@@ -67,19 +69,32 @@ class OOM(AgentCheck):
                     if 'uptime' in results:
                         uptime = float(results['uptime'])
 
-                        # only process lines since the last reboot
+                        # only process lines since the last reboot -- we're processing backwards,
+                        # so if we see an uptime larger than the last one we saw, it indicates
+                        # a reboot (the current line is the lowest uptime in the current sequence)
+                        #
+                        # this is not entirely optimal for a filtered kernel log: it won't abort on
+                        # equal timestamps, such as multiple reboot messages with timestamp 0, even
+                        # though we would otherwise want to. if you filter your target log that heavily,
+                        # though, it shouldn't be a problem -- and the complexity of capturing this case
+                        # plus a full count of OOMs is not really worth the optimization
                         if last != None and uptime > last:
                             break
 
                         last = uptime
 
-                    killed = killedRE.match(message)
-                    if killed:
-                        break
+                    killed_match = killedRE.match(message)
+                    if not killed_match:
+                        continue
 
-            if killed == None:
+                    count += 1
+                    last_killed = last_killed or killed_match
+
+            self.gauge('system.oom.count', count)
+
+            if last_killed == None:
                 self.service_check('system.oom', AgentCheck.OK)
             else:
                 self.service_check('system.oom', AgentCheck.CRITICAL,
-                    message="Process OOM killed since last boot: %s" % killed.groupdict()
+                    message="Process OOM killed since last boot: %s" % last_killed.groupdict()
                 )

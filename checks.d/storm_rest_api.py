@@ -128,9 +128,12 @@ class StormRESTCheck(AgentCheck):
             tags=check_tags)
 
     def report_cluster(self, config, cluster):
-        self.gauge(self.metric(config, 'cluster.nimbus_uptime_seconds'),
-                   storm_utils.translate_timespec(cluster['nimbusUptime']),
-                   tags=config.tags)
+        uptime = cluster.get('nimbusUptime', None)
+        if uptime is not None:
+            self.gauge(self.metric(config, 'cluster.nimbus_uptime_seconds'),
+                    storm_utils.translate_timespec(uptime),
+                    tags=config.tags)
+
         self.gauge(self.metric(config, 'cluster.slots_used_count'),
                    cluster['slotsUsed'],
                    tags=config.tags)

@@ -64,6 +64,7 @@ class Splunk(AgentCheck):
             self.do_fixup_metrics(instance_tags, url, sessionkey, timeout)
             self.do_license_metrics(instance_tags, url, sessionkey, timeout)
             self.do_throughput_metrics(instance_tags, url, sessionkey, timeout)
+            self.do_queue_metrics(instance_tags, url, sessionkey, timeout)
 
         if self.is_captain(instance_tags, url, sessionkey, timeout):
             self.do_search_metrics(instance_tags, url, sessionkey, timeout)
@@ -95,6 +96,17 @@ class Splunk(AgentCheck):
             return False
         else:
             return True
+
+    def do_queue_metrics(self, instance_tags, url, sessionkey, timeout):
+        response = self.do_search(url, 'search index=_internal source=*metrics.log group=queue earliest=-1m | stats avg(current_size_kb) AS avgsize_kb max(max_size_kb) AS maxsize_kb by name, host | eval percentage=round(avgsize_kb/maxsize_kb,2) | where percentage > 0', instance_tags, sessionkey, timeout)
+
+        res = StringIO.StringIO(response)
+        reader = csv.reader(res, delimiter=',')
+        for row in reader:
+            self.gauge("splunk.indexer.queue_fill_ratio", row[4], tags=instance_tags + [
+                'queuename:{0}'.format(row[0]),
+                'sourcehost:{0}'.format(row[1])
+            ])
 
     def do_throughput_metrics(self, instance_tags, url, sessionkey, timeout):
         response = self.do_search(url, 'search earliest=-10@s | eval size=len(_raw) | stats sum(size) as size by host, sourcetype', instance_tags, sessionkey, timeout)

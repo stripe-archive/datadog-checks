@@ -1,7 +1,5 @@
 # stdlib
-import csv
 import time
-import StringIO
 from collections import defaultdict
 from urlparse import urljoin
 from xml.dom import minidom
@@ -63,8 +61,6 @@ class Splunk(AgentCheck):
             self.do_peer_metrics(instance_tags, url, sessionkey, timeout)
             self.do_fixup_metrics(instance_tags, url, sessionkey, timeout)
             self.do_license_metrics(instance_tags, url, sessionkey, timeout)
-            self.do_throughput_metrics(instance_tags, url, sessionkey, timeout)
-            self.do_queue_metrics(instance_tags, url, sessionkey, timeout)
 
         if self.is_captain(instance_tags, url, sessionkey, timeout):
             self.do_search_metrics(instance_tags, url, sessionkey, timeout)
@@ -96,28 +92,6 @@ class Splunk(AgentCheck):
             return False
         else:
             return True
-
-    def do_queue_metrics(self, instance_tags, url, sessionkey, timeout):
-        response = self.do_search(url, 'search index=_internal source=*metrics.log group=queue earliest=-1m | stats avg(current_size_kb) AS avgsize_kb max(max_size_kb) AS maxsize_kb by name, host | eval percentage=round(avgsize_kb/maxsize_kb,2) | where percentage > 0', instance_tags, sessionkey, timeout)
-
-        res = StringIO.StringIO(response)
-        reader = csv.reader(res, delimiter=',')
-        for row in reader:
-            self.gauge("splunk.indexer.queue_fill_ratio", row[4], tags=instance_tags + [
-                'queuename:{0}'.format(row[0]),
-                'sourcehost:{0}'.format(row[1])
-            ])
-
-    def do_throughput_metrics(self, instance_tags, url, sessionkey, timeout):
-        response = self.do_search(url, 'search earliest=-10@s | eval size=len(_raw) | stats sum(size) as size by host, sourcetype', instance_tags, sessionkey, timeout)
-
-        res = StringIO.StringIO(response)
-        reader = csv.reader(res, delimiter=',')
-        for row in reader:
-            self.gauge("splunk.indexer.indexed_bytes", row[2], tags=instance_tags + [
-                'sourcehost:{0}'.format(row[0]),
-                'sourcetype:{0}'.format(row[1])
-            ])
 
     def do_forwarder_metrics(self, instance_tags, url, sessionkey, timeout):
         response = self.get_json(url, '/services/admin/inputstatus/TailingProcessor:FileStatus', instance_tags, sessionkey, timeout)
@@ -162,21 +136,6 @@ class Splunk(AgentCheck):
                 self.gauge('splunk.search_cluster.member_statuses', count, tags=instance_tags + [
                     'site:{0}'.format(member_site),
                     'status:{0}'.format(status)
-                ])
-
-    def do_search_metrics(self, instance_tags, url, sessionkey, timeout):
-        response = self.get_json(url, '/services/search/jobs', instance_tags, sessionkey, timeout, params={'summarize': True, 'search': 'isDone=false'})
-
-        searches = defaultdict(lambda: defaultdict(lambda: 0))
-
-        for entry in response['entry']:
-            searches[entry['content']['isSavedSearch']][entry['author']] += 1
-
-        for search_saved in searches.keys():
-            for search_owner in searches[search_saved].keys():
-                self.gauge('splunk.searches.in_progress', searches[search_saved][search_owner], tags=instance_tags + [
-                    'is_saved:{0}'.format(search_saved),
-                    'search_owner:{0}'.format(search_owner)
                 ])
 
     def do_fixup_metrics(self, instance_tags, url, sessionkey, timeout):

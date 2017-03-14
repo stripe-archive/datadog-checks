@@ -1,5 +1,7 @@
 # stdlib
+import csv
 import time
+import StringIO
 from collections import defaultdict
 from urlparse import urljoin
 from xml.dom import minidom
@@ -61,6 +63,7 @@ class Splunk(AgentCheck):
             self.do_peer_metrics(instance_tags, url, sessionkey, timeout)
             self.do_fixup_metrics(instance_tags, url, sessionkey, timeout)
             self.do_license_metrics(instance_tags, url, sessionkey, timeout)
+            self.do_throughput_metrics(instance_tags, url, sessionkey, timeout)
 
         if self.is_captain(instance_tags, url, sessionkey, timeout):
             self.do_search_metrics(instance_tags, url, sessionkey, timeout)
@@ -93,6 +96,17 @@ class Splunk(AgentCheck):
         else:
             return True
 
+    def do_throughput_metrics(self, instance_tags, url, sessionkey, timeout):
+        response = self.do_search(url, 'search earliest=-10@s | eval size=len(_raw) | stats sum(size) as size by host, sourcetype', instance_tags, sessionkey, timeout)
+
+        res = StringIO.StringIO(response)
+        reader = csv.reader(res, delimiter=',')
+        for row in reader:
+            self.gauge("splunk.indexer.indexed_bytes", row[2], tags=instance_tags + [
+                'sourcehost:{0}'.format(row[0]),
+                'sourcetype:{0}'.format(row[1])
+            ])
+
     def do_forwarder_metrics(self, instance_tags, url, sessionkey, timeout):
         response = self.get_json(url, '/services/admin/inputstatus/TailingProcessor:FileStatus', instance_tags, sessionkey, timeout)
 
@@ -104,11 +118,12 @@ class Splunk(AgentCheck):
             if 'percent' in input_status:
                 count += 1
                 status_percent = input_status['percent']
-                self.gauge('splunk.forwarder.read_percentage', input_status['percent'], tags=instance_tags + [
-                    'filename:{0}'.format(fname)
-                ])
                 if status_percent != 100:
-                    self.count('splunk.forwarder.incomplete_files_total', 1, tags=instance_tags)
+                    # To keep cardinality down, we're only going to emit only metrics
+                    # for "incomplete" files.
+                    self.count('splunk.forwarder.incomplete_files_total', 1, tags=instance_tags + [
+                        'filename:{0}'.format(fname)
+                    ])
 
         self.gauge('splunk.forwarder.files_read_count', count, tags=instance_tags)
 
@@ -299,12 +314,30 @@ class Splunk(AgentCheck):
                             'index_copy:{0}'.format(index_index)
                         ])
 
+    def do_search(self, url, search, instance_tags, sessionkey, timeout, params={}):
+        data = {
+            'search': search,
+            'output_mode': 'csv',
+            'adhoc_search_level': 'fast',
+            'exec_mode': 'oneshot'
+        }
+        # request_params.update(params)
+
+        try:
+            # start_time = time.time()
+            r = requests.post(urljoin(url, '/services/search/jobs/export'), verify=False, headers={'Authorization': "Splunk {0}".format(sessionkey)}, timeout=timeout, data=data)
+            r.raise_for_status()
+            # elapsed_time = time.time() - start_time
+            # self.histogram('splunk.stats_fetch_duration_seconds', int(elapsed_time), tags = [ 'path:{0}'.format(path) ])
+        except requests.exceptions.Timeout:
+            # If there's a timeout
+            raise Exception("Timeout when hitting URL")
+
+        except requests.exceptions.HTTPError:
+            raise Exception("Got {0} when hitting URL".format(r.status_code))
+        return r.text
+
     def get_json(self, url, path, instance_tags, sessionkey, timeout, params={}):
-        # For future reference
-        # 'search': 'search earliest=-10@s | eval size=len(_raw) | stats sum(size) by host, source',
-        # params
-        #     'adhoc_search_level': 'fast',
-        #     'exec_mode': 'oneshot'
         request_params = {
             'output_mode': 'json'
         }

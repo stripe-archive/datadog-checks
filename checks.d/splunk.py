@@ -138,6 +138,21 @@ class Splunk(AgentCheck):
                     'status:{0}'.format(status)
                 ])
 
+    def do_search_metrics(self, instance_tags, url, sessionkey, timeout):
+        response = self.get_json(url, '/services/search/jobs', instance_tags, sessionkey, timeout, params={'summarize': True, 'search': 'isDone=false'})
+
+        searches = defaultdict(lambda: defaultdict(lambda: 0))
+
+        for entry in response['entry']:
+            searches[entry['content']['isSavedSearch']][entry['author']] += 1
+
+        for search_saved in searches.keys():
+            for search_owner in searches[search_saved].keys():
+                self.gauge('splunk.searches.in_progress', searches[search_saved][search_owner], tags=instance_tags + [
+                    'is_saved:{0}'.format(search_saved),
+                    'search_owner:{0}'.format(search_owner)
+                ])
+
     def do_fixup_metrics(self, instance_tags, url, sessionkey, timeout):
         for level in self.FIXUP_LEVELS:
             response = self.get_json(url, '/services/cluster/master/fixup', instance_tags, sessionkey, timeout, params={'level': level, 'count': -1})
@@ -284,29 +299,6 @@ class Splunk(AgentCheck):
                             'index_name:{0}'.format(name),
                             'index_copy:{0}'.format(index_index)
                         ])
-
-    def do_search(self, url, search, instance_tags, sessionkey, timeout, params={}):
-        data = {
-            'search': search,
-            'output_mode': 'csv',
-            'adhoc_search_level': 'fast',
-            'exec_mode': 'oneshot'
-        }
-        # request_params.update(params)
-
-        try:
-            # start_time = time.time()
-            r = requests.post(urljoin(url, '/services/search/jobs/export'), verify=False, headers={'Authorization': "Splunk {0}".format(sessionkey)}, timeout=timeout, data=data)
-            r.raise_for_status()
-            # elapsed_time = time.time() - start_time
-            # self.histogram('splunk.stats_fetch_duration_seconds', int(elapsed_time), tags = [ 'path:{0}'.format(path) ])
-        except requests.exceptions.Timeout:
-            # If there's a timeout
-            raise Exception("Timeout when hitting URL")
-
-        except requests.exceptions.HTTPError:
-            raise Exception("Got {0} when hitting URL".format(r.status_code))
-        return r.text
 
     def get_json(self, url, path, instance_tags, sessionkey, timeout, params={}):
         request_params = {

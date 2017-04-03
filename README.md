@@ -38,10 +38,6 @@ instances:
     expect: absent
 ```
 
-## Resque
-
-Fetches metrics about processed jobs from Resque. It's pretty minimal, but we only needed it for a small thing.
-
 ## Jenkins Metrics
 
 Fetches metrics from Jenkin's [Metrics Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Metrics+Plugin) (which you must install separately). It fetches all the metrics under `vm.*` and emits them as gauges except the `vm.gc.*.count` and `vm.gc.*.time` which are emitted as `monotonic_count`.
@@ -170,7 +166,6 @@ Inspects the Redis storage for a Resque instance and ouputs some metrics:
 * `resque.jobs.processed_total` - number of jobs processed (monotonic_count)
 * `resque.queues_count` - number of queues (gauge)
 * `resque.worker_count` - number of workers (gauge)
-
 
 ## Slapd (OpenLDAP's Stand-alone LDAP Daemon)
 

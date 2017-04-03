@@ -66,6 +66,9 @@ class Splunk(AgentCheck):
             self.do_search_metrics(instance_tags, url, sessionkey, timeout)
             self.do_shmember_metrics(instance_tags, url, sessionkey, timeout)
 
+        if self.is_forwarder(instance_tags, url, sessionkey, timeout):
+            self.do_forwarder_metrics(instance_tags, url, sessionkey, timeout)
+
     def is_master(self, instance_tags, url, sessionkey, timeout):
         try:
             self.get_json(url, '/services/cluster/master/info', instance_tags, sessionkey, timeout)
@@ -81,6 +84,34 @@ class Splunk(AgentCheck):
             return False
         else:
             return True
+
+    def is_forwarder(self, instance_tags, url, sessionkey, timeout):
+        try:
+            self.get_json(url, '/services/data/inputs/all', instance_tags, sessionkey, timeout)
+        except Exception as inst:
+            return False
+        else:
+            return True
+
+    def do_forwarder_metrics(self, instance_tags, url, sessionkey, timeout):
+        response = self.get_json(url, '/services/admin/inputstatus/TailingProcessor:FileStatus', instance_tags, sessionkey, timeout)
+
+        count = 0
+        for fname in response['entry'][0]['content']['inputs']:
+            input_status = response['entry'][0]['content']['inputs'][fname]
+            # Not every input is actually followed. Those that are have a few
+            # keys. We'll use percent as our signal.
+            if 'percent' in input_status:
+                count += 1
+                status_percent = input_status['percent']
+                if status_percent != 100:
+                    # To keep cardinality down, we're only going to emit only metrics
+                    # for "incomplete" files.
+                    self.count('splunk.forwarder.incomplete_files_total', 1, tags=instance_tags + [
+                        'filename:{0}'.format(fname)
+                    ])
+
+        self.gauge('splunk.forwarder.files_read_count', count, tags=instance_tags)
 
     def do_shmember_metrics(self, instance_tags, url, sessionkey, timeout):
         response = self.get_json(url, '/services/shcluster/captain/members', instance_tags, sessionkey, timeout, params={'count': -1})
@@ -270,11 +301,6 @@ class Splunk(AgentCheck):
                         ])
 
     def get_json(self, url, path, instance_tags, sessionkey, timeout, params={}):
-        # For future reference
-        # 'search': 'search earliest=-10@s | eval size=len(_raw) | stats sum(size) by host, source',
-        # params
-        #     'adhoc_search_level': 'fast',
-        #     'exec_mode': 'oneshot'
         request_params = {
             'output_mode': 'json'
         }

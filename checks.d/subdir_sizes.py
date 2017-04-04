@@ -54,6 +54,7 @@ class SubDirSizesCheck(AgentCheck):
 
     def _get_stats(self, directory, dirtagname, subdirtagname, subdirtagname_regex, pattern, recurse):
         orig_dirtags = [dirtagname + ":%s" % directory]
+        pat = re.compile(subdirtagname_regex)
 
         # Initialize state for subdirectories
         subdirs = {}
@@ -62,7 +63,6 @@ class SubDirSizesCheck(AgentCheck):
                 for d in dirs:
                     subdir_path = join(root, d)
                     if subdirtagname_regex:
-                        pat = re.compile(subdirtagname_regex)
                         m = pat.match(d)
                         if m:
                             # Subdir matches

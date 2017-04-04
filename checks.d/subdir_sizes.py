@@ -30,6 +30,7 @@ class SubDirSizesCheck(AgentCheck):
         "subdirtagname" - string, the name of the tag used for the subdirectory. defaults to "subdir"
         "subdirgauges" - boolean, when true a total stat will be emitted for each subdirectory. default False
         "pattern" - string, the `fnmatch` pattern to use when reading the "directory"'s files. default "*"
+        "recurse" - boolean, when true gather stats for the subdirectories recursively. default False
     """
 
     SOURCE_TYPE_NAME = 'system'
@@ -44,18 +45,41 @@ class SubDirSizesCheck(AgentCheck):
         subdirtagname = instance.get("subdirtagname", "subdir")
         subdirtagname_regex = instance.get("subdirtagname_regex", "")
         pattern = instance.get("pattern", "*")
+        recurse = instance.get("recurse", False)
 
         if not exists(abs_directory):
             raise Exception("DirectoryCheck: the directory (%s) does not exist" % abs_directory)
 
-        self._get_stats(abs_directory, dirtagname, subdirtagname, subdirtagname_regex, pattern)
+        self._get_stats(abs_directory, dirtagname, subdirtagname, subdirtagname_regex, pattern, recurse)
 
-    def _get_stats(self, directory, dirtagname, subdirtagname, subdirtagname_regex, pattern):
+    def _get_stats(self, directory, dirtagname, subdirtagname, subdirtagname_regex, pattern, recurse):
         orig_dirtags = [dirtagname + ":%s" % directory]
-        directory_bytes = 0
-        directory_files = 0
-        recurse_count = 0
+        pat = re.compile(subdirtagname_regex)
+
+        # Initialize state for subdirectories
+        subdirs = {}
         for root, dirs, files in walk(directory):
+            if root == directory:
+                for d in dirs:
+                    subdir_path = join(root, d)
+                    if subdirtagname_regex:
+                        m = pat.match(d)
+                        if m:
+                            # Subdir matches
+                            tags = ["%s:%s" % (tagname, tagvalue) for tagname, tagvalue in m.groupdict().iteritems()]
+                            subdirs[subdir_path] = {'name': d, 'files': 0, 'bytes': 0, 'tags': tags}
+                    else:
+                        subdir_tag_value = d
+                        tags = ["%s:%s" % (subdirtagname, subdir_tag_value)]
+                        subdirs[subdir_path] = {'name': d, 'files': 0, 'bytes': 0, 'tags': tags}
+
+                # There should only be one case where root == directory, so safe to break
+                break
+
+
+        # Walk the entire directory and accumulate counts
+        for root, dirs, files in walk(directory):
+            directory_files = 0
             subdir_bytes = 0
 
             for filename in files:
@@ -73,25 +97,23 @@ class SubDirSizesCheck(AgentCheck):
                 else:
                     subdir_bytes += file_stat.st_size
 
-            subdir_tag_value = basename(root)
-            if recurse_count > 0:
-                dirtags = list(orig_dirtags)
-                if subdirtagname_regex:
-                    pat = re.compile(subdirtagname_regex)
-                    m = pat.match(subdir_tag_value)
-                    if m:
-                        # We got a match, use the groupdict to tagify the keys
-                        for tagname, tagvalue in m.groupdict().iteritems():
-                            dirtags = ["%s:%s" % (tagname, tagvalue)] + dirtags
-                else:
-                    dirtags = [subdirtagname + ":%s" % subdir_tag_value] + dirtags
+            for subdir in subdirs:
+                # Append a trailing slash to prevent bad matches
+                if root == subdir or (recurse and root.startswith("{0}/".format(subdir))):
+                    subdirs[subdir]['files'] += directory_files
+                    subdirs[subdir]['bytes'] += subdir_bytes
 
-                # If we've descended in to a subdir then let's emit total for the subdir
 
-                self.gauge("system.sub_dir.bytes", subdir_bytes, tags=dirtags)
-                self.gauge("system.sub_dir.files", directory_files, tags=orig_dirtags)
+        # Iterate through subdirectory states and emit metrics
+        for _, state in subdirs.iteritems():
+            name = state['name']
+            subdir_files = state['files']
+            subdir_bytes = state['bytes']
+            tags = state['tags']
 
-            # os.walk gives us all sub-directories and their files
-            # if we do not want to do this recursively and just want
-            # the top level directory we gave it, then break
-            recurse_count += 1
+            tags = list(orig_dirtags) + tags
+
+
+            self.gauge("system.sub_dir.bytes", subdir_bytes, tags=tags)
+            self.gauge("system.sub_dir.files", subdir_files, tags=tags)
+

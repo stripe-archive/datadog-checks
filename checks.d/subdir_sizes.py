@@ -28,6 +28,7 @@ class SubDirSizesCheck(AgentCheck):
         "directory" - string, the directory to gather stats for. required
         "dirtagname" - string, the name of the tag used for the directory. defaults to "name"
         "subdirtagname" - string, the name of the tag used for the subdirectory. defaults to "subdir"
+        "subdirtagname_regex" - string, pattern to use when parsing tags from a directory name. default None
         "subdirgauges" - boolean, when true a total stat will be emitted for each subdirectory. default False
         "pattern" - string, the `fnmatch` pattern to use when reading the "directory"'s files. default "*"
         "recurse" - boolean, when true gather stats for the subdirectories recursively. default False
@@ -62,17 +63,17 @@ class SubDirSizesCheck(AgentCheck):
             if root == directory:
                 for d in dirs:
                     subdir_path = join(root, d)
+                    tags = []
                     if subdirtagname_regex:
                         m = pat.match(d)
                         if m:
                             # Subdir matches
-                            tags = ["%s:%s" % (tagname, tagvalue) for tagname, tagvalue in m.groupdict().iteritems()]
-                            subdirs[subdir_path] = {'name': d, 'files': 0, 'bytes': 0, 'tags': tags}
+                            tags += ["%s:%s" % (tagname, tagvalue) for tagname, tagvalue in m.groupdict().iteritems()]
                     else:
                         subdir_tag_value = d
-                        tags = ["%s:%s" % (subdirtagname, subdir_tag_value)]
-                        subdirs[subdir_path] = {'name': d, 'files': 0, 'bytes': 0, 'tags': tags}
+                        tags += ["%s:%s" % (subdirtagname, subdir_tag_value)]
 
+                    subdirs[subdir_path] = {'name': d, 'files': 0, 'bytes': 0, 'tags': tags}
                 # There should only be one case where root == directory, so safe to break
                 break
 

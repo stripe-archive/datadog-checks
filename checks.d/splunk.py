@@ -313,7 +313,8 @@ class Splunk(AgentCheck):
             elapsed_time = time.time() - start_time
             self.histogram('splunk.stats_fetch_duration_seconds', int(elapsed_time), tags = [ 'path:{0}'.format(path) ])
         except requests.exceptions.Timeout:
-            # If there's a timeout
+            # If there's a timeout, increment a count (tagged with the path in question) and then raise.
+            self.increment('splunk.stats_fetch_timeouts', tags = [ 'path:{0}'.format(path) ])
             raise Exception("Timeout when hitting URL")
 
         except requests.exceptions.HTTPError:

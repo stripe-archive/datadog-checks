@@ -67,7 +67,7 @@ class Splunk(AgentCheck):
             self.do_search_metrics(instance_tags, url, sessionkey, timeout)
             self.do_shmember_metrics(instance_tags, url, sessionkey, timeout)
 
-        if forwarder_metrics_enabled
+        if forwarder_metrics_enabled:
             if self.is_forwarder(instance_tags, url, sessionkey, timeout):
                 self.do_forwarder_metrics(instance_tags, url, sessionkey, timeout)
 

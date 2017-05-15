@@ -278,6 +278,7 @@ instances:
   - url: https://localhost:8089
     username: obsrobot
     password: foobar
+    forwarder_metrics_enabled: false # If you wanna disable this feature, it might be expensive
 ```
 
 ## SubDir Sizes

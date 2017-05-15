@@ -30,7 +30,7 @@ class Splunk(AgentCheck):
         url = instance['url']
         instance_tags = instance.get('tags', []) + ['instance:{0}'.format(url)]
         default_timeout = self.init_config.get('default_timeout', self.DEFAULT_TIMEOUT)
-        forwarder_metrics_enabled = instance.get('forwarder_metrics_enabled', True)
+        forwarder_metrics_enabled = instance.get('forwarder_metrics_enabled', False)
         username = instance.get('username')
         password = instance.get('password')
         timeout = float(instance.get('timeout', default_timeout))
@@ -67,9 +67,8 @@ class Splunk(AgentCheck):
             self.do_search_metrics(instance_tags, url, sessionkey, timeout)
             self.do_shmember_metrics(instance_tags, url, sessionkey, timeout)
 
-        if forwarder_metrics_enabled:
-            if self.is_forwarder(instance_tags, url, sessionkey, timeout):
-                self.do_forwarder_metrics(instance_tags, url, sessionkey, timeout)
+        if forwarder_metrics_enabled && self.is_forwarder(instance_tags, url, sessionkey, timeout):
+            self.do_forwarder_metrics(instance_tags, url, sessionkey, timeout)
 
     def is_master(self, instance_tags, url, sessionkey, timeout):
         try:

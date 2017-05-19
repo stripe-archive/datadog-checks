@@ -56,11 +56,13 @@ class Splunk(AgentCheck):
                 tags = instance_tags
             )
 
+        if self.is_license_master(instance_tags, url, sessionkey, timeout):
+            self.do_license_metrics(instance_tags, url, sessionkey, timeout)
+
         if self.is_master(instance_tags, url, sessionkey, timeout):
             self.do_index_metrics(instance_tags, url, sessionkey, timeout)
             self.do_peer_metrics(instance_tags, url, sessionkey, timeout)
             self.do_fixup_metrics(instance_tags, url, sessionkey, timeout)
-            self.do_license_metrics(instance_tags, url, sessionkey, timeout)
 
         if self.is_captain(instance_tags, url, sessionkey, timeout):
             self.do_search_metrics(instance_tags, url, sessionkey, timeout)
@@ -68,6 +70,14 @@ class Splunk(AgentCheck):
 
         if self.is_forwarder(instance_tags, url, sessionkey, timeout):
             self.do_forwarder_metrics(instance_tags, url, sessionkey, timeout)
+
+    def is_license_master(self, instance_tags, url, sessionkey, timeout):
+        try:
+            users = self.get_json(url, '/services/licenser/slaves', instance_tags, sessionkey, timeout)
+            # If we don't have > 1 license user we're not a real LM
+            return len(users['entry']) > 1
+        except:
+            return False
 
     def is_master(self, instance_tags, url, sessionkey, timeout):
         try:

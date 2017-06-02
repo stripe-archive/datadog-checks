@@ -31,9 +31,12 @@ class TestFileUnit(AgentCheckTest):
             with open(filename, "r") as fh:
                 return fh.read()
 
-        self.run_check(conf, mocks={'get_stats': get_stats})
+        # Run twice to establish rates.
+        self.run_check_twice(conf, mocks={'get_stats': get_stats})
 
-        self.assertMetric("unbound.thread0.num.queries", value=884)
+        self.assertMetric("unbound.num.queries", value=0, tags=['thread:0'])
+        self.assertMetric("unbound.requestlist.max", value=1212, tags=['thread:total'])
+        self.assertMetric("unbound.requestlist.max", value=1079, tags=['thread:2'])
         self.assertServiceCheck('unbound', AgentCheck.OK)
 
     def test_output_failure(self):

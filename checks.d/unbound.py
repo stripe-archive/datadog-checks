@@ -3,8 +3,9 @@ import subprocess
 from checks import AgentCheck
 
 
-class FileCheck(AgentCheck):
+class UnboundCheck(AgentCheck):
     SERVICE_CHECK_NAME = 'unbound'
+
 
     def get_stats(self):
         cmd = 'sudo unbound-control stats'
@@ -22,6 +23,66 @@ class FileCheck(AgentCheck):
 
         return output
 
+    def parse_stat(self, stat):
+        label, stat = stat.split("=")
+        prefix, suffix = label.split(".", 1)
+
+        by_tag_labels = [
+            'num.query.flags',
+            'num.query.edns',
+            'num.answer.rcode',
+        ]
+
+        tags = []
+        if prefix.startswith('thread'):
+            tags.append("thread:{}".format(prefix[-1]))
+            metric = suffix
+        elif prefix == 'total':
+            tags.append("thread:total")
+            metric = suffix
+        elif any(label.startswith(lbl) for lbl in by_tag_labels):
+            # E.g.
+            # num.query.flags.QR
+            # metric = num.query.flags
+            # tag = {flags: QR}
+            metric, tag = label.rsplit('.', 1)
+            tag_name = metric.rsplit('.', 1)
+            tags.append("{}:{}".format(tag_name, tag))
+        else:
+            metric = label
+
+
+        rate_metrics = [
+            "num.queries",
+            "num.cachehits",
+            "num.cachemiss",
+            "num.prefetch",
+            "num.recursivereplies",
+            "requestlist.overwritten",
+            "requestlist.exceeded",
+            "tcpusage",
+            "num.query.flags",
+            "num.query.edns",
+            "num.answer.rcode",
+        ]
+        gauge_metrics = [
+            "requestlist.max",
+            "requestlist.avg",
+            "requestlist.overwritten",
+            "requestlist.current.all",
+            "requestlist.current.user",
+            "recursion.time.avg",
+            "recursion.time.median",
+        ]
+
+        ns_metric = "unbound.{}".format(metric)
+        if metric in rate_metrics:
+            self.rate(ns_metric, float(stat), tags)
+        elif metric in gauge_metrics:
+            self.gauge(ns_metric, float(stat), tags)
+        else:
+            self.count(ns_metric, float(stat), tags)
+
     def check(self, instance):
         stats = self.get_stats()
 
@@ -32,9 +93,7 @@ class FileCheck(AgentCheck):
             for line in stats.split("\n"):
                 if not line:
                     continue
-                metric_name, amount = line.split('=')
-                tagged_name = "unbound.{0}".format(metric_name)
-                self.gauge(tagged_name, float(amount))
+                self.parse_stat(line)
         except Exception as e:
             self.service_check(
                 self.SERVICE_CHECK_NAME,

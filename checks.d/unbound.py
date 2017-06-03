@@ -46,7 +46,7 @@ class UnboundCheck(AgentCheck):
             # metric = num.query.flags
             # tag = {flags: QR}
             metric, tag = label.rsplit('.', 1)
-            tag_name = metric.rsplit('.', 1)
+            _, tag_name = metric.rsplit('.', 1)
             tags.append("{}:{}".format(tag_name, tag))
         else:
             metric = label

@@ -16,7 +16,7 @@ class TestFileUnit(AgentCheckTest):
 
     def test_check_exists(self):
         conf = {}
-        check = load_check('unbound', conf, {})
+        load_check('unbound', conf, {})
 
     def test_output(self):
         conf = {
@@ -37,6 +37,9 @@ class TestFileUnit(AgentCheckTest):
         self.assertMetric("unbound.num.queries", value=0, tags=['thread:0'])
         self.assertMetric("unbound.requestlist.max", value=1212, tags=['thread:total'])
         self.assertMetric("unbound.requestlist.max", value=1079, tags=['thread:2'])
+        self.assertMetric("unbound.num.query.flags", value=0, tags=['flags:RD'])
+        self.assertMetric("unbound.num.query.edns", value=0, tags=['edns:present'])
+        self.assertMetric("unbound.num.answer.rcode", value=0, tags=['rcode:NOERROR'])
         self.assertServiceCheck('unbound', AgentCheck.OK)
 
     def test_output_failure(self):

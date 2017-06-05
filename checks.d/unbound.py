@@ -6,9 +6,17 @@ from checks import AgentCheck
 class UnboundCheck(AgentCheck):
     SERVICE_CHECK_NAME = 'unbound'
 
+    def get_cmd(self):
+        if self.init_config.get('sudo'):
+            cmd = 'sudo unbound-control stats'
+        else:
+            cmd = 'unbound-control stats'
+
+        return cmd
 
     def get_stats(self):
-        cmd = 'sudo unbound-control stats'
+        cmd = self.get_cmd()
+
         try:
             output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
         except subprocess.CalledProcessError as e:
@@ -36,9 +44,6 @@ class UnboundCheck(AgentCheck):
         tags = []
         if prefix.startswith('thread'):
             tags.append("thread:{}".format(prefix[-1]))
-            metric = suffix
-        elif prefix == 'total':
-            tags.append("thread:total")
             metric = suffix
         elif any(label.startswith(lbl) for lbl in by_tag_labels):
             # E.g.
@@ -74,6 +79,9 @@ class UnboundCheck(AgentCheck):
             "recursion.time.avg",
             "recursion.time.median",
         ]
+
+        rate_metrics = rate_metrics + ["total.{}".format(m) for m in rate_metrics]
+        gauge_metrics= gauge_metrics + ["total.{}".format(m) for m in gauge_metrics]
 
         ns_metric = "unbound.{}".format(metric)
         if metric in rate_metrics:

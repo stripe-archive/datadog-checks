@@ -1,5 +1,5 @@
 init_config:
-  # Not required for this check
+  sudo: true
 
 instances:
   # Not required for this check

@@ -35,7 +35,7 @@ class TestFileUnit(AgentCheckTest):
         self.run_check_twice(conf, mocks={'get_stats': get_stats})
 
         self.assertMetric("unbound.num.queries", value=0, tags=['thread:0'])
-        self.assertMetric("unbound.requestlist.max", value=1212, tags=['thread:total'])
+        self.assertMetric("unbound.total.requestlist.max", value=1212)
         self.assertMetric("unbound.requestlist.max", value=1079, tags=['thread:2'])
         self.assertMetric("unbound.num.query.flags", value=0, tags=['flags:RD'])
         self.assertMetric("unbound.num.query.edns", value=0, tags=['edns:present'])
@@ -55,3 +55,19 @@ class TestFileUnit(AgentCheckTest):
         self.run_check(conf, mocks={'get_stats': get_stats})
 
         self.assertServiceCheck('unbound', AgentCheck.CRITICAL)
+
+    def check_sudo(self, sudo_value):
+        conf = {
+            'init_config': {"sudo": sudo_value},
+            'instances': [
+                {}
+            ]
+        }
+
+        check = load_check('unbound', conf, {})
+        cmd = check.get_cmd()
+        self.assertEqual(cmd.startswith("sudo "), sudo_value)
+
+    def test_sudo(self):
+        self.check_sudo(True)
+        self.check_sudo(False)

@@ -1,4 +1,8 @@
 init_config:
+  # `unbound-control stats` needs to be run as root since there are
+  # administrative commands that can be invoked with `unbound-control`.
+  # Communication to the `unbound` process is via an authenticated
+  # channel using certs that unbound created during installation.
   sudo: true
 
 instances:

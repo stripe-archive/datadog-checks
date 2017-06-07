@@ -51,7 +51,7 @@ class UnboundCheck(AgentCheck):
             # specified by  <sec>.<usec>.to.<sec>.<usec>.
             metric = "histogram"
             _, window = label.split(".", 1)
-            tags.append("window:{}".format(window))
+            tags.append("bucket:{}".format(window))
         elif any(label.startswith(lbl) for lbl in by_tag_labels):
             # E.g.
             # num.query.flags.QR

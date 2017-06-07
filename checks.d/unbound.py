@@ -45,6 +45,13 @@ class UnboundCheck(AgentCheck):
         if prefix.startswith('thread'):
             tags.append("thread:{}".format(prefix[-1]))
             metric = suffix
+        elif label.startswith('histogram'):
+            # E.g. histogram.000000.524288.to.000001.000000=59
+            # This the count of requests needing recursive processing whose processing time fell in the window
+            # specified by  <sec>.<usec>.to.<sec>.<usec>.
+            metric = "histogram"
+            _, window = label.split(".", 1)
+            tags.append("window:{}".format(window))
         elif any(label.startswith(lbl) for lbl in by_tag_labels):
             # E.g.
             # num.query.flags.QR
@@ -56,8 +63,8 @@ class UnboundCheck(AgentCheck):
         else:
             metric = label
 
-
         rate_metrics = [
+            "histogram",
             "num.queries",
             "num.cachehits",
             "num.cachemiss",

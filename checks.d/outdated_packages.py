@@ -12,6 +12,7 @@ SUPPORTED_RELEASES = frozenset([
     'trusty',
     'utopic',
     'vivid',
+    'xenial',
 ])
 
 

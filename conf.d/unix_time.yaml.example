@@ -1,0 +1,6 @@
+---
+init_config:
+
+# Nothing is configurable here, but the dd agent code requires something
+instances:
+  - pass: pass

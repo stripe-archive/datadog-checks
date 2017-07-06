@@ -22,6 +22,7 @@ class TestFileUnit(AgentCheckTest):
         self.assertMetric('package.up_to_date.change', count=0)
 
     @mock.patch('outdated_packages.OutdatedPackagesCheck.get_package_version', return_value='2.0.0')
+    @mock.patch('outdated_packages.OutdatedPackagesCheck.is_package_installed', return_value=True)
     def test_package_is_up_to_date(self, *args):
         self.config['instances'].append({
             'package': 'foo',
@@ -40,6 +41,7 @@ class TestFileUnit(AgentCheckTest):
         )
 
     @mock.patch('outdated_packages.OutdatedPackagesCheck.get_package_version', return_value='1.0.0')
+    @mock.patch('outdated_packages.OutdatedPackagesCheck.is_package_installed', return_value=True)
     def test_package_is_outdated(self, *args):
         self.config['instances'].append({
             'package': 'bar',
@@ -57,8 +59,24 @@ class TestFileUnit(AgentCheckTest):
             count=1
         )
 
+    @mock.patch('outdated_packages.OutdatedPackagesCheck.get_package_version', return_value='2.0.0')
+    @mock.patch('outdated_packages.OutdatedPackagesCheck.is_package_installed', return_value=False)
+    def test_package_does_not_exist(self, *args):
+        self.config['instances'].append({
+            'package': 'foo',
+            'version': {
+                'precise': '1.0.0',
+                'trusty': '1.0.0',
+            },
+        })
+        self.run_check(self.config)
+
+        self.assertEqual(len(self.service_checks), 0)
+        self.assertMetric('package.up_to_date.change', count=0)
+
     @mock.patch('outdated_packages.OutdatedPackagesCheck.get_lsb_codename', return_value='trusty')
     @mock.patch('outdated_packages.OutdatedPackagesCheck.get_package_version', return_value='1.0.0')
+    @mock.patch('outdated_packages.OutdatedPackagesCheck.is_package_installed', return_value=True)
     def test_unknown_release(self, *args):
         self.config['instances'].append({
             'package': 'foo',
@@ -76,6 +94,7 @@ class TestFileUnit(AgentCheckTest):
 
     @mock.patch('outdated_packages.OutdatedPackagesCheck.get_lsb_codename', return_value='trusty')
     @mock.patch('outdated_packages.OutdatedPackagesCheck.get_package_version', return_value='2.0.0')
+    @mock.patch('outdated_packages.OutdatedPackagesCheck.is_package_installed', return_value=True)
     def test_correct_release(self, *args):
         self.config['instances'].append({
             'package': 'foo',

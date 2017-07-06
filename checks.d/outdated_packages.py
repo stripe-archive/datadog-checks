@@ -30,6 +30,15 @@ class OutdatedPackagesCheck(AgentCheck):
     def get_lsb_codename(self):
         return subprocess.check_output(['lsb_release', '-cs']).strip()
 
+    def is_package_installed(self, package_name):
+        """
+        Returns a boolean indicating whether the given package is installed.
+        """
+        cmd = ['dpkg-query', '-W', '-f', '${Status}', package_name]
+        out = subprocess.check_output(cmd)
+
+        return out.strip() == 'install ok installed'
+
     def get_package_version(self, package_name):
         """
         Gets the current version of a package.
@@ -72,6 +81,10 @@ class OutdatedPackagesCheck(AgentCheck):
         # Inputs
         package = instance["package"]
         expected_versions = instance["version"]
+
+        # Ignore packages that aren't installed
+        if not self.is_package_installed(package):
+            return
 
         # Default (successful) outputs
         tags = ['package:' + package]

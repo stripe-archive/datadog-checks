@@ -2,7 +2,9 @@
 from checks import AgentCheck
 from utils.platform import Platform
 
+import os
 import subprocess
+
 
 class UpdatesCheck(AgentCheck):
 
@@ -20,15 +22,18 @@ class UpdatesCheck(AgentCheck):
             return
 
         num_updates, num_security = parts
+        reboot_required = self.get_reboot_required_flag_status()
         try:
             num_updates = int(num_updates)
             num_security = int(num_security)
+            reboot_required = int(reboot_required)
         except ValueError as e:
             self.log.debug("Could not convert to integer: {0}".format(e))
             return
 
         self.gauge('updates.available', num_updates)
         self.gauge('updates.security', num_security)
+        self.gauge('updates.reboot_required', reboot_required)
 
     def get_subprocess_output(self):
         """
@@ -45,3 +50,6 @@ class UpdatesCheck(AgentCheck):
         except subprocess.CalledProcessError as e:
             self.log.debug("Could not run apt-check: {0}".format(e.returncode))
             return None
+
+    def get_reboot_required_flag_status(self):
+        return os.path.isfile('/var/run/reboot-required')

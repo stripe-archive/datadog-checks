@@ -22,13 +22,14 @@ class Sequins(AgentCheck):
         for db_name, db in resp['dbs'].iteritems():
             db_tags = instance_tags + ['sequins_db:%s' % db_name]
 
-            num_dbs = len(db['versions'])
+            versions = db.get('versions', {})
+            num_dbs = len(versions)
             if num_dbs > max_dbs:
                 raise Exception("%d dbs is more than the configured maximum (%d)" % (num_dbs, max_dbs))
 
             self.gauge('sequins.version_count', num_dbs, db_tags)
 
-            for version_name, version in db['versions'].iteritems():
+            for version_name, version in versions.iteritems():
                 version_tags = db_tags + ['sequins_version:%s' % version_name]
                 self.gauge('sequins.partition_count', version['num_partitions'], version_tags)
                 self.gauge('sequins.missing_partition_count', version['missing_partitions'], version_tags)

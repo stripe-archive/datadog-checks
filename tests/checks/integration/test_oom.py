@@ -45,16 +45,32 @@ class TestFileUnit(AgentCheckTest):
         for idx, obj in enumerate(service_checks):
             match = matches[idx]
 
-            self.assertEqual(obj['check'], self.CHECK_NAME, "(%s) Service check name should be %s" % (idx, self.CHECK_NAME))
+            self.assertEqual(
+                obj.get('check'),
+                self.CHECK_NAME,
+                "(%s) Service check name should be %s" % (idx, self.CHECK_NAME)
+            )
 
             if 'status' in match:
-                self.assertEqual(obj['status'], match['status'], "(%s) Status should be %s" % (idx, match['status']))
+                self.assertEqual(
+                    obj.get('status'),
+                    match.get('status'),
+                    "(%s) Status should be %s" % (idx, match.get('status'))
+                )
 
             if 'message' in match:
-                if match['message'] == None:
-                    self.assertEqual(obj['message'], None, "(%s) Service check should have no message" % idx)
+                if match.get('message') is None:
+                    self.assertEqual(
+                        obj.get('message'),
+                        None,
+                        "(%s) Service check should have no message" % idx
+                    )
                 else:
-                    self.assertRegexpMatches(obj['message'], match['message'], "(%s) Message should match %s" % (idx, match['message']))
+                    self.assertRegexpMatches(
+                        obj.get('message'),
+                        match.get('message'),
+                        "(%s) Message should match %s" % (idx, match.get('message'))
+                    )
 
     def test_no_file(self):
         self.check_and_assert('kern.nonexistent.log', [

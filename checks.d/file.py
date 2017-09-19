@@ -49,6 +49,7 @@ class FileCheck(AgentCheck):
 
         path = instance['path']
         expect = instance['expect']
+        min_age = instance.get('present_minimum_age_seconds', 0)
 
         status, statinfo = self.stat_file(path)
 
@@ -57,20 +58,28 @@ class FileCheck(AgentCheck):
             'path:' + path
         ]
 
+        # Set a default
+        file_age = -1
+        timestamp = time.time()
+        if status == self.STATUS_PRESENT:
+            timestamp = statinfo.st_ctime
+            # Set this for the metric later
+            file_age = time.time() - timestamp
+
         # Emit a service check:
         msg = "File %s is %s" % (path, expect)
         check_status = AgentCheck.OK
         if status != expect:
-            check_status = AgentCheck.CRITICAL
-            msg = "File %s that was expected to be %s is %s instead" % (path, expect, status)
+            if (expect == self.STATUS_PRESENT and file_age > min_age) or expect == self.STATUS_ABSENT:
+                # We only want to emit this if the file is "old enough". Since
+                # this check_status is used to signal the event below, we won't
+                # get an event either.
+                check_status = AgentCheck.CRITICAL
+                msg = "File %s that was expected to be %s is %s instead" % (path, expect, status)
         self.service_check('file.existence', check_status, message=msg, tags=tags)
 
         # Emit an event if the previous state is known & it's different:
         if self.has_different_status(path, status):
-            timestamp = time.time()
-            if status == self.STATUS_PRESENT:
-                timestamp = statinfo.st_ctime
-
             alert_type = 'success'
             if check_status != AgentCheck.OK:
                 alert_type = 'error'
@@ -86,7 +95,4 @@ class FileCheck(AgentCheck):
             })
 
         # Emit age metrics (of dubious utility):
-        file_age = -1
-        if status == self.STATUS_PRESENT:
-            file_age = time.time() - statinfo.st_ctime
         self.gauge('file.age_seconds', file_age, tags=tags)

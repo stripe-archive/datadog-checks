@@ -1,11 +1,13 @@
 # init_config:
-# # Not required for this check
 #
 # instances:
 #  - path: '/var/run/reboot-required'
 #    expected: absent
 #  - path: '/etc/passwd'
 #    expected: present
+#    Optionally require that the file be at least this many seconds old
+#    before we call it "present".
+#    present_minimum_age_seconds: 300
 
 init_config:
   # Not required for this check

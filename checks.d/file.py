@@ -52,7 +52,6 @@ class FileCheck(AgentCheck):
         min_age = instance.get('present_minimum_age_seconds', 0)
 
         status, statinfo = self.stat_file(path)
-
         tags = [
             'expected_status:' + expect,
             'path:' + path
@@ -60,17 +59,20 @@ class FileCheck(AgentCheck):
 
         # Set a default
         file_age = -1
+        m_age = -1
         timestamp = time.time()
         if status == self.STATUS_PRESENT:
             timestamp = statinfo.st_ctime
             # Set this for the metric later
             file_age = time.time() - timestamp
+            # We use the mtime because we cant change the ctime for testing.
+            m_age = time.time() - statinfo.st_mtime
 
         # Emit a service check:
         msg = "File %s is %s" % (path, expect)
         check_status = AgentCheck.OK
         if status != expect:
-            if (expect == self.STATUS_PRESENT and file_age > min_age) or expect == self.STATUS_ABSENT:
+            if (status == self.STATUS_PRESENT and m_age > min_age) or expect == self.STATUS_PRESENT:
                 # We only want to emit this if the file is "old enough". Since
                 # this check_status is used to signal the event below, we won't
                 # get an event either.

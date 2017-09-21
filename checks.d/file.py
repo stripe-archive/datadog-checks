@@ -38,7 +38,11 @@ class FileCheck(AgentCheck):
             else:
                 raise
 
-    def check(self, instance):
+    # Note that this check takes a "second" (lol self) argument that allows
+    # us to override the age of the file. Since the age of the file is based on
+    # the ctime, we can't modify it to rig up a test. Supply this value will
+    # ignore the file's age and use the provided value instead. Yay testing!
+    def check(self, instance, file_age=-1):
         """
         Stats a file and emits service_checks and metrics on file creation/age.
         """
@@ -57,22 +61,19 @@ class FileCheck(AgentCheck):
             'path:' + path
         ]
 
-        # Set a default
-        file_age = -1
-        m_age = -1
         timestamp = time.time()
         if status == self.STATUS_PRESENT:
-            timestamp = statinfo.st_ctime
-            # Set this for the metric later
-            file_age = time.time() - timestamp
-            # We use the mtime because we cant change the ctime for testing.
-            m_age = time.time() - statinfo.st_mtime
+            if file_age == -1:
+                # We only want to change this value of we have been given a
+                # value different than the default. See the note atop this
+                # function.
+                file_age = timestamp - statinfo.st_ctime
 
         # Emit a service check:
         msg = "File %s is %s" % (path, expect)
         check_status = AgentCheck.OK
         if status != expect:
-            if (status == self.STATUS_PRESENT and m_age > min_age) or expect == self.STATUS_PRESENT:
+            if (status == self.STATUS_PRESENT and file_age > min_age) or expect == self.STATUS_PRESENT:
                 # We only want to emit this if the file is "old enough". Since
                 # this check_status is used to signal the event below, we won't
                 # get an event either.

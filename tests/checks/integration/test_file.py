@@ -90,9 +90,6 @@ class TestFileUnit(AgentCheckTest):
 
     def test_present_over_minimum_age_success(self):
         _, path = mkstemp()
-        # Change the temp file to be older than the minimum age we'll set below
-        oldstamp = time.time() - 100
-        os.utime(path, (oldstamp, oldstamp))
 
         conf = {
             'init_config': {},
@@ -101,7 +98,11 @@ class TestFileUnit(AgentCheckTest):
             ]
         }
         self.check = load_check('file', conf, {})
-        self.check.check(conf['instances'][0])
+
+        # Change the temp file to be older than the minimum age we'll set below
+        oldstamp = time.time() - 100
+
+        self.check.check(conf['instances'][0], file_age=oldstamp)
         metrics = self.check.get_metrics()
         self.assertTrue(len(metrics) == 1)
         metric = metrics[0]

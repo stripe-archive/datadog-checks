@@ -5,11 +5,13 @@
 #    expected: absent
 #  - path: '/etc/passwd'
 #    expected: present
-#    Optionally require that the file be at least this many seconds old
-#    before we call it "present".
+#    Optionally require that the file must be AT LEAST this many seconds old
+#    before we call it "present". This is useful for giving the file time to
+#    quiesce if tracking follower/leader behavior, bootstrapping or other
+#    transient behavior.
 #    present_minimum_age_seconds: 300
 
 init_config:
   # Not required for this check
 
-instances:
+instances: []

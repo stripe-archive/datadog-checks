@@ -1,0 +1,5 @@
+init_config:
+  # Not required for this check
+
+instances:
+  - host: 'http://localhost:8200'

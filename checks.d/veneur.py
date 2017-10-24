@@ -25,11 +25,13 @@ class Veneur(AgentCheck):
             builddate = datetime.datetime.fromtimestamp(int(r.text))
 
             tdelta = datetime.datetime.now() - builddate
-            self.histogram(self.BUILDAGE_METRIC_NAME, tdelta.seconds)
+            self.histogram(self.BUILDAGE_METRIC_NAME, tdelta.total_seconds())
 
         except:
             success = 0
             self.increment(self.ERROR_METRIC_NAME)
             raise
         finally:
-            self.gauge(self.VERSION_METRIC_NAME, success, tags = ['sha:{0}'.format(sha)])
+            tags = instance.get('tags', [])
+            tags.extend(['sha:{0}'.format(sha)])
+            self.gauge(self.VERSION_METRIC_NAME, success, tags = tags)

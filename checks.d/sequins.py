@@ -45,6 +45,9 @@ class Sequins(AgentCheck):
                     tags = version_tags + ['sequins_node_state:%s' % state.lower()]
                     self.gauge('sequins.node_count', count, tags)
 
+        if 'shard_id' in resp:
+            self.gauge('sequins.shard_id', 1, instance_tags + ['sequins_shard:%s' % resp['shard_id']])
+
     def get_json(self, url, timeout):
         try:
             r = requests.get(url, timeout=timeout, headers={'accept': 'application/json'})

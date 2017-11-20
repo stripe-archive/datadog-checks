@@ -38,7 +38,11 @@ class FileCheck(AgentCheck):
             else:
                 raise
 
-    def check(self, instance):
+    # Note that this check takes a "second" (lol self) argument that allows
+    # us to override the age of the file. Since the age of the file is based on
+    # the ctime, we can't modify it to rig up a test. Supply this value will
+    # ignore the file's age and use the provided value instead. Yay testing!
+    def check(self, instance, file_age=-1):
         """
         Stats a file and emits service_checks and metrics on file creation/age.
         """
@@ -49,28 +53,36 @@ class FileCheck(AgentCheck):
 
         path = instance['path']
         expect = instance['expect']
+        min_age = instance.get('present_minimum_age_seconds', 0)
 
         status, statinfo = self.stat_file(path)
-
         tags = [
             'expected_status:' + expect,
             'path:' + path
         ]
 
+        timestamp = time.time()
+        if status == self.STATUS_PRESENT:
+            if file_age == -1:
+                # We only want to change this value of we have been given a
+                # value different than the default. See the note atop this
+                # function.
+                file_age = timestamp - statinfo.st_ctime
+
         # Emit a service check:
         msg = "File %s is %s" % (path, expect)
         check_status = AgentCheck.OK
         if status != expect:
-            check_status = AgentCheck.CRITICAL
-            msg = "File %s that was expected to be %s is %s instead" % (path, expect, status)
+            if (status == self.STATUS_PRESENT and file_age > min_age) or expect == self.STATUS_PRESENT:
+                # We only want to emit this if the file is "old enough". Since
+                # this check_status is used to signal the event below, we won't
+                # get an event either.
+                check_status = AgentCheck.CRITICAL
+                msg = "File %s that was expected to be %s is %s instead" % (path, expect, status)
         self.service_check('file.existence', check_status, message=msg, tags=tags)
 
         # Emit an event if the previous state is known & it's different:
         if self.has_different_status(path, status):
-            timestamp = time.time()
-            if status == self.STATUS_PRESENT:
-                timestamp = statinfo.st_ctime
-
             alert_type = 'success'
             if check_status != AgentCheck.OK:
                 alert_type = 'error'
@@ -86,7 +98,4 @@ class FileCheck(AgentCheck):
             })
 
         # Emit age metrics (of dubious utility):
-        file_age = -1
-        if status == self.STATUS_PRESENT:
-            file_age = time.time() - statinfo.st_ctime
         self.gauge('file.age_seconds', file_age, tags=tags)

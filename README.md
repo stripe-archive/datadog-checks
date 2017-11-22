@@ -84,6 +84,10 @@ Fetches the following metrics by polling NSQ's `/stats` endpoint:
   * `finish_count`
   * `requeue_count`
 
+If you have extra tags you would like to parse from any of your topic names, you can include `topic_name_regex` as a
+Python regex in your `init_config`. The regex will be applied to each topic name and if there is a match, the name of
+the symbolic group and the value it captured will be included as a tag key/value pair.
+
 ## Nagios Runner
 
 The Nagios Runner check takes a list of check "instances". The instances are each executed and, [according to the Nagios Plugin API](https://assets.nagios.com/downloads/nagioscore/docs/nagioscore/3/en/pluginapi.html) the return value is inspected and a [service check](http://docs.datadoghq.com/api/#service_checks) is submitted using the provided name.

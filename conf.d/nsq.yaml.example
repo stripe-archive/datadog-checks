@@ -1,5 +1,9 @@
-# This check takes no init_config
+# (Optional) `topic_name_regex` - If included, applies the given Python regular expression to each topic_name. For each
+# symbolic group captured, the name of the group will be included as a tag key, and the captured value will be the tag
+# value. In this example, the "service-prod" topic will include the tag stage:prod and the "service-canary" topic will
+# include the tag stage:canary. The regex must include at least one symbolic group.
 init_config:
+    topic_name_regex: "service-(?P<stage>prod|canary)$"
 
 instances:
     # Where your NSQD HTTP Server Lives

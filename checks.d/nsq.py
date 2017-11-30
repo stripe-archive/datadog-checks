@@ -1,4 +1,5 @@
 # stdlib
+import re
 import time
 from urlparse import urljoin
 
@@ -71,11 +72,20 @@ class NSQ(AgentCheck):
             self.gauge('nsq.topic_count', len(response['data']['topics']), tags=instance_tags)
 
 
+            topic_name_pattern = None
+            topic_name_regex = self.init_config.get('topic_name_regex')
+            if topic_name_regex:
+                topic_name_pattern = re.compile(topic_name_regex)
+
             # Descend in to topic
             for topic in response['data']['topics']:
                 self.gauge('nsq.topic.channel_count', len(topic['channels']), instance_tags)
 
                 topic_tags = ['topic_name:' + topic['topic_name']] + instance_tags
+
+                if topic_name_pattern:
+                    topic_tags += self.tags_from_topic_name(topic_name_pattern, topic['topic_name'])
+
                 for attr in self.TOPIC_GAUGES:
                     self.gauge('nsq.topic.' + attr, topic[attr], tags=topic_tags)
                 for attr in self.TOPIC_COUNTS:
@@ -144,3 +154,20 @@ class NSQ(AgentCheck):
             )
 
         return r.json()
+
+
+    def tags_from_topic_name(self, pattern, topic_name):
+        if not pattern.groupindex:
+            raise Exception('topic_names_regex was defined in init_config, but does not include any symbolic groups.')
+  
+        matches = pattern.match(topic_name)
+  
+        if not matches:
+            return []
+  
+        tags = []
+        for tag_key in pattern.groupindex:
+            tag_value = matches.group(tag_key)
+            tags.append('{}:{}'.format(tag_key, tag_value))
+  
+        return tags

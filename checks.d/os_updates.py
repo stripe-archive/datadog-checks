@@ -27,8 +27,14 @@ class UpdatesCheck(AgentCheck):
             self.log.debug("Could not convert to integer: {0}".format(e))
             return
 
+        # We create "boolean" versions of these metrics because Datadog doesn't
+        # seem to have a way to compute them in queries.
+
         self.gauge('updates.available', num_updates)
+        self.gauge('updates.available.boolean', 1 if num_updates > 0 else 0)
+
         self.gauge('updates.security', num_security)
+        self.gauge('updates.security.boolean', 1 if num_security > 0 else 0)
 
     def get_subprocess_output(self):
         """

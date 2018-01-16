@@ -9,10 +9,10 @@ class Veneur(AgentCheck):
     ERROR_METRIC_NAME = 'linux.kernel.agent_check.errors_total'
 
     def get_kernel_version(self):
-        return subprocess.check_call(['uname', '-r']).strip()
+        return subprocess.check_output(['uname', '-r']).strip()
 
     def get_linux_release(self):
-        return subprocess.check_call(['lsb_release', '-sc']).strip()
+        return subprocess.check_output(['lsb_release', '-sc']).strip()
 
     def get_grub_menu_lines(self):
         with open("/boot/grub/menu.lst") as menu_fh:
@@ -34,6 +34,8 @@ class Veneur(AgentCheck):
     def check(self, instance):
         success = 0
         grub_default = 'unknown'
+        kernel = 'unknown'
+        release = 'unknown'
 
         try:
             kernel = self.get_kernel_version()

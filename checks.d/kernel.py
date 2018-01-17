@@ -19,6 +19,7 @@ class Veneur(AgentCheck):
             return menu_fh.readlines()
 
     def get_grub_default(self):
+        grub_default = 'unknown'
         try:
             menu_lines = self.get_grub_menu_lines()
             default_line = next(l for l in menu_lines

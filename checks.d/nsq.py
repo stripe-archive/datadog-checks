@@ -57,7 +57,7 @@ class NSQ(AgentCheck):
 
         response = self.get_json(urljoin(url, "/stats?format=json"), timeout)
         if response is not None:
-            health = response['data']['health']
+            health = response['health']
             if health == 'OK':
                 self.service_check(self.HEALTH_CHECK_NAME, AgentCheck.OK,
                     tags = ["url:{0}".format(url)]
@@ -69,7 +69,7 @@ class NSQ(AgentCheck):
                 )
 
 
-            self.gauge('nsq.topic_count', len(response['data']['topics']), tags=instance_tags)
+            self.gauge('nsq.topic_count', len(response['topics']), tags=instance_tags)
 
 
             topic_name_pattern = None
@@ -78,7 +78,7 @@ class NSQ(AgentCheck):
                 topic_name_pattern = re.compile(topic_name_regex)
 
             # Descend in to topic
-            for topic in response['data']['topics']:
+            for topic in response['topics']:
                 self.gauge('nsq.topic.channel_count', len(topic['channels']), instance_tags)
 
                 topic_tags = ['topic_name:' + topic['topic_name']] + instance_tags
@@ -116,17 +116,18 @@ class NSQ(AgentCheck):
                             self.gauge('nsq.topic.channel.client.' + attr, client[attr], tags=client_tags)
                         for attr in self.CLIENT_COUNTS:
                             self.monotonic_count('nsq.topic.channel.client.' + attr, client[attr], tags=client_tags)
-
-                    for latency in channel['e2e_processing_latency']['percentiles']:
-                        # NSQ does not zero pad the quantile's numberic representation,
-                        # so we'll do that by splitting on the . and left-justifying up to
-                        # 2 spaces, filling with 0. Note that `ljust` returns the whole strong
-                        # if it is >= the length. This converts 0.5 in to '50' and .9999 in to '9999'
-                        if latency['quantile'] == 1:
-                            quantile = '100'
-                        else:
-                            quantile = str(latency['quantile']).split(".")[1].ljust(2, "0")
-                        self.gauge('nsq.topic.channel.e2e_processing_latency.p' + quantile, latency['value'], tags=channel_tags)
+                    
+                    if channel['e2e_processing_latency']['percentiles']:
+                        for latency in channel['e2e_processing_latency']['percentiles']:
+                            # NSQ does not zero pad the quantile's numberic representation,
+                            # so we'll do that by splitting on the . and left-justifying up to
+                            # 2 spaces, filling with 0. Note that `ljust` returns the whole strong
+                            # if it is >= the length. This converts 0.5 in to '50' and .9999 in to '9999'
+                            if latency['quantile'] == 1:
+                                quantile = '100'
+                            else:
+                                quantile = str(latency['quantile']).split(".")[1].ljust(2, "0")
+                            self.gauge('nsq.topic.channel.e2e_processing_latency.p' + quantile, latency['value'], tags=channel_tags)
 
     def get_json(self, url, timeout):
         try:

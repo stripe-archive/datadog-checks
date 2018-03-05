@@ -223,7 +223,7 @@ class Splunk(AgentCheck):
                 self.service_check(self.PEER_HEALTH_CHECK_NAME, AgentCheck.OK,
                     tags = tags)
 
-            self.gauge('splunk.peers.delayed_buckets_to_discard', peer['content']['delayed_buckets_to_discard'], tags=tags)
+            self.gauge('splunk.peers.delayed_buckets_to_discard', len(peer['content']['delayed_buckets_to_discard']), tags=tags)
             self.gauge('splunk.peers.primary_count', peer['content']['primary_count'], tags=tags)
             self.gauge('splunk.peers.primary_count_remote', peer['content']['primary_count_remote'], tags=tags)
             self.gauge('splunk.peers.replication_count', peer['content']['replication_count'], tags=tags)

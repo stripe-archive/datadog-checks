@@ -12,6 +12,7 @@ test-requirements: /src/venv requirements.txt requirements-test.txt
 	/src/venv/bin/pip install -r requirements-test.txt
 
 test: test-requirements
+	mkdir -p /opt/datadog-agent/agent/checks.d/
 	ln -sf /src/checks.d/* /opt/datadog-agent/agent/checks.d/
 	su dd-agent -c '. /src/venv/bin/activate ; env PYTHONPATH=$(echo $PYTHONPATH):/opt/datadog-agent/agent nosetests tests/checks/integration/test_*.py tests/lib/test_*.py'
 

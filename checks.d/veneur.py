@@ -15,10 +15,11 @@ class Veneur(AgentCheck):
         success = 0
 
         host = instance['host']
+        tags = instance.get('tags', [])
 
         try:
             r = requests.get(urljoin(host, '/version'))
-            sha = r.text
+            tags.extend(['sha:{0}'.format(r.text)])
             success = 1
 
             r = requests.get(urljoin(host, '/builddate'))
@@ -32,6 +33,4 @@ class Veneur(AgentCheck):
             self.increment(self.ERROR_METRIC_NAME)
             raise
         finally:
-            tags = instance.get('tags', [])
-            tags.extend(['sha:{0}'.format(sha)])
             self.gauge(self.VERSION_METRIC_NAME, success, tags = tags)

@@ -14,6 +14,8 @@ class MoreLinuxVMCheck(AgentCheck):
     def check(self, instance):
         tags = instance.get('tags', [])
 
+        enabled_metrics = instance.get('enabled_metrics', list(VM_COUNTS.keys()))
+
         with open('/proc/vmstat', 'r') as vm_info:
             content = [line.strip().split() for line in vm_info.readlines()]
 

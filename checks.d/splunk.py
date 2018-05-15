@@ -73,7 +73,7 @@ class Splunk(AgentCheck):
 
     def is_license_master(self, instance_tags, url, sessionkey, timeout):
         try:
-            users = self.get_json(url, '/services/licenser/slaves', instance_tags, sessionkey, timeout)
+            users = self.get_json(url, '/services/licenser/slaves', instance_tags, sessionkey, timeout, False)
             # If we don't have > 1 license user we're not a real LM
             return len(users['entry']) > 1
         except:
@@ -81,7 +81,7 @@ class Splunk(AgentCheck):
 
     def is_master(self, instance_tags, url, sessionkey, timeout):
         try:
-            self.get_json(url, '/services/cluster/master/info', instance_tags, sessionkey, timeout)
+            self.get_json(url, '/services/cluster/master/info', instance_tags, sessionkey, timeout, False)
         except:
             return False
         else:
@@ -89,7 +89,7 @@ class Splunk(AgentCheck):
 
     def is_captain(self, instance_tags, url, sessionkey, timeout):
         try:
-            self.get_json(url, '/services/shcluster/captain/jobs', instance_tags, sessionkey, timeout)
+            self.get_json(url, '/services/shcluster/captain/jobs', instance_tags, sessionkey, timeout, False)
         except:
             return False
         else:
@@ -97,14 +97,14 @@ class Splunk(AgentCheck):
 
     def is_forwarder(self, instance_tags, url, sessionkey, timeout):
         try:
-            self.get_json(url, '/services/data/inputs/all', instance_tags, sessionkey, timeout)
+            self.get_json(url, '/services/data/inputs/all', instance_tags, sessionkey, timeout, False)
         except Exception as inst:
             return False
         else:
             return True
 
     def do_forwarder_metrics(self, instance_tags, url, sessionkey, timeout):
-        response = self.get_json(url, '/services/admin/inputstatus/TailingProcessor:FileStatus', instance_tags, sessionkey, timeout)
+        response = self.get_json(url, '/services/admin/inputstatus/TailingProcessor:FileStatus', instance_tags, sessionkey, timeout, False)
 
         count = 0
         for fname in response['entry'][0]['content']['inputs']:
@@ -310,7 +310,7 @@ class Splunk(AgentCheck):
                             'index_copy:{0}'.format(index_index)
                         ])
 
-    def get_json(self, url, path, instance_tags, sessionkey, timeout, params={}):
+    def get_json(self, url, path, instance_tags, sessionkey, timeout, emit_timers=True, params={}):
         request_params = {
             'output_mode': 'json'
         }
@@ -321,7 +321,8 @@ class Splunk(AgentCheck):
             r = requests.get(urljoin(url, path), verify=False, headers={'Authorization': "Splunk {0}".format(sessionkey)}, timeout=timeout, params=request_params)
             r.raise_for_status()
             elapsed_time = time.time() - start_time
-            self.histogram('splunk.stats_fetch_duration_seconds', int(elapsed_time), tags = [ 'path:{0}'.format(path) ])
+            if emit_timers:
+                self.histogram('splunk.stats_fetch_duration_seconds', int(elapsed_time), tags = [ 'path:{0}'.format(path) ])
         except requests.exceptions.Timeout:
             # If there's a timeout, increment a count (tagged with the path in question) and then raise.
             self.increment('splunk.stats_fetch_timeouts', tags = [ 'path:{0}'.format(path) ])

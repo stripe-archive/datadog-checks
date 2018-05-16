@@ -1,4 +1,5 @@
 init_config:
- 2
- 3 instances:
- 4   - tags: []
+
+instances:
+  - tags: []
+    enabled_metrics: [ 'pgpgin', 'pgpgout', 'pswpin', 'pswpout', 'pgfault', 'pgmajfault' ]

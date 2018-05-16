@@ -20,5 +20,5 @@ class MoreLinuxVMCheck(AgentCheck):
             content = [line.strip().split() for line in vm_info.readlines()]
 
             for line in content:
-                if line[0] in VM_COUNTS:
+                if line[0] in enabled_metrics:
                     self.monotonic_count("system.linux.vm.{0}".format(VM_COUNTS[line[0]]), int(line[1]), tags=tags)

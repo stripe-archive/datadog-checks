@@ -8,7 +8,7 @@ from checks import AgentCheck
 class Veneur(AgentCheck):
 
     VERSION_METRIC_NAME = 'veneur.deployed_version'
-    BUILDAGE_METRIC_NAME = 'veneur.build_age'
+    BUILDAGE_METRIC_NAME = 'veneur.build_age_seconds'
     ERROR_METRIC_NAME = 'veneur.agent_check.errors_total'
 
     def check(self, instance):
@@ -26,7 +26,7 @@ class Veneur(AgentCheck):
             builddate = datetime.datetime.fromtimestamp(int(r.text))
 
             tdelta = datetime.datetime.now() - builddate
-            self.histogram(self.BUILDAGE_METRIC_NAME, tdelta.total_seconds())
+            self.gauge(self.BUILDAGE_METRIC_NAME, tdelta.total_seconds())
 
         except:
             success = 0

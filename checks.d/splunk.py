@@ -1,8 +1,13 @@
 # stdlib
-import time
 from collections import defaultdict
 from urlparse import urljoin
 from xml.dom import minidom
+
+# Add lib/ to the import path:
+import sys
+import os
+agent_lib_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../lib')
+sys.path.insert(1, agent_lib_dir)
 
 # 3rd party
 import requests
@@ -10,6 +15,7 @@ from requests.auth import HTTPBasicAuth
 
 # project
 from checks import AgentCheck
+from stats_helpers import Timing
 
 class Splunk(AgentCheck):
 
@@ -19,6 +25,7 @@ class Splunk(AgentCheck):
     INDEX_REPL_HEALTH_CHECK_NAME = 'splunk.index_copy.is_replicated'
     INDEX_SEARCH_HEALTH_CHECK_NAME = 'splunk.index_copy.is_searchable'
     PEER_HEALTH_CHECK_NAME = 'splunk.peer.is_healthy'
+    REQUEST_TIMING_METRIC_NAME = 'splunk.stats_fetch_duration_seconds'
 
     FIXUP_LEVELS = ['streaming', 'data_safety', 'generation', 'replication_factor', 'search_factor', 'checksum_sync']
 
@@ -73,7 +80,7 @@ class Splunk(AgentCheck):
 
     def is_license_master(self, instance_tags, url, sessionkey, timeout):
         try:
-            users = self.get_json(url, '/services/licenser/slaves', instance_tags, sessionkey, timeout, False)
+            users = self.get_json(url, '/services/licenser/slaves', instance_tags, sessionkey, timeout, emit_count=False, emit_timers=False)
             # If we don't have > 1 license user we're not a real LM
             return len(users['entry']) > 1
         except:
@@ -81,7 +88,7 @@ class Splunk(AgentCheck):
 
     def is_master(self, instance_tags, url, sessionkey, timeout):
         try:
-            self.get_json(url, '/services/cluster/master/info', instance_tags, sessionkey, timeout, False)
+            self.get_json(url, '/services/cluster/master/info', instance_tags, sessionkey, timeout, emit_count=False, emit_timers=False)
         except:
             return False
         else:
@@ -89,7 +96,7 @@ class Splunk(AgentCheck):
 
     def is_captain(self, instance_tags, url, sessionkey, timeout):
         try:
-            self.get_json(url, '/services/shcluster/captain/jobs', instance_tags, sessionkey, timeout, False)
+            self.get_json(url, '/services/shcluster/captain/jobs', instance_tags, sessionkey, timeout, emit_count=False, emit_timers=False)
         except:
             return False
         else:
@@ -97,14 +104,14 @@ class Splunk(AgentCheck):
 
     def is_forwarder(self, instance_tags, url, sessionkey, timeout):
         try:
-            self.get_json(url, '/services/data/inputs/all', instance_tags, sessionkey, timeout, False)
+            self.get_json(url, '/services/data/inputs/all', instance_tags, sessionkey, timeout, emit_count=False, emit_timers=False)
         except Exception as inst:
             return False
         else:
             return True
 
     def do_forwarder_metrics(self, instance_tags, url, sessionkey, timeout):
-        response = self.get_json(url, '/services/admin/inputstatus/TailingProcessor:FileStatus', instance_tags, sessionkey, timeout, False)
+        response = self.get_json(url, '/services/admin/inputstatus/TailingProcessor:FileStatus', instance_tags, sessionkey, timeout, emit_count=True, emit_timers=False)
 
         count = 0
         for fname in response['entry'][0]['content']['inputs']:
@@ -310,24 +317,32 @@ class Splunk(AgentCheck):
                             'index_copy:{0}'.format(index_index)
                         ])
 
-    def get_json(self, url, path, instance_tags, sessionkey, timeout, emit_timers=True, params={}):
+    def get_json(self, url, path, instance_tags, sessionkey, timeout, emit_count=True, emit_timers=True, params={}):
         request_params = {
             'output_mode': 'json'
         }
         request_params.update(params)
 
-        try:
-            start_time = time.time()
-            r = requests.get(urljoin(url, path), verify=False, headers={'Authorization': "Splunk {0}".format(sessionkey)}, timeout=timeout, params=request_params)
-            r.raise_for_status()
-            elapsed_time = time.time() - start_time
-            if emit_timers:
-                self.histogram('splunk.stats_fetch_duration_seconds', int(elapsed_time), tags = [ 'path:{0}'.format(path) ])
-        except requests.exceptions.Timeout:
-            # If there's a timeout, increment a count (tagged with the path in question) and then raise.
-            self.increment('splunk.stats_fetch_timeouts', tags = [ 'path:{0}'.format(path) ])
-            raise Exception("Timeout when hitting URL")
+        if emit_timers:
+            timing_mode = Timing.WITH_TIMING
+        elif emit_count:
+            timing_mode = Timing.WITH_COUNT
+        else:
+            timing_mode = None
 
+        try:
+            with Timing(self, self.REQUEST_TIMING_METRIC_NAME, tags={'path': path}, emit=timing_mode):
+                r = requests.get(
+                    urljoin(url, path),
+                    verify=False,
+                    headers={'Authorization': "Splunk {0}".format(sessionkey)},
+                    timeout=timeout,
+                    params=request_params
+                )
+                r.raise_for_status()
+
+        except requests.exceptions.Timeout:
+            raise Exception("Timeout when hitting URL")
         except requests.exceptions.HTTPError:
             raise Exception("Got {0} when hitting URL".format(r.status_code))
 

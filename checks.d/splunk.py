@@ -43,14 +43,19 @@ class Splunk(AgentCheck):
             self.service_check(self.CONNECT_CHECK_NAME, AgentCheck.CRITICAL,
                 message='Timed out after {0} seconds.'.format(timeout),
                 tags = instance_tags)
-            raise Exception("Timeout when hitting URL")
+            return
 
         except requests.exceptions.HTTPError:
             self.service_check(self.CONNECT_CHECK_NAME, AgentCheck.CRITICAL,
                 message='Returned a status of {0}'.format(r.status_code),
                 tags = instance_tags)
-            raise Exception("Got {0} when hitting URL".format(r.status_code))
+            return
 
+        except Exception as e:
+            self.service_check(self.CONNECT_CHECK_NAME, AgentCheck.CRITICAL,
+                message='Got exception {0}: {1}'.format(e.__class__.__name__, e),
+                tags = instance_tags)
+            return
         else:
             self.service_check(self.CONNECT_CHECK_NAME, AgentCheck.OK,
                 tags = instance_tags

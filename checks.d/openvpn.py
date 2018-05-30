@@ -43,6 +43,7 @@ class OpenVPN(AgentCheck):
             self.service_check(self.VPN_IS_RUNNING_CHECK_NAME, AgentCheck.CRITICAL,
                     message='VPN level {0} is not running (status file is missing)'.format(vpn_name),
                     tags = instance_tags)
+            return
 
         mtimestamp = os.path.getmtime(filename)
         now = int(datetime.datetime.now().strftime("%s"))
@@ -50,6 +51,11 @@ class OpenVPN(AgentCheck):
             self.service_check(self.VPN_IS_RUNNING_CHECK_NAME, AgentCheck.CRITICAL,
                     message='VPN level {0} is not running (status file has not been refreshed since ${1})'.format(vpn_name, str(mtimestamp)),
                     tags = instance_tags)
+            return
+
+        self.service_check(self.VPN_IS_RUNNING_CHECK_NAME, AgentCheck.OK,
+                message='VPN level {0} is running'.format(vpn_name),
+                tags = instance_tags)
 
     def parse_status_file(self, filename, instance_tags):
         with open(filename) as csvfile:

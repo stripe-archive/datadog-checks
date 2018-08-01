@@ -139,6 +139,34 @@ Two error cases also emit service checks:
 2. If a permission error prevents dd-agent from reading the file, a critical is emitted; this is a definite failure and needs correcting
 
 
+## Segfault
+
+This check emits a count of segfaults over a time window as a gauge, tagged by the process name.
+
+Example configuration looks like this:
+```yaml
+---
+init_config:
+instances:
+  - logfile: '/var/log/kern.log'
+    kernel_line_regex: '^(?P<timestamp>.+?) (?P<host>\S+) kernel: \[\s*(?P<uptime>\d+(?:\.\d+)?)\] (?P<message>.*)$'
+    process_name_regex: '^(?P<process>[^\[]+)\[(?P<pid>\d+)\]: segfault'
+    timestamp_format: '%b %d %H:%M:%S'
+    time_window_seconds: 60
+```
+
+This file is included in `conf.d/oom.yaml`
+
+You can optionally specify a `tags` option to the instance config to add extra tags to any metrics emitted.
+
+Errors for this check are emitted as tagged counters with the metric name `system.segfault.errors`. The tag `type` indicates the kind of error that was encountered:
+- `type:config` is an error loading config data that is expected to exist, or an error creating the regular expressions
+- `type:io` is an error reading the log file specified
+- `type:parse` is an error extracting the `message` component of `kernel_line_regex` or an error parsing the `timestamp`
+
+When successful, if any segfaults are found in the log within the last `time_window_seconds` seconds at the time the check runs, they are emitted as `system.segfault.count` with the tags `process:<process name>` and `time_window:<value of time_window_seconds>`.
+
+
 ## Outdated Packages
 
 This check verifies that the given packages are not outdated (currently, only

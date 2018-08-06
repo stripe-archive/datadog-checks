@@ -129,6 +129,13 @@ class TestFileUnit(AgentCheckTest):
         metrics = self.check_and_assert('kern.clean.log', [])
         self.assertEqual(len(metrics), 0, "Expected no metrics, got: %s" % metrics)
 
+    def test_non_matching(self):
+        metrics = self.check_and_assert('kern.garbage.log', [])
+        self.assertEqual(len(metrics), 0, "Expected no metrics, got: %s" % metrics)
+        metrics = self.check_and_assert('kern.envoy_segfaults.log', [], time_window_seconds=65, process_name_regex='whaargarbl')
+        self.assertEqual(len(metrics), 0, "Expected no metrics, got: %s" % metrics)
+
+
     def test_segfaults(self):
         self.check_and_assert('kern.envoy_segfaults.log', [
             { 'name': 'system.segfault.count', 'type': 'gauge', 'value': 1.0, 'tags': ['process:envoy', 'time_window:65'] }
@@ -140,3 +147,11 @@ class TestFileUnit(AgentCheckTest):
             { 'name': 'system.segfault.count', 'type': 'gauge', 'value': 1.0, 'tags': ['process:anvoy', 'time_window:7200'] },
             { 'name': 'system.segfault.count', 'type': 'gauge', 'value': 3.0, 'tags': ['process:envoy', 'time_window:7200'] },
         ], time_window_seconds=7200)
+
+    def test_segfault_no_process(self):
+        self.check_and_assert('kern.envoy_segfaults.log', [
+            { 'name': 'system.segfault.count', 'type': 'gauge', 'value': 1.0, 'tags': ['time_window:65'] }
+        ], time_window_seconds=65, process_name_regex=None)
+        self.check_and_assert('kern.envoy_segfaults.log', [
+            { 'name': 'system.segfault.count', 'type': 'gauge', 'value': 1.0, 'tags': ['process:yovne', 'time_window:65'] }
+        ], time_window_seconds=65, process_name_regex=None, tags=['process:yovne'])

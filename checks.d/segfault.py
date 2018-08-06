@@ -36,7 +36,7 @@ class Segfault(AgentCheck):
 
             # the regex to extract the process name from the message with
             process_name_regex = None
-            if 'process_name_regex' in instance:
+            if 'process_name_regex' in instance and instance['process_name_regex']:
                 process_name_regex = re.compile(instance['process_name_regex'])
 
             # the format to parse the timestamp from

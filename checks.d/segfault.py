@@ -35,7 +35,9 @@ class Segfault(AgentCheck):
             kernel_line_regex = re.compile(instance['kernel_line_regex'])
 
             # the regex to extract the process name from the message with
-            process_name_regex = re.compile(instance['process_name_regex'])
+            process_name_regex = None
+            if 'process_name_regex' in instance and instance['process_name_regex']:
+                process_name_regex = re.compile(instance['process_name_regex'])
 
             # the format to parse the timestamp from
             # %b %d %H:%M:%S
@@ -68,6 +70,11 @@ class Segfault(AgentCheck):
         with fh:
             for line in reverse_readline(fh):
                 kern_results = regex_matches(line, kernel_line_regex)
+
+                # no match = skip this line
+                if not kern_results:
+                    continue
+
                 message = kern_results.get('message', None)
                 timestamp = kern_results.get('timestamp', None)
 
@@ -84,18 +91,27 @@ class Segfault(AgentCheck):
                     # we only look back X seconds; we can end early if we hit a timestamp earlier than that
                     break
 
-                pname_results = regex_matches(message, process_name_regex)
-                if not pname_results:
-                    # process name regex matches segfault events. no match = not a segfault message
-                    continue
+                # process name regex is an extra regex to extract the process name
+                # from the 'message' capturing group. behaves the same as kernel_line_regex
+                # in that a failed match = skip this line. if unspecified, do not extract
+                # a process name
+                process_name = None
+                if process_name_regex:
+                    pname_results = regex_matches(message, process_name_regex)
+                    if not pname_results:
+                        continue
 
-                process_name = pname_results.get('process', '_unknown_')
+                    process_name = pname_results.get('process', None)
 
                 counts[process_name] += 1
 
         for pname, num_segfaults in counts.iteritems():
-            metric_tags = self.tags(
-                'process:%s' % pname,
-                'time_window:%s' % time_window_seconds,
-            )
+            tags = ['time_window:%s' % time_window_seconds]
+            # sometimes the process name isn't present / can't be extracted
+            # we might want to put the process name in the tag config, so don't
+            # add on an extra 'process' tag that's empty in addition
+            if pname:
+                tags.append('process:%s' % pname)
+
+            metric_tags = self.tags(*tags)
             self.gauge('system.segfault.count', num_segfaults, tags=metric_tags)

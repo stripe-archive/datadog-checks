@@ -25,12 +25,19 @@ class JenkinsMetrics(AgentCheck):
 
         response = self.get_json(url, timeout)
         if response is not None:
-            for m in response['gauges']:
-                if m.startswith("vm."):
-                    if m.startswith("vm.gc."):
-                        self.monotonic_count('jenkins.' + m, response['gauges'][m]['value'], tags=instance_tags)
+            if not response.get('gauges'):
+                for key, value in response.iteritems():
+                    if value.get('healthy'):
+                        self.service_check('jenkins.healthcheck.' + key, AgentCheck.OK, message = value.get('message'), tags = [])
                     else:
-                        self.gauge('jenkins.' + m, response['gauges'][m]['value'], tags=instance_tags)
+                        self.service_check('jenkins.healthcheck.' + key, AgentCheck.CRITICAL, message = value.get('message'), tags = [])
+            else:
+                for m in response['gauges']:
+                    if m.startswith("vm."):
+                        if m.startswith("vm.gc."):
+                            self.monotonic_count('jenkins.' + m, response['gauges'][m]['value'], tags=instance_tags)
+                        else:
+                            self.gauge('jenkins.' + m, response['gauges'][m]['value'], tags=instance_tags)
 
     def get_json(self, url, timeout):
         try:

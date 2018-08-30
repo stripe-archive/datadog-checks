@@ -2,3 +2,4 @@ init_config:
 
 instances:
   # - url: "http://localhost:8080/metrics/ACCESS_KEY_HERE/metrics"
+  # - url: "http://localhost:8080/metrics/ACCESS_KEY_HERE/healthcheck"

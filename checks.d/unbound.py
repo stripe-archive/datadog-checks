@@ -76,6 +76,7 @@ class UnboundCheck(AgentCheck):
             "num.query.flags",
             "num.query.edns",
             "num.answer.rcode",
+            "num.zero_ttl",
         ]
         gauge_metrics = [
             "requestlist.max",

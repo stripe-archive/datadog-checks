@@ -40,6 +40,7 @@ class TestFileUnit(AgentCheckTest):
         self.assertMetric("unbound.num.query.flags", value=0, tags=['flags:RD'])
         self.assertMetric("unbound.num.query.edns", value=0, tags=['edns:present'])
         self.assertMetric("unbound.num.answer.rcode", value=0, tags=['rcode:NOERROR'])
+        self.assertMetric("unbound.num.zero_ttl", value=0, tags=['thread:0'])
 
         self.assertMetric("unbound.histogram", value=0, tags=['bucket:000000.000000.to.000000.000001'])
         self.assertMetric("unbound.histogram", value=0, tags=['bucket:008192.000000.to.016384.000000'])

@@ -1,3 +1,4 @@
+from __future__ import print_function
 # project
 from checks import AgentCheck
 from tests.checks.common import AgentCheckTest, load_check
@@ -60,7 +61,7 @@ class TestFileUnit(AgentCheckTest):
 
         cluster_slots_used = self.find_metric(metrics, 'storm.rest.cluster.slots_used_count')
         self.assertEqual(7, cluster_slots_used[2])
-        print cluster_slots_used
+        print(cluster_slots_used)
         self.assert_tags(['cluster_want:form'], cluster_slots_used[3]['tags'])
 
         for metric_name in ['supervisor_count', 'slots_total_count', 'slots_free_count', 'executors_total_count', 'tasks_total_count']:
@@ -157,7 +158,7 @@ class TestFileUnit(AgentCheckTest):
         metrics = self.check.get_metrics()
         spout_workers_metric = self.find_metric(metrics, 'storm.rest.spout.executors_total', ['storm_task_id:somespout'])
         self.assertEqual(48, spout_workers_metric[2])
-        print spout_workers_metric[3]
+        print(spout_workers_metric[3])
         self.assert_tags(['storm_topology:sometopo', 'storm_task_id:somespout', 'is_a_great_spout:true'], spout_workers_metric[3]['tags'])
 
         complete_latency_metric = self.find_metric(metrics, 'storm.rest.spout.complete_latency_us', ['storm_task_id:somespout'])

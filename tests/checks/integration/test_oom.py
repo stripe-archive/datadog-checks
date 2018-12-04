@@ -1,3 +1,4 @@
+from __future__ import print_function
 from os import path, getuid
 #from tempfile import mkstemp, gettempdir
 
@@ -90,7 +91,7 @@ class TestFileUnit(AgentCheckTest):
                 { 'status': AgentCheck.CRITICAL, 'message': 'Permission denied' }
             ])
         else:
-            print "Skipping"
+            print("Skipping")
 
     def test_no_kills(self):
         self.check_and_assert('kern.clean.log', [

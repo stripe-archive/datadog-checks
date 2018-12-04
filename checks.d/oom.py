@@ -19,7 +19,7 @@ class OOM(AgentCheck):
 
         try:
             fh = open(instance.get('logfile'), 'rt')
-        except IOError, err:
+        except IOError as err:
             if err.errno == errno.ENOENT:
                 level = AgentCheck.WARNING
             else:

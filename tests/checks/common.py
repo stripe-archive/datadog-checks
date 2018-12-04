@@ -1,3 +1,4 @@
+from __future__ import print_function
 # stdlib
 import copy
 import inspect
@@ -22,6 +23,11 @@ except ImportError:
     from utils.platform import get_os
 
 from utils.debug import get_check  # noqa -  FIXME 5.5.0 AgentCheck tests should not use this
+
+try:
+    xrange          # Python 2
+except NameError:
+    xrange = range  # Python 3
 
 log = logging.getLogger('tests')
 
@@ -205,10 +211,10 @@ class AgentCheckTest(unittest.TestCase):
                 self.check.check(copy.deepcopy(instance))
                 # FIXME: This should be called within the `run` method only
                 self.check._roll_up_instance_metadata()
-            except Exception, e:
+            except Exception as e:
                 # Catch error before re-raising it to be able to get service_checks
-                print "Exception {0} during check".format(e)
-                print traceback.format_exc()
+                print("Exception {0} during check".format(e))
+                print(traceback.format_exc())
                 error = e
         self.metrics = self.check.get_metrics()
         self.events = self.check.get_events()

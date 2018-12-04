@@ -39,7 +39,7 @@ StormConfig = namedtuple(
 )
 
 class StormRESTCheck(AgentCheck):
-    class ConnectionFailure(StandardError):
+    class ConnectionFailure(Exception):
         def __init__(self, url, timeout):
             self.url = url
             self.timeout = timeout

@@ -32,7 +32,7 @@ class FileCheck(AgentCheck):
                 return self.STATUS_PRESENT, statinfo
             else:
                 return self.STATUS_ABSENT, []
-        except OSError, e:
+        except OSError as e:
             if e.errno == errno.ENOENT:
                 return self.STATUS_ABSENT, []
             else:

@@ -92,7 +92,7 @@ class SubDirSizesCheck(AgentCheck):
 
                 try:
                     file_stat = stat(filename)
-                except OSError, ose:
+                except OSError as ose:
                     self.warning("DirectoryCheck: could not stat file %s - %s" % (filename, ose))
                 else:
                     subdir_bytes += file_stat.st_size

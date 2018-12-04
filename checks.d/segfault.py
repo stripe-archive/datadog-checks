@@ -48,18 +48,18 @@ class Segfault(AgentCheck):
 
             # the logfile to read from
             logfile_path = instance['logfile']
-        except KeyError, e:
+        except KeyError as e:
             self.increment('system.segfault.errors', tags=self.tags('type:config'))
             print >> sys.stderr, "Instance config: Key `%s` is required" % e.args[0]
             return
-        except TypeError, e:
+        except TypeError as e:
             self.increment('system.segfault.errors', tags=self.tags('type:config'))
             print >> sys.stderr, "Error loading config: %s" % e
             return
 
         try:
             fh = open(logfile_path, 'rt')
-        except IOError, err:
+        except IOError as err:
             self.increment('system.segfault.errors', tags=self.tags('type:io'))
             return
 

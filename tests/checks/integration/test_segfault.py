@@ -1,3 +1,4 @@
+from __future__ import print_function
 from os import path, getuid
 #from tempfile import mkstemp, gettempdir
 
@@ -123,7 +124,7 @@ class TestFileUnit(AgentCheckTest):
                 { 'name': 'system.segfault.errors', 'type': 'rate', 'tags': ['type:io'] }
             ])
         else:
-            print "Skipping"
+            print("Skipping")
 
     def test_no_segfaults(self):
         metrics = self.check_and_assert('kern.clean.log', [])

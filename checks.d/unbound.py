@@ -5,6 +5,44 @@ from checks import AgentCheck
 
 class UnboundCheck(AgentCheck):
     SERVICE_CHECK_NAME = 'unbound'
+    def __init__(self, name, init_config, agentConfig, instances=None):
+        AgentCheck.__init__(self, name, init_config, agentConfig, instances)
+        self.define_metric_types()
+
+    def define_metric_types(self):
+        rate_metrics = [
+            "histogram",
+            "num.answer.rcode",
+            "num.cachehits",
+            "num.cachemiss",
+            "num.prefetch",
+            "num.queries",
+            "num.query.edns",
+            "num.query.flags",
+            "num.recursivereplies",
+            "num.zero_ttl",
+            "requestlist.exceeded",
+            "requestlist.overwritten",
+            "tcpusage"
+        ]
+        gauge_metrics = [
+            "recursion.time.avg",
+            "recursion.time.median",
+            "requestlist.avg",
+            "requestlist.current.all",
+            "requestlist.current.user",
+            "requestlist.max",
+            "requestlist.overwritten"
+        ]
+
+        self.by_tag_labels = [
+            "num.query.flags",
+            "num.query.edns",
+            "num.answer.rcode",
+        ]
+
+        self.rate_metrics = rate_metrics + ["total.{}".format(m) for m in rate_metrics]
+        self.gauge_metrics= gauge_metrics + ["total.{}".format(m) for m in gauge_metrics]
 
     def get_cmd(self):
         if self.init_config.get('sudo'):
@@ -31,15 +69,10 @@ class UnboundCheck(AgentCheck):
 
         return output
 
+
     def parse_stat(self, stat):
         label, stat = stat.split("=")
         prefix, suffix = label.split(".", 1)
-
-        by_tag_labels = [
-            'num.query.flags',
-            'num.query.edns',
-            'num.answer.rcode',
-        ]
 
         tags = []
         if prefix.startswith('thread'):
@@ -52,7 +85,7 @@ class UnboundCheck(AgentCheck):
             metric = "histogram"
             _, window = label.split(".", 1)
             tags.append("bucket:{}".format(window))
-        elif any(label.startswith(lbl) for lbl in by_tag_labels):
+        elif any(label.startswith(lbl) for lbl in self.by_tag_labels):
             # E.g.
             # num.query.flags.QR
             # metric = num.query.flags
@@ -63,38 +96,10 @@ class UnboundCheck(AgentCheck):
         else:
             metric = label
 
-        rate_metrics = [
-            "histogram",
-            "num.queries",
-            "num.cachehits",
-            "num.cachemiss",
-            "num.prefetch",
-            "num.recursivereplies",
-            "requestlist.overwritten",
-            "requestlist.exceeded",
-            "tcpusage",
-            "num.query.flags",
-            "num.query.edns",
-            "num.answer.rcode",
-            "num.zero_ttl",
-        ]
-        gauge_metrics = [
-            "requestlist.max",
-            "requestlist.avg",
-            "requestlist.overwritten",
-            "requestlist.current.all",
-            "requestlist.current.user",
-            "recursion.time.avg",
-            "recursion.time.median",
-        ]
-
-        rate_metrics = rate_metrics + ["total.{}".format(m) for m in rate_metrics]
-        gauge_metrics= gauge_metrics + ["total.{}".format(m) for m in gauge_metrics]
-
         ns_metric = "unbound.{}".format(metric)
-        if metric in rate_metrics:
+        if metric in self.rate_metrics:
             self.rate(ns_metric, float(stat), tags)
-        elif metric in gauge_metrics:
+        elif metric in self.gauge_metrics:
             self.gauge(ns_metric, float(stat), tags)
         else:
             self.count(ns_metric, float(stat), tags)

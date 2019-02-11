@@ -40,6 +40,10 @@ class TestFileUnit(AgentCheckTest):
         self.assertMetric("unbound.num.query.flags", value=0, tags=['flags:RD'])
         self.assertMetric("unbound.num.query.edns", value=0, tags=['edns:present'])
         self.assertMetric("unbound.num.answer.rcode", value=0, tags=['rcode:NOERROR'])
+        self.assertMetric("unbound.num.query.class", value=0, tags=['class:IN'])
+        self.assertMetric("unbound.num.query.opcode", value=0, tags=['opcode:QUERY'])
+        self.assertMetric("unbound.num.query.type", value=0, tags=['type:A'])
+        self.assertMetric("unbound.num.query.type", value=0, tags=['type:AAAA'])
         self.assertMetric("unbound.num.zero_ttl", value=0, tags=['thread:0'])
 
         self.assertMetric("unbound.histogram", value=0, tags=['bucket:000000.000000.to.000000.000001'])

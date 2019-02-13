@@ -77,6 +77,31 @@ class TestFileUnit(AgentCheckTest):
         # (in this case 0 since the data doesn't change between runs
         self.assertMetric("unbound.num.query.type", value=0, tags=['type:A'])
 
+    def test_exclude_metrics(self):
+        conf = {
+            'init_config': {
+                'exclude_metrics': ['num.queries']
+            },
+            'instances': [
+                {}
+            ]
+        }
+
+        filename = path.join(self.FIXTURE_PATH, 'stats.txt')
+
+        def get_stats():
+            with open(filename, "r") as fh:
+                return fh.read()
+
+        # Run twice to establish rates.
+        self.run_check_twice(conf, mocks={'get_stats': get_stats})
+
+        self.assertMetric("unbound.num.queries", count=0)
+        self.assertMetric("unbound.total.num.queries", count=0)
+
+        # Make sure metrics that are not excluded are still reported
+        self.assertMetric("unbound.num.query.type", at_least=1)
+
     def test_output_failure(self):
         conf = {
             'init_config': {},

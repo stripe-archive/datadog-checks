@@ -93,8 +93,11 @@ class UnboundCheck(AgentCheck):
             "num.query.type",
         ]
 
+        exclude_metrics = init_config.get('exclude_metrics', [])
+
         self.rate_metrics = rate_metrics + ["total.{}".format(m) for m in rate_metrics]
         self.gauge_metrics= gauge_metrics + ["total.{}".format(m) for m in gauge_metrics]
+        self.exclude_metrics = exclude_metrics + ["total.{}".format(m) for m in exclude_metrics]
 
     def get_cmd(self):
         if self.init_config.get('sudo'):
@@ -147,6 +150,9 @@ class UnboundCheck(AgentCheck):
             tags.append("{}:{}".format(tag_name, tag))
         else:
             metric = label
+
+        if metric in self.exclude_metrics:
+            return
 
         ns_metric = "unbound.{}".format(metric)
         if metric in self.rate_metrics:

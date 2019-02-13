@@ -7,9 +7,11 @@ class UnboundCheck(AgentCheck):
     SERVICE_CHECK_NAME = 'unbound'
     def __init__(self, name, init_config, agentConfig, instances=None):
         AgentCheck.__init__(self, name, init_config, agentConfig, instances)
-        self.define_metric_types()
+        self.define_metric_types(init_config)
 
-    def define_metric_types(self):
+    def define_metric_types(self, init_config):
+        override_rate_as_counter_metrics = init_config.get('override_rate_as_counter_metrics', [])
+
         rate_metrics = [
             "histogram",
             "num.answer.bogus",
@@ -50,6 +52,11 @@ class UnboundCheck(AgentCheck):
             "unwanted.queries",
             "unwanted.replies",
         ]
+
+        # Remove any rate metrics that have explicitly been overriden to be
+        # reported as counters
+        rate_metrics = list(set(rate_metrics) - set(override_rate_as_counter_metrics))
+
         gauge_metrics = [
             "dnscrypt_nonce.cache.count",
             "dnscrypt_shared_secret.cache.count",

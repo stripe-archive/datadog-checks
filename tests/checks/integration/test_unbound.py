@@ -50,6 +50,33 @@ class TestFileUnit(AgentCheckTest):
         self.assertMetric("unbound.histogram", value=0, tags=['bucket:008192.000000.to.016384.000000'])
         self.assertServiceCheck('unbound', AgentCheck.OK)
 
+    def test_override_rate_as_counter(self):
+        conf = {
+            'init_config': {
+                'override_rate_as_counter_metrics': ['num.queries']
+            },
+            'instances': [
+                {}
+            ]
+        }
+
+        filename = path.join(self.FIXTURE_PATH, 'stats.txt')
+
+        def get_stats():
+            with open(filename, "r") as fh:
+                return fh.read()
+
+        # Run twice to establish rates.
+        self.run_check_twice(conf, mocks={'get_stats': get_stats})
+
+        # Now reports as individual values instead of caclulating the rate
+        self.assertMetric("unbound.num.queries", value=884, tags=['thread:0'])
+        self.assertMetric("unbound.total.num.queries", value=59379)
+
+        # Make sure metrics that are not overriden are still reported as a rate
+        # (in this case 0 since the data doesn't change between runs
+        self.assertMetric("unbound.num.query.type", value=0, tags=['type:A'])
+
     def test_output_failure(self):
         conf = {
             'init_config': {},

@@ -5,6 +5,99 @@ from checks import AgentCheck
 
 class UnboundCheck(AgentCheck):
     SERVICE_CHECK_NAME = 'unbound'
+    def __init__(self, name, init_config, agentConfig, instances=None):
+        AgentCheck.__init__(self, name, init_config, agentConfig, instances)
+        self.define_metric_types(init_config)
+
+    def define_metric_types(self, init_config):
+        override_rate_as_counter_metrics = init_config.get('override_rate_as_counter_metrics', [])
+
+        rate_metrics = [
+            "histogram",
+            "num.answer.bogus",
+            "num.answer.rcode",
+            "num.answer.secure",
+            "num.cachehits",
+            "num.cachemiss",
+            "num.dnscrypt.cert",
+            "num.dnscrypt.cleartext",
+            "num.dnscrypt.crypted",
+            "num.dnscrypt.malformed",
+            "num.prefetch",
+            "num.queries",
+            "num.queries_ip_ratelimited",
+            "num.query.aggressive",
+            "num.query.authzone.down",
+            "num.query.authzone.up",
+            "num.query.class",
+            "num.query.dnscrypt.replay",
+            "num.query.dnscrypt.shared_secret.cachemiss",
+            "num.query.edns",
+            "num.query.flags",
+            "num.query.ipv6",
+            "num.query.opcode",
+            "num.query.ratelimited",
+            "num.query.subnet",
+            "num.query.subnet_cache",
+            "num.query.tcp",
+            "num.query.tcpout",
+            "num.query.tls",
+            "num.query.tls.resume",
+            "num.query.type",
+            "num.recursivereplies",
+            "num.rrset.bogus",
+            "num.zero_ttl",
+            "requestlist.exceeded",
+            "requestlist.overwritten",
+            "unwanted.queries",
+            "unwanted.replies",
+        ]
+
+        # Remove any rate metrics that have explicitly been overriden to be
+        # reported as counters
+        rate_metrics = list(set(rate_metrics) - set(override_rate_as_counter_metrics))
+
+        gauge_metrics = [
+            "dnscrypt_nonce.cache.count",
+            "dnscrypt_shared_secret.cache.count",
+            "infra.cache.count",
+            "key.cache.count",
+            "mem.cache.dnscrypt_nonce",
+            "mem.cache.dnscrypt_shared_secret",
+            "mem.cache.message",
+            "mem.cache.rrset",
+            "mem.mod.iterator",
+            "mem.mod.validator",
+            "mem.streamwait",
+            "msg.cache.count",
+            "recursion.time.avg",
+            "recursion.time.median",
+            "requestlist.avg",
+            "requestlist.current.all",
+            "requestlist.current.user",
+            "requestlist.max",
+            "rrset.cache.count",
+            "tcpusage",
+            "time.elapsed",
+            "time.now",
+            "time.up",
+        ]
+
+        self.by_tag_labels = [
+            "num.answer.rcode",
+            "num.query.aggressive",
+            "num.query.class",
+            "num.query.edns",
+            "num.query.flags",
+            "num.query.opcode",
+            "num.query.type",
+        ]
+
+        exclude_metrics = init_config.get('exclude_metrics', [])
+
+        self.rate_metrics = rate_metrics + ["total.{}".format(m) for m in rate_metrics]
+        self.gauge_metrics= gauge_metrics + ["total.{}".format(m) for m in gauge_metrics]
+        self.exclude_metrics = exclude_metrics + ["total.{}".format(m) for m in exclude_metrics]
 
     def get_cmd(self):
         if self.init_config.get('sudo'):
@@ -31,15 +124,10 @@ class UnboundCheck(AgentCheck):
 
         return output
 
+
     def parse_stat(self, stat):
         label, stat = stat.split("=")
         prefix, suffix = label.split(".", 1)
-
-        by_tag_labels = [
-            'num.query.flags',
-            'num.query.edns',
-            'num.answer.rcode',
-        ]
 
         tags = []
         if prefix.startswith('thread'):
@@ -52,7 +140,7 @@ class UnboundCheck(AgentCheck):
             metric = "histogram"
             _, window = label.split(".", 1)
             tags.append("bucket:{}".format(window))
-        elif any(label.startswith(lbl) for lbl in by_tag_labels):
+        elif any(label.startswith(lbl) for lbl in self.by_tag_labels):
             # E.g.
             # num.query.flags.QR
             # metric = num.query.flags
@@ -63,38 +151,13 @@ class UnboundCheck(AgentCheck):
         else:
             metric = label
 
-        rate_metrics = [
-            "histogram",
-            "num.queries",
-            "num.cachehits",
-            "num.cachemiss",
-            "num.prefetch",
-            "num.recursivereplies",
-            "requestlist.overwritten",
-            "requestlist.exceeded",
-            "tcpusage",
-            "num.query.flags",
-            "num.query.edns",
-            "num.answer.rcode",
-            "num.zero_ttl",
-        ]
-        gauge_metrics = [
-            "requestlist.max",
-            "requestlist.avg",
-            "requestlist.overwritten",
-            "requestlist.current.all",
-            "requestlist.current.user",
-            "recursion.time.avg",
-            "recursion.time.median",
-        ]
-
-        rate_metrics = rate_metrics + ["total.{}".format(m) for m in rate_metrics]
-        gauge_metrics= gauge_metrics + ["total.{}".format(m) for m in gauge_metrics]
+        if metric in self.exclude_metrics:
+            return
 
         ns_metric = "unbound.{}".format(metric)
-        if metric in rate_metrics:
+        if metric in self.rate_metrics:
             self.rate(ns_metric, float(stat), tags)
-        elif metric in gauge_metrics:
+        elif metric in self.gauge_metrics:
             self.gauge(ns_metric, float(stat), tags)
         else:
             self.count(ns_metric, float(stat), tags)

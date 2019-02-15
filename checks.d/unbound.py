@@ -124,7 +124,7 @@ class UnboundCheck(AgentCheck):
                 AgentCheck.CRITICAL,
                 message=error_msg,
             )
-            self.log.error()
+            self.log.error(error_msg)
             return None
 
         return output

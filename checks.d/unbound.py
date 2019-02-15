@@ -130,7 +130,7 @@ class UnboundCheck(AgentCheck):
         return output
 
 
-    def parse_stat(self, stat):
+    def parse_stat(self, stat, extra_tags=[]):
         label, stat = stat.split("=")
         prefix, suffix = label.split(".", 1)
 
@@ -160,6 +160,10 @@ class UnboundCheck(AgentCheck):
             return
 
         ns_metric = "unbound.{}".format(metric)
+
+        for extra_tag in extra_tags:
+            tags.append(extra_tag)
+
         if metric in self.rate_metrics:
             self.rate(ns_metric, float(stat), tags)
         elif metric in self.gauge_metrics:
@@ -174,10 +178,12 @@ class UnboundCheck(AgentCheck):
             return
 
         try:
+            extra_tags = instance.get('extra_tags', [])
+
             for line in stats.split("\n"):
                 if not line:
                     continue
-                self.parse_stat(line)
+                self.parse_stat(line, extra_tags)
         except Exception as e:
             self.service_check(
                 self.SERVICE_CHECK_NAME,

@@ -4,6 +4,7 @@ from os import path
 
 from checks import AgentCheck
 from tests.checks.common import AgentCheckTest, load_check
+import mock
 
 class TestFileUnit(AgentCheckTest):
     CHECK_NAME = 'unbound'
@@ -27,7 +28,7 @@ class TestFileUnit(AgentCheckTest):
         }
         filename = path.join(self.FIXTURE_PATH, 'stats.txt')
 
-        def get_stats():
+        def get_stats(instance):
             with open(filename, "r") as fh:
                 return fh.read()
 
@@ -62,7 +63,7 @@ class TestFileUnit(AgentCheckTest):
 
         filename = path.join(self.FIXTURE_PATH, 'stats.txt')
 
-        def get_stats():
+        def get_stats(instance):
             with open(filename, "r") as fh:
                 return fh.read()
 
@@ -89,7 +90,7 @@ class TestFileUnit(AgentCheckTest):
 
         filename = path.join(self.FIXTURE_PATH, 'stats.txt')
 
-        def get_stats():
+        def get_stats(instance):
             with open(filename, "r") as fh:
                 return fh.read()
 
@@ -109,7 +110,7 @@ class TestFileUnit(AgentCheckTest):
                 {}
             ]
         }
-        def get_stats():
+        def get_stats(instance):
             return "garbageoutput"
 
         self.run_check(conf, mocks={'get_stats': get_stats})
@@ -131,3 +132,44 @@ class TestFileUnit(AgentCheckTest):
     def test_sudo(self):
         self.check_sudo(True)
         self.check_sudo(False)
+
+    def test_unbound_config_path(self):
+        conf = {
+            'init_config': {},
+            'instances': [
+                {
+                    'unbound_config_path': 'unbound1.conf'
+                },
+                {
+                    'unbound_config_path': 'unbound2.conf'
+                }
+            ]
+        }
+
+        with mock.patch('subprocess.check_output', return_value="") as check_output_mock:
+            self.run_check(conf)
+
+            self.assertEqual(check_output_mock.call_count, 2)
+            check_output_mock.assert_any_call("unbound-control -c unbound1.conf stats", stderr=mock.ANY, shell=mock.ANY)
+            check_output_mock.assert_any_call("unbound-control -c unbound2.conf stats", stderr=mock.ANY, shell=mock.ANY)
+
+    def test_additional_tags(self):
+        conf = {
+            'init_config': {},
+            'instances': [
+                {
+                    'extra_tags': ['tag_name1:tag_value1', 'tag_name2:tag_value2']
+                }
+            ]
+        }
+
+        filename = path.join(self.FIXTURE_PATH, 'stats.txt')
+
+        def get_stats(instance):
+            with open(filename, "r") as fh:
+                return fh.read()
+
+        # Run twice to establish rates.
+        self.run_check(conf, mocks={'get_stats': get_stats})
+
+        self.assertMetric("unbound.recursion.time.avg", value=122.983901, tags=['thread:0', 'tag_name1:tag_value1', 'tag_name2:tag_value2'])

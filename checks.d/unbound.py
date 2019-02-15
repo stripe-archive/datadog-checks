@@ -99,16 +99,21 @@ class UnboundCheck(AgentCheck):
         self.gauge_metrics= gauge_metrics + ["total.{}".format(m) for m in gauge_metrics]
         self.exclude_metrics = exclude_metrics + ["total.{}".format(m) for m in exclude_metrics]
 
-    def get_cmd(self):
-        if self.init_config.get('sudo'):
-            cmd = 'sudo unbound-control stats'
+    def get_cmd(self, config_path=None):
+        if config_path is not None:
+            config_path_arg = "-c {}".format(config_path)
         else:
-            cmd = 'unbound-control stats'
+            config_path_arg = ""
+
+        if self.init_config.get('sudo'):
+            cmd = 'sudo unbound-control {} stats'.format(config_path_arg)
+        else:
+            cmd = 'unbound-control {} stats'.format(config_path_arg)
 
         return cmd
 
-    def get_stats(self):
-        cmd = self.get_cmd()
+    def get_stats(self, instance={}):
+        cmd = self.get_cmd(instance.get('unbound_config_path'))
 
         try:
             output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
@@ -119,13 +124,13 @@ class UnboundCheck(AgentCheck):
                 AgentCheck.CRITICAL,
                 message=error_msg,
             )
-            self.log.error()
+            self.log.error(error_msg)
             return None
 
         return output
 
 
-    def parse_stat(self, stat):
+    def parse_stat(self, stat, extra_tags=[]):
         label, stat = stat.split("=")
         prefix, suffix = label.split(".", 1)
 
@@ -155,6 +160,10 @@ class UnboundCheck(AgentCheck):
             return
 
         ns_metric = "unbound.{}".format(metric)
+
+        for extra_tag in extra_tags:
+            tags.append(extra_tag)
+
         if metric in self.rate_metrics:
             self.rate(ns_metric, float(stat), tags)
         elif metric in self.gauge_metrics:
@@ -163,16 +172,18 @@ class UnboundCheck(AgentCheck):
             self.count(ns_metric, float(stat), tags)
 
     def check(self, instance):
-        stats = self.get_stats()
+        stats = self.get_stats(instance)
 
         if stats is None:
             return
 
         try:
+            extra_tags = instance.get('extra_tags', [])
+
             for line in stats.split("\n"):
                 if not line:
                     continue
-                self.parse_stat(line)
+                self.parse_stat(line, extra_tags)
         except Exception as e:
             self.service_check(
                 self.SERVICE_CHECK_NAME,

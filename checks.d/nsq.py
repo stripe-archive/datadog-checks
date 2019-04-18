@@ -92,6 +92,16 @@ class NSQ(AgentCheck):
                     self.monotonic_count('nsq.topic.' + attr, topic[attr], tags=topic_tags)
 
 
+                latency_percentiles = topic['e2e_processing_latency']['percentiles']
+                if latency_percentiles is not None:
+                    for latency in latency_percentiles:
+                        if latency['quantile'] == 1:
+                            quantile = '100'
+                        else:
+                            quantile = str(latency['quantile']).split(".")[1].ljust(2, "0")
+                        self.gauge('nsq.topic.e2e_processing_latency.p' + quantile, latency['value'], tags=topic_tags)
+
+
                 # Descend in to channels
                 for channel in topic['channels']:
                     channel_tags = ['channel_name:' + channel['channel_name']] + topic_tags

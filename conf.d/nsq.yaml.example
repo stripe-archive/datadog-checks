@@ -4,6 +4,7 @@
 # include the tag stage:canary. The regex must include at least one symbolic group.
 init_config:
     topic_name_regex: "service-(?P<stage>prod|canary)$"
+    nsqd_major_version: 1
 
 instances:
     # Where your NSQD HTTP Server Lives

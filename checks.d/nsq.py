@@ -54,10 +54,15 @@ class NSQ(AgentCheck):
         instance_tags = instance.get('tags', [])
         default_timeout = self.init_config.get('default_timeout', self.DEFAULT_TIMEOUT)
         timeout = float(instance.get('timeout', default_timeout))
+        use_old_metrics_format = self.init_config.get('nsqd_major_version') == 0
 
         response = self.get_json(urljoin(url, "/stats?format=json"), timeout)
+
+        if use_old_metrics_format:
+            response = response['data']
+
         if response is not None:
-            health = response['data']['health']
+            health = response['health']
             if health == 'OK':
                 self.service_check(self.HEALTH_CHECK_NAME, AgentCheck.OK,
                     tags = ["url:{0}".format(url)]
@@ -69,7 +74,7 @@ class NSQ(AgentCheck):
                 )
 
 
-            self.gauge('nsq.topic_count', len(response['data']['topics']), tags=instance_tags)
+            self.gauge('nsq.topic_count', len(response['topics']), tags=instance_tags)
 
 
             topic_name_pattern = None
@@ -78,7 +83,7 @@ class NSQ(AgentCheck):
                 topic_name_pattern = re.compile(topic_name_regex)
 
             # Descend in to topic
-            for topic in response['data']['topics']:
+            for topic in response['topics']:
                 self.gauge('nsq.topic.channel_count', len(topic['channels']), instance_tags)
 
                 topic_tags = ['topic_name:' + topic['topic_name']] + instance_tags

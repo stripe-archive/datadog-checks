@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM ubuntu:16.04
 MAINTAINER The Stripe Observability Team <support@stripe.com>
 
 RUN apt-get update && apt-get install -y build-essential python-dev curl

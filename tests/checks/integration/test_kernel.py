@@ -51,7 +51,7 @@ class TestKernelUnit(AgentCheckTest):
         }
 
         def get_linux_release():
-            return 'trusty'
+            return 'xenial'
 
         def get_kernel_version():
             return '1.2.3.4-generic'
@@ -70,5 +70,5 @@ class TestKernelUnit(AgentCheckTest):
 
         self.assertMetric("linux.kernel", value=1, metric_type='gauge',
                           tags=['kernel:1.2.3.4-generic',
-                                'release:trusty',
+                                'release:xenial',
                                 'grub_default:unknown'])

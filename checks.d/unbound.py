@@ -13,7 +13,6 @@ class UnboundCheck(AgentCheck):
         override_rate_as_counter_metrics = init_config.get('override_rate_as_counter_metrics', [])
 
         rate_metrics = [
-            "histogram",
             "num.answer.bogus",
             "num.answer.rcode",
             "num.answer.secure",
@@ -98,6 +97,7 @@ class UnboundCheck(AgentCheck):
         self.rate_metrics = rate_metrics + ["total.{}".format(m) for m in rate_metrics]
         self.gauge_metrics= gauge_metrics + ["total.{}".format(m) for m in gauge_metrics]
         self.exclude_metrics = exclude_metrics + ["total.{}".format(m) for m in exclude_metrics]
+        self.exclude_metrics.append("histogram")
 
     def get_cmd(self, config_path=None):
         if config_path is not None:
@@ -143,8 +143,6 @@ class UnboundCheck(AgentCheck):
             # This the count of requests needing recursive processing whose processing time fell in the window
             # specified by  <sec>.<usec>.to.<sec>.<usec>.
             metric = "histogram"
-            _, window = label.split(".", 1)
-            tags.append("bucket:{}".format(window))
         elif any(label.startswith(lbl) for lbl in self.by_tag_labels):
             # E.g.
             # num.query.flags.QR

@@ -47,8 +47,6 @@ class TestFileUnit(AgentCheckTest):
         self.assertMetric("unbound.num.query.type", value=0, tags=['type:AAAA'])
         self.assertMetric("unbound.num.zero_ttl", value=0, tags=['thread:0'])
 
-        self.assertMetric("unbound.histogram", value=0, tags=['bucket:000000.000000.to.000000.000001'])
-        self.assertMetric("unbound.histogram", value=0, tags=['bucket:008192.000000.to.016384.000000'])
         self.assertServiceCheck('unbound', AgentCheck.OK)
 
     def test_override_rate_as_counter(self):

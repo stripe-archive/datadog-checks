@@ -45,7 +45,7 @@ adodbapi==2.6.0.7
 pyro4==4.35 # required by adodbapi
 
 # checks.d/riak.py
-httplib2==0.9
+httplib2==0.18.0
 
 # checks.d/kafka_consumer.py
 kafka-python==0.9.3
